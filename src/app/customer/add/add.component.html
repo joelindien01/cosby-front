@@ -5,7 +5,7 @@
   <div class="form-group">
     <label class="col-md-4 control-label">Phone number</label>
     <div class="col-md-4">
-      <input  name="textinput" type="text"  class="form-control input-md">
+      <input formControlName="phoneNumber" name="textinput" type="text"  class="form-control input-md">
 
     </div>
   </div>
@@ -14,7 +14,7 @@
   <div class="form-group">
     <label class="col-md-4 control-label">Name</label>
     <div class="col-md-4">
-      <input  name="textinput" type="text"  class="form-control input-md" required="">
+      <input formControlName="name" name="textinput" type="text"  class="form-control input-md" required="">
 
     </div>
   </div>
@@ -23,13 +23,13 @@
   <div class="form-group">
     <label class="col-md-4 control-label">Email</label>
     <div class="col-md-4">
-      <input  name="textinput" type="text"  class="form-control input-md" required="">
+      <input formControlName="contactEmailAddresses" name="textinput" type="text"  class="form-control input-md" required="">
 
     </div>
   </div>
 
-  <app-address [formGroup]="customerForm" [formGroupName]="'billingAddress'"></app-address>
-  <app-address *ngFor="let deliveryAddress of myForm.get('deliveryAddress').controls; let i=index" [formGroup]="customerForm" [formGroupName]="'deliveryAddress'"></app-address>
+  <app-address formTitle="Addresse de facturation" [formGroup]="customerForm" [groupName]="'billingAddress'"></app-address>
+  <app-address formTitle="Addresse de livraison" [formGroup]="customerForm" [arrayName]="'deliveryAddress'"></app-address>
   <div class="form-group">
     <label class="col-md-4 control-label" for="singlebutton"></label>
     <div class="col-md-4">
