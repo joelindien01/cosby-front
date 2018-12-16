@@ -1,0 +1,38 @@
+<form class="form-horizontal" [formGroup]="productForm">
+  <h1>Add Product</h1>
+
+  <!-- Text input-->
+  <div class="form-group">
+    <label class="col-md-4 control-label">Name</label>
+    <div class="col-md-4">
+      <input formControlName="name" name="textinput" type="text"  class="form-control input-md" required="">
+
+    </div>
+  </div>
+
+  <!-- Text input-->
+  <div class="form-group" formArrayName="prices">
+    <h2>Prices</h2>
+    <div class="col-md-4" *ngFor="let price of productForm.controls['prices'].controls; let i=index">
+      <div [formGroupName]="i">
+        <h3>price {{i + 1}}</h3>
+        <label class="col-md-4 control-label">Label</label>
+        <input formControlName="label" type="text"  class="form-control input-md" required="">
+        <label class="col-md-4 control-label">Value</label>
+        <input formControlName="value" type="number"  class="form-control input-md" required="">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-primary" (click)="addPrice()">add price</button>
+    </div>
+  </div>
+
+
+
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="singlebutton"></label>
+    <div class="col-md-4">
+      <button id="singlebutton" name="singlebutton" class="btn btn-primary" (click)="saveProduct()">save</button>
+    </div>
+  </div>
+</form>
