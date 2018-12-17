@@ -1,0 +1,20 @@
+<table style="width:100%">
+  <tr>
+    <th>name</th>
+    <th>contact email addresses</th>
+    <th>billing addresses</th>
+    <th>delivery addresses</th>
+    <th>phone number</th>
+    <th>location</th>
+    <th>action</th>
+  </tr>
+  <tr *ngFor="let customer of customerList">
+    <td>{{customer.name}}</td>
+    <td>{{customer.contactEmailAddresses[0]}} see all</td>
+    <td>{{customer.billingAddress}}</td>
+    <td>{{customer.deliveryAddress[0]}} see all</td>
+    <td>{{customer.phoneNumber}}</td>
+    <td>{{customer.location}}</td>
+    <td>action</td>
+  </tr>
+</table>

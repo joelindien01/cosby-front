@@ -5,9 +5,10 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CustomerService} from "./customer.service";
 import {HttpClientModule} from "@angular/common/http";
 import {CosbyCommonModule} from "../common/cosby-common.module";
+import { ListCustomerComponent } from './list-customer/list-customer.component';
 
 @NgModule({
-  declarations: [AddCustomerComponent],
+  declarations: [AddCustomerComponent, ListCustomerComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

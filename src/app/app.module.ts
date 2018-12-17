@@ -10,10 +10,12 @@ import {CustomerModule} from "./customer/customer.module";
 import {AddCustomerComponent} from "./customer/add/add.component";
 import {ProductModule} from "./product/product.module";
 import {AddProductComponent} from "./product/add-product/add-product.component";
+import {AddPurchaseOrderComponent} from './purchase-order/add-purchase-order/add-purchase-order.component';
 
 const appRoutes: Routes = [
   { path: 'customer', component: AddCustomerComponent },
   { path: 'product', component: AddProductComponent },
+  { path: 'purchase-order', component: AddPurchaseOrderComponent },
   { path: '',
     redirectTo: '/customer',
     pathMatch: 'full'
