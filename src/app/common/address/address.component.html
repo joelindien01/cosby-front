@@ -1,5 +1,5 @@
 <div [(formGroup)]="formGroup" *ngIf="!isArrayForm">
-  <h2>{{formTitle}}</h2>
+  <h3>{{formTitle}}</h3>
   <div [formGroupName]="groupName">
     <div class="form-group">
       <label class="col-md-4 control-label">street</label>
@@ -43,7 +43,7 @@
 
 
 <div [(formGroup)]="formGroup" *ngIf="isArrayForm">
-  <h2>{{formTitle}}</h2>
+  <h3>{{formTitle}}</h3>
   <div [formArrayName]="arrayName">
 
     <div *ngFor="let address of formGroup.controls[arrayName].controls; let i=index">

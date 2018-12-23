@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 import {ProductService} from "../product.service";
-import {TitleModel} from "../../common/form-array/form-array.component";
 
 @Component({
   selector: 'app-add-product',
@@ -11,11 +10,8 @@ import {TitleModel} from "../../common/form-array/form-array.component";
 export class AddProductComponent implements OnInit {
 
   productForm: FormGroup;
-  titleModel: TitleModel;
   priceModel: any;
   constructor(private fb: FormBuilder, private productService: ProductService) {
-
-    this.titleModel = {arrayName: "prices", addTitle: "ajouter", formTitle: "Prices"};
     this.priceModel = this.initPriceForm();
     this.productForm = this.fb.group({
       name: [''],

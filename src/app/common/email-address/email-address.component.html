@@ -1,0 +1,26 @@
+<div [formGroup]="formGroup" *ngIf="!isArrayForm">
+  <div [formGroupName]="groupName">
+    <label>email</label>
+    <input type="text" formControlName="email" name="email"/>
+  </div>
+</div>
+
+<div [formGroup]="formGroup" *ngIf="isArrayForm">
+  <div [formArrayName]="arrayName">
+    <div *ngFor="let email of formGroup.controls[arrayName].controls; let i=index">
+      <span>Email {{i +1}}</span>
+      <div [formGroupName]="i">
+        <label>email</label>
+        <input type="text" formControlName="email" name="email" />
+      </div>
+      <div>
+        <span *ngIf="formGroup.controls[arrayName].controls.length > 1"
+              (click)="remove(i)">remove email
+                </span>
+      </div>
+    </div>
+  </div>
+  <button
+    (click)="add()">add email
+  </button>
+</div>

@@ -1,4 +1,63 @@
-<form class="form-horizontal" [formGroup]="purchaseOrderForm">
-  <h1>Add Order</h1>
+<h2>Add Order</h2>
+<div>
+  <p>you are going to generate a purchase order for customer: <span>{{ customer.name }}</span></p>
+
+</div>
+<div>
+  <form class="form-horizontal" [formGroup]="productToFindForm">
+    <label class="col-md-4 control-label">Find a product first</label>
+    <input formControlName="productToFindName" type="text" class="form-control input-md" required="">
+    <button type="button" (click)="findProductByName()">search product</button>
+  </form>
+</div>
+
+<form [formGroup]="selectedProductForm">
+  <div *ngFor="let product of foundProducts">
+    <input name="product" type="radio" [value]="product" formControlName="product">
+    <p>product: {{ product.name }} with prices <span *ngFor="let price of product.prices">({{price.label}} -> {{price.value}})</span>
+    </p>
+  </div>
+  <button *ngIf="selectedProductForm.get('product').value" type="button" (click)="addProductToItems()">set
+    product items
+  </button>
+  <div *ngIf="showItemConfig">
+    <div>
+      <label class="col-md-4 control-label">add a description</label>
+      <input formControlName="description" type="text" class="form-control input-md" required="">
+    </div>
+    <div>
+      <label class="col-md-4 control-label">quantity</label>
+      <input formControlName="quantity" type="number" class="form-control input-md" required="">
+    </div>
+    <div>
+      <label class="col-md-4 control-label">unit price</label>
+      <input formControlName="unit" type="number" class="form-control input-md" required="">
+    </div>
+    <button type="button" (click)="saveItem()">
+      save item
+    </button>
+  </div>
+
 
 </form>
+
+<div *ngIf="showAddAnotherProductButton">
+  <button type="button" (click)="addAnotherProduct()">
+    add another product
+  </button>
+  <button type="button" (click)="selectDeliveryAddress()">
+    select delivery address
+  </button>
+</div>
+
+<form [formGroup]="deliveryAddressForm" *ngIf="showSelectDeliveryAddress">
+  <label> select delivery address</label>
+  <div *ngFor="let address of customer.deliveryAddress">
+    <input name="address" type="radio" [value]="address" formControlName="address">
+    <p> street: {{ address.street }} | city: {{address.city}} | country: {{address.country}}</p>
+  </div>
+  <button type="button" (click)="createOrder()">
+    create purchase order
+  </button>
+</form>
+

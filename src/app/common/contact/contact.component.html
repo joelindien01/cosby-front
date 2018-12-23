@@ -1,0 +1,48 @@
+<div [formGroup]="formGroup" *ngIf="!isArrayForm">
+  <div [formGroupName]="groupName">
+    <div>
+      <label>name</label>
+      <input type="text" name="name" formControlName="name">
+    </div>
+    <div>
+      <label>phoneNumber</label>
+      <input type="text" name="phoneNumber" formControlName="phoneNumber">
+    </div>
+    <div>
+      <label>email</label>
+      <input type="text" name="email" formControlName="email">
+    </div>
+  </div>
+</div>
+
+
+<div [formGroup]="formGroup" *ngIf="isArrayForm" >
+  <h3>Contacts</h3>
+  <div [formArrayName]="arrayName">
+    <div *ngFor="let contact of formGroup.controls[arrayName].controls; let i=index">
+      <h4>Contact {{i + 1}}</h4>
+      <div [formGroupName]="i">
+        <div>
+          <label>name</label>
+          <input type="text" name="name" formControlName="name">
+        </div>
+        <div>
+          <label>Phone Number</label>
+          <input type="text" name="phoneNumber" formControlName="phoneNumber">
+        </div>
+        <div>
+          <label>email</label>
+          <input type="text" name="email" formControlName="email">
+        </div>
+      </div>
+      <div>
+     <span *ngIf="formGroup.controls[arrayName].controls.length > 1"
+           (click)="remove(i)"> remove contact
+                </span>
+      </div>
+    </div>
+  </div>
+  <button
+    (click)="add()">add contact
+  </button>
+</div>

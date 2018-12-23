@@ -1,0 +1,18 @@
+<table style="width:100%" border="1">
+  <tr>
+    <th>Customer name</th>
+    <th>Order creation date</th>
+    <th>delivery address</th>
+    <th>action</th>
+  </tr>
+  <tr *ngFor="let order of purchaseOrderList">
+    <td>{{order.customer.name}}</td>
+    <td>TODO: to be added later</td>
+    <td>{{order.customer.deliveryAddress |json}}</td>
+    <!--TODO add an addressFormatter component-->
+    <td>
+      <button type="button" (click)="createDeliveryNote(order.id, order.customer.id)">create delivery note</button>
+      <button type="button" (click)="createBill(order.id, order.customer.id)">create bill</button>
+    </td>
+  </tr>
+</table>

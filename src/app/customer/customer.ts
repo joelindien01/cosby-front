@@ -1,11 +1,27 @@
-export interface Customer {
+export class Customer {
   id: number;
   name: string;
-  contactEmailAddresses: EmailAddress[];
-  deliveryAddress: Address[];
+  contacts: Contact[];
+  deliveryInformations: DeliveryInformation[];
   billingAddress: Address;
-  phoneNumber: string;
   location: Address;
+}
+
+export class Contact {
+  id: number;
+  name: string;
+  phoneNumber: string;
+  emailAddresses: EmailAddress[];
+  customer: Customer;
+}
+
+export class DeliveryInformation {
+  id: number;
+  vessel: string;
+  imo: string;
+  flag: string;
+  master: string;
+  customer: Customer;
 }
 
 export interface EmailAddress {

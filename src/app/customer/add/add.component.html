@@ -1,14 +1,5 @@
 <form class="form-horizontal" [formGroup]="customerForm">
-  <legend>Add customer</legend>
-
-  <!-- Text input-->
-  <div class="form-group">
-    <label class="col-md-4 control-label">Phone number</label>
-    <div class="col-md-4">
-      <input formControlName="phoneNumber" name="textinput" type="text"  class="form-control input-md">
-
-    </div>
-  </div>
+  <h2>Add customer</h2>
 
   <!-- Text input-->
   <div class="form-group">
@@ -19,17 +10,11 @@
     </div>
   </div>
 
-  <!-- Text input-->
-  <div class="form-group">
-    <label class="col-md-4 control-label">Email</label>
-    <div class="col-md-4">
-      <input formControlName="contactEmailAddresses" name="textinput" type="text"  class="form-control input-md" required="">
+  <app-contact [formGroup]="customerForm" [arrayName]="'contacts'"></app-contact>
+  <app-address formTitle="Billing Address" [formGroup]="customerForm" [groupName]="'billingAddress'"></app-address>
+  <app-address formTitle="Location" [formGroup]="customerForm" [groupName]="'location'"></app-address>
+  <app-ship formTitle="Delivery Information" [formGroup]="customerForm" [arrayName]="'deliveryInformations'"></app-ship>
 
-    </div>
-  </div>
-
-  <app-address formTitle="Addresse de facturation" [formGroup]="customerForm" [groupName]="'billingAddress'"></app-address>
-  <app-address formTitle="Addresse de livraison" [formGroup]="customerForm" [arrayName]="'deliveryAddress'"></app-address>
   <div class="form-group">
     <label class="col-md-4 control-label" for="singlebutton"></label>
     <div class="col-md-4">

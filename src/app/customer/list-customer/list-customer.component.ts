@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {CustomerService} from '../customer.service';
 import {Address, Customer, EmailAddress} from '../customer';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-list-customer',
@@ -11,13 +12,22 @@ export class ListCustomerComponent implements OnInit {
 
   customerList: Array<Customer>;
 
-  constructor(private customerService: CustomerService) {
-    const address = <Address> {id: 1, city: "", country: "", state: "", street: "", zipCode: ""};
-    this.customerList = [{id: 1, location: address , phoneNumber: "234" , deliveryAddress: [address],
-      billingAddress: address, contactEmailAddresses: [{id: 1, email: "test"}], name: ""}];
+  constructor(private customerService: CustomerService, private router: Router) {
+    this.customerList = this.customerService.customerList;
   }
 
   ngOnInit() {
   }
 
+  createPurchaseOrder(customerId: number) {
+    this.router.navigateByUrl('/purchase-order/'+customerId).then();
+  }
+
+  goToPurchaseOrdersPage(customerId: number) {
+    this.router.navigate(['/purchase-orders', {customerId: customerId}]).then();
+  }
+
+  goToBillsPage(customerId: number) {
+    this.router.navigate(['/bills', {customerId: customerId}]).then();
+  }
 }
