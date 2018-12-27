@@ -1,13 +1,11 @@
 <table style="width:100%" border="1">
   <tr>
     <th>Customer name</th>
-    <th>phone number</th>
     <th>location country</th>
     <th>actions</th>
   </tr>
-  <tr *ngFor="let customer of customerList">
+  <tr *ngFor='let customer of customerList$ | async'>
     <td>{{customer.name}}</td>
-    <td>{{customer.phoneNumber}}</td>
     <td>{{customer.location.country}}</td>
     <td>
       <button type="button" (click)="createPurchaseOrder(customer.id)">create purchase order</button>

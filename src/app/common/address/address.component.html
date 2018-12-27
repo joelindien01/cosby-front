@@ -4,21 +4,21 @@
     <div class="form-group">
       <label class="col-md-4 control-label">street</label>
       <div class="col-md-4">
-        <input formControlName="street" name="textinput" type="text"  class="form-control input-md">
+        <input formControlName="street" name="textinput" type="text"  class="form-control input-md" [readonly]="formGroup.get('useLocationAddress').value">
       </div>
     </div>
 
     <div  class="form-group">
       <label class="col-md-4 control-label">City</label>
       <div class="col-md-4">
-        <input formControlName="city" name="textinput" type="text"  class="form-control input-md">
+        <input formControlName="city" name="textinput" type="text"  class="form-control input-md" [readonly]="formGroup.get('useLocationAddress').value">
       </div>
     </div>
 
     <div class="form-group">
       <label class="col-md-4 control-label">zipCode</label>
       <div class="col-md-4">
-        <input name="textinput" type="text"  class="form-control input-md">
+        <input formControlName="zipCode" name="textinput" type="text"  class="form-control input-md" [readonly]="formGroup.get('useLocationAddress').value">
 
       </div>
     </div>
@@ -26,7 +26,7 @@
     <div class="form-group">
       <label class="col-md-4 control-label">state</label>
       <div class="col-md-4">
-        <input  name="textinput" type="text"  class="form-control input-md">
+        <input formControlName="state" name="textinput" type="text"  class="form-control input-md" [readonly]="formGroup.get('useLocationAddress').value">
 
       </div>
     </div>
@@ -34,7 +34,7 @@
     <div class="form-group">
       <label class="col-md-4 control-label">Country</label>
       <div class="col-md-4">
-        <input name="textinput" type="text"  class="form-control input-md">
+        <input formControlName="country" name="textinput" type="text"  class="form-control input-md">
 
       </div>
     </div>

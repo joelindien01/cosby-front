@@ -5,7 +5,7 @@
     <th>delivery address</th>
     <th>action</th>
   </tr>
-  <tr *ngFor="let order of purchaseOrderList">
+  <tr *ngFor="let order of purchaseOrderList$ | async">
     <td>{{order.customer.name}}</td>
     <td>TODO: to be added later</td>
     <td>{{order.customer.deliveryAddress |json}}</td>

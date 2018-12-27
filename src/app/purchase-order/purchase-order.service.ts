@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {PurchaseOrder} from "./PurchaseOrder";
 import {Address} from "../customer/customer";
 
@@ -15,12 +15,21 @@ export class PurchaseOrderService {
   public customerList = [this.customer];
 
   constructor(private httpClient: HttpClient) {
-    const order: PurchaseOrder = {id: 1, itemList: [], customer: this.customer, deliveryAddress: this.address}
-    this.purchaseOrderList.push(order);
+    /*const order: PurchaseOrder = {id: 1, itemList: [], customer: this.customer, deliveryAddress: this.address};
+    this.purchaseOrderList.push(order);*/
   }
 
   createOrder(purchaseOrder: PurchaseOrder) {
     return this.httpClient.post("http://localhost:8080/purchase-order/",purchaseOrder);
+  }
+
+  getOrderByCustomerId(customerId: number) {
+    let params = new HttpParams({
+      fromObject: {
+        customerId: customerId.toString()
+      }
+    });
+    return this.httpClient.get("http://localhost:8080/purchase-order/",{params: params});
   }
 
 

@@ -9,11 +9,16 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./list-purchase-orders.component.scss']
 })
 export class ListPurchaseOrdersComponent implements OnInit {
-  purchaseOrderList: Array<PurchaseOrder> = [];
+  purchaseOrderList$;
+  customerId: number;
 
-  constructor(private orderService: PurchaseOrderService, private router: Router) {
-    this.purchaseOrderList = [];
-    this.purchaseOrderList = orderService.purchaseOrderList
+  constructor(private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute) {
+    this.route.params.subscribe(params => {
+      if (params['customerId']) {
+        this.customerId = params['customerId'];
+        this.purchaseOrderList$ = orderService.getOrderByCustomerId(this.customerId);
+      }
+    });
   }
 
   ngOnInit() {

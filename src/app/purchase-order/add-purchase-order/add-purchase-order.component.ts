@@ -28,7 +28,7 @@ export class AddPurchaseOrderComponent implements OnInit {
   constructor(private customerService: CustomerService,
               private fb: FormBuilder,
               private purchaseOrderService: PurchaseOrderService) {
-    this.customer = customerService.customer;
+    //this.customer = customerService.customer;
     this.productToFindForm = this.fb.group({
       productToFindName: [""]
     });
@@ -41,7 +41,7 @@ export class AddPurchaseOrderComponent implements OnInit {
     this.deliveryAddressForm = this.fb.group({
       address: []
     });
-    this.purchaseOrder = {id: null, customer: this.customer, deliveryAddress: null, itemList: [] }
+    //this.purchaseOrder = {id: null, customer: this.customer, deliveryAddress: null, itemList: [] }
   }
 
   ngOnInit() {

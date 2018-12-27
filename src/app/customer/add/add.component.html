@@ -11,8 +11,12 @@
   </div>
 
   <app-contact [formGroup]="customerForm" [arrayName]="'contacts'"></app-contact>
-  <app-address formTitle="Billing Address" [formGroup]="customerForm" [groupName]="'billingAddress'"></app-address>
   <app-address formTitle="Location" [formGroup]="customerForm" [groupName]="'location'"></app-address>
+ <div>
+   <label>use location address as billing address?</label>
+   <input type="checkbox" formControlName="useLocationAddress" name="useLocationAddress" />
+ </div>
+  <app-address formTitle="Billing Address" [formGroup]="customerForm" [groupName]="'billingAddress'"></app-address>
   <app-ship formTitle="Delivery Information" [formGroup]="customerForm" [arrayName]="'deliveryInformations'"></app-ship>
 
   <div class="form-group">

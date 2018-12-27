@@ -5,6 +5,9 @@ import {AddressService} from "../../common/address.service";
 import {CustomerService} from "../customer.service";
 import {ShipService} from "../../common/ship.service";
 import {ContactService} from "../../common/contact.service";
+import {deepEqual} from "assert";
+import {Address} from "../customer";
+
 
 @Component({
   selector: 'app-customer-add',
@@ -23,12 +26,16 @@ export class AddCustomerComponent implements OnInit {
               private contactService: ContactService) {
     this.customerForm = this.fb.group({
       name: ['',Validators.required],
+      useLocationAddress: [false],
       contacts: this.fb.array([this.contactService.initForm()]),
       billingAddress: this.addressService.initAddress(),
       location: this.addressService.initAddress(),
       deliveryInformations: this.fb.array([this.shipService.initShip()])
     });
+    this.onUseLocationAddressChanges();
   }
+
+
 
   ngOnInit() {
 
@@ -42,5 +49,26 @@ export class AddCustomerComponent implements OnInit {
     });
   }
 
+  private onUseLocationAddressChanges() {
+    this.customerForm.get('useLocationAddress').valueChanges.subscribe(val=> {
+      if(val == true) {
+        this.syncLocationAddressWithBillingAddress();
+      } else {
+        this.unsyncLocationAddressWithBillingAddress();
+      }
+    });
+  }
 
+  private syncLocationAddressWithBillingAddress() {
+    const location = this.customerForm.get('location');
+    this.customerForm.controls['billingAddress'].patchValue(location.value);
+  }
+
+  private unsyncLocationAddressWithBillingAddress() {
+    const location = this.customerForm.get('location');
+    const billingAddress: Address = <Address>this.customerForm.controls['billingAddress'].value;
+    if(this.addressService.isSameAddress(billingAddress, location.value)) {
+      this.customerForm.controls['billingAddress'].reset();
+    }
+  }
 }

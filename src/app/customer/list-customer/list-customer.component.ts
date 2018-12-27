@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {CustomerService} from '../customer.service';
 import {Address, Customer, EmailAddress} from '../customer';
 import {Router} from "@angular/router";
+import {Observable} from "rxjs/index";
 
 @Component({
   selector: 'app-list-customer',
@@ -10,10 +11,10 @@ import {Router} from "@angular/router";
 })
 export class ListCustomerComponent implements OnInit {
 
-  customerList: Array<Customer>;
+  customerList$: Observable<Array<Customer>>;
 
   constructor(private customerService: CustomerService, private router: Router) {
-    this.customerList = this.customerService.customerList;
+    this.customerList$ = this.customerService.getCustomers();
   }
 
   ngOnInit() {

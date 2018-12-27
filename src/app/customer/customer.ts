@@ -11,7 +11,7 @@ export class Contact {
   id: number;
   name: string;
   phoneNumber: string;
-  emailAddresses: EmailAddress[];
+  emailAddresses: string;
   customer: Customer;
 }
 

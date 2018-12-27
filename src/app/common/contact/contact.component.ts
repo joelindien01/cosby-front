@@ -8,7 +8,6 @@ import {ContactService} from "../contact.service";
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent extends MultiAddableForm implements OnInit {
-  @Input() emailArrayName: string;
 
   constructor(private contactService: ContactService) {
     super(contactService);
