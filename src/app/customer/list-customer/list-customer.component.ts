@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {CustomerService} from '../customer.service';
 import {Address, Customer, EmailAddress} from '../customer';
 import {Router} from "@angular/router";
-import {Observable} from "rxjs/index";
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-list-customer',

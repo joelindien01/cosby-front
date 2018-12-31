@@ -1,17 +1,28 @@
-<table style="width:100%" border="1">
-  <tr>
-    <th>Customer name</th>
-    <th>location country</th>
-    <th>actions</th>
-  </tr>
-  <tr *ngFor='let customer of customerList$ | async'>
-    <td>{{customer.name}}</td>
-    <td>{{customer.location.country}}</td>
-    <td>
-      <button type="button" (click)="createPurchaseOrder(customer.id)">Create purchase order</button>
-      <button type="button" (click)="goToPurchaseOrdersPage(customer.id)">Purchase orders</button>
-      <button type="button" (click)="goToBillsPage(customer.id)">Bills</button>
-      <button type="button" (click)="goToDeliveryNotePage(customer.id)">Delivery notes</button>
-    </td>
-  </tr>
-</table>
+<div class="row">
+  <div class="col-2 page-header">
+    <a routerLink="/customers/add" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add customer</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <table style="width:100%" border="1">
+      <tr>
+        <th>Customer name</th>
+        <th>location country</th>
+        <th>actions</th>
+      </tr>
+      <tr *ngFor='let customer of customerList$ | async'>
+        <td>{{customer.name}}</td>
+        <td>{{customer.location.country}}</td>
+        <td>
+          <button type="button" (click)="createPurchaseOrder(customer.id)">Create purchase order</button>
+          <button type="button" (click)="goToPurchaseOrdersPage(customer.id)">Purchase orders</button>
+          <button type="button" (click)="goToBillsPage(customer.id)">Bills</button>
+          <button type="button" (click)="goToDeliveryNotePage(customer.id)">Delivery notes</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+

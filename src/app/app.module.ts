@@ -20,6 +20,7 @@ import {ListBillComponent} from "./bill/list-bill/list-bill.component";
 import {AddDeliveryNoteComponent} from "./delivery-note/add-delivery-note/add-delivery-note.component";
 import {ListDeliveryNoteComponent} from "./delivery-note/list-delivery-note/list-delivery-note.component";
 import {MaterialModule} from "./common/material/material.module";
+import { HomePageComponent } from './home-page/home-page.component';
 
 const appRoutes: Routes = [
   { path: 'customers/add', component: AddCustomerComponent },
@@ -32,14 +33,15 @@ const appRoutes: Routes = [
   { path: 'purchase-order/:customerId', component: AddPurchaseOrderComponent },
   { path: 'purchase-orders', component: ListPurchaseOrdersComponent },
   { path: '',
-    redirectTo: '/customer',
+    redirectTo: '/customers',
     pathMatch: 'full'
   }
 ];
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomePageComponent
   ],
   imports: [
     BrowserModule,

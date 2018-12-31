@@ -6,6 +6,8 @@ import {CustomerService} from "./customer.service";
 import {HttpClientModule} from "@angular/common/http";
 import {CosbyCommonModule} from "../common/cosby-common.module";
 import { ListCustomerComponent } from './list-customer/list-customer.component';
+import {MaterialModule} from '../common/material/material.module';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [AddCustomerComponent, ListCustomerComponent],
@@ -14,7 +16,9 @@ import { ListCustomerComponent } from './list-customer/list-customer.component';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    CosbyCommonModule
+    CosbyCommonModule,
+    MaterialModule,
+    RouterModule
   ],
   exports: [AddCustomerComponent],
   providers: [CustomerService]

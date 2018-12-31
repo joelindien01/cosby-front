@@ -1,0 +1,10 @@
+nav {
+  margin-bottom: 10px;
+}
+
+:host ::ng-deep {
+  & .page-header {
+    margin-bottom: 10px !important;
+  }
+
+}
