@@ -1,7 +1,7 @@
 <h2>Generate bill</h2>
 <form [formGroup]="billForm">
   <label>Payment DeadLine</label>
-  <input formControlName="date" type="date" name="deadLine"/>
+  <input formControlName="deadLine" type="date" name="deadLine"/>
   <p>Would you like to apply a discount? <input formControlName="applyDiscount" type="checkbox"/></p>
   <div *ngIf="billForm.get('applyDiscount').value">
     <label>discount (%)</label>

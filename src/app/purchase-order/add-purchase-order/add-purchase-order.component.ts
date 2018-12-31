@@ -1,12 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CustomerService} from "../../customer/customer.service";
 import {Customer} from "../../customer/customer";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {AddressService} from "../../common/address.service";
 import {ProductService} from "../../product/product.service";
 import {Product} from "../../product/product";
-import {Item, PurchaseOrder} from "../PurchaseOrder";
+import {PurchaseOrder} from "../PurchaseOrder";
 import {PurchaseOrderService} from "../purchase-order.service";
+import {Observable} from "rxjs/index";
+import {ActivatedRoute} from "@angular/router";
+import {switchMap} from "rxjs/internal/operators";
+
+class ReferenceItem {
+label: string;
+value: string;
+
+}
 
 @Component({
   selector: 'app-add-purchase-order',
@@ -18,22 +26,47 @@ export class AddPurchaseOrderComponent implements OnInit {
   customer: Customer;
   deliveryAddressForm: FormGroup;
   productToFindForm: FormGroup;
-  foundProducts: Array<Product>;
+  foundProducts$: Observable<Array<Product>>;
   selectedProductForm: FormGroup;
   private showItemConfig: boolean;
   private purchaseOrder: PurchaseOrder;
   private showAddAnotherProductButton: boolean;
   private showSelectDeliveryAddress: boolean;
+  private selectedProduct: Product;
+  private currentCustomer$: Observable<Customer>;
+  private paymentInfoForm: FormGroup;
+  private paymentMeans: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
+  private paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
 
   constructor(private customerService: CustomerService,
               private fb: FormBuilder,
-              private purchaseOrderService: PurchaseOrderService) {
-    //this.customer = customerService.customer;
+              private purchaseOrderService: PurchaseOrderService,
+              private productService: ProductService,
+              private route: ActivatedRoute) {
+    let customerId;
+    this.route.params.subscribe(params => {
+      console.log(params);
+      if (params['customerId']) {
+        customerId = params['customerId']
+      }
+    });
+
+    const routeParams$ = this.route.params;
+    this.currentCustomer$ = routeParams$.pipe(
+      switchMap(params => {
+        const customerId = params['customerId'];
+        if (customerId) {
+          return this.customerService.findCustomerById(customerId);
+        }
+      }));
+    this.currentCustomer$.subscribe(currentCustomer => this.customer = <Customer> currentCustomer);
+
     this.productToFindForm = this.fb.group({
-      productToFindName: [""]
+      productToFindName: [null]
     });
     this.selectedProductForm = this.fb.group({
       product: [],
+      overridePrice: false,
       description: [''],
       quantity: [0],
       unit: [0]
@@ -41,7 +74,11 @@ export class AddPurchaseOrderComponent implements OnInit {
     this.deliveryAddressForm = this.fb.group({
       address: []
     });
-    //this.purchaseOrder = {id: null, customer: this.customer, deliveryAddress: null, itemList: [] }
+    this.paymentInfoForm = this.fb.group({
+      payMeans: "",
+      payStatus: ""
+    });
+    this.purchaseOrder = {id: null, customer: null, deliveryInformation: null, itemList: [] }
   }
 
   ngOnInit() {
@@ -49,25 +86,20 @@ export class AddPurchaseOrderComponent implements OnInit {
 
   findProductByName() {
     console.log("product to find: "+ this.productToFindForm.get('productToFindName').value);
-    this.foundProducts = [{id:1, name: "first product", prices: [{id:1, label: "favorite client price", value: 36},
-      {id:1, label: "VIP client price", value: 76}]},
-
-      {id:2, name: "second product", prices: [{id:1, label: "autumn price", value: 43},
-        {id:1, label: "winter price", value: 87}]}
-    ];
+    const productToFound = this.productToFindForm.get('productToFindName').value;
+    this.foundProducts$ = this.productService.findProductByName(productToFound);
   }
 
   addProductToItems() {
     this.showItemConfig = true;
-    const selectedProduct = this.selectedProductForm.get('product').value;
-    console.log("selectedProduct is vvvv(look down)");
-    console.log(selectedProduct);
-
+    this.selectedProduct = this.selectedProductForm.get('product').value;
   }
 
   saveItem() {
-    const item:Item = this.selectedProductForm.value;
+    const item = this.selectedProductForm.value;
+    delete item.overridePrice;
     this.purchaseOrder.itemList.push(item);
+    console.log(this.purchaseOrder);
     alert("item saved");
     this.resetForms();
     this.showAddAnotherProductButton = true;
@@ -75,18 +107,22 @@ export class AddPurchaseOrderComponent implements OnInit {
 
   private resetForms() {
     this.productToFindForm.reset();
+    this.foundProducts$ = null;
     this.selectedProductForm.reset();
+    this.selectedProduct = null;
   }
 
   addAnotherProduct() {
+    this.showAddAnotherProductButton = !this.showAddAnotherProductButton;
     //TODO restart process
   }
 
   createOrder() {
-    this.purchaseOrder.deliveryAddress = this.deliveryAddressForm.get('address').value;
+    this.purchaseOrder.deliveryInformation = this.deliveryAddressForm.get('address').value;
+    this.purchaseOrder.customer = this.customer;
     console.log("order to create vvvv");
     console.log(this.purchaseOrder);
-    this.purchaseOrderService.createOrder(this.purchaseOrder).subscribe(result =>{
+    this.purchaseOrderService.createOrder({order: this.purchaseOrder, informationDTO: this.paymentInfoForm.value}).subscribe(result =>{
       alert("order created");
     });
 

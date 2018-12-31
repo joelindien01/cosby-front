@@ -8,9 +8,10 @@
     <td>{{customer.name}}</td>
     <td>{{customer.location.country}}</td>
     <td>
-      <button type="button" (click)="createPurchaseOrder(customer.id)">create purchase order</button>
-      <button type="button" (click)="goToPurchaseOrdersPage(customer.id)">purchase orders</button>
-      <button type="button" (click)="goToBillsPage(customer.id)">bills</button>
+      <button type="button" (click)="createPurchaseOrder(customer.id)">Create purchase order</button>
+      <button type="button" (click)="goToPurchaseOrdersPage(customer.id)">Purchase orders</button>
+      <button type="button" (click)="goToBillsPage(customer.id)">Bills</button>
+      <button type="button" (click)="goToDeliveryNotePage(customer.id)">Delivery notes</button>
     </td>
   </tr>
 </table>

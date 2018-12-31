@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {CosbyMaterialModule} from "./cosby-material/cosby-material.module";
 import {RouterModule, Routes} from "@angular/router";
 import {CustomerModule} from "./customer/customer.module";
 import {AddCustomerComponent} from "./customer/add/add.component";
@@ -17,12 +16,19 @@ import {AddBillComponent} from "./bill/add-bill/add-bill.component";
 import {BillModule} from "./bill/bill.module";
 import {ListPurchaseOrdersComponent} from "./purchase-order/list-purchase-orders/list-purchase-orders.component";
 import {DeliveryNoteModule} from "./delivery-note/delivery-note.module";
+import {ListBillComponent} from "./bill/list-bill/list-bill.component";
+import {AddDeliveryNoteComponent} from "./delivery-note/add-delivery-note/add-delivery-note.component";
+import {ListDeliveryNoteComponent} from "./delivery-note/list-delivery-note/list-delivery-note.component";
+import {MaterialModule} from "./common/material/material.module";
 
 const appRoutes: Routes = [
   { path: 'customers/add', component: AddCustomerComponent },
+  { path: 'delivery-notes/add', component: AddDeliveryNoteComponent },
+  { path: 'delivery-notes', component: ListDeliveryNoteComponent },
   { path: 'customers', component: ListCustomerComponent },
   { path: 'product', component: AddProductComponent },
-  { path: 'bill/add', component: AddBillComponent },
+  { path: 'bills/add', component: AddBillComponent },
+  { path: 'bills', component: ListBillComponent },
   { path: 'purchase-order/:customerId', component: AddPurchaseOrderComponent },
   { path: 'purchase-orders', component: ListPurchaseOrdersComponent },
   { path: '',
@@ -39,12 +45,12 @@ const appRoutes: Routes = [
     BrowserModule,
     AppRoutingModule,
     NoopAnimationsModule,
-    CosbyMaterialModule,
     CustomerModule,
     ProductModule,
     PurchaseOrderModule,
     BillModule,
     DeliveryNoteModule,
+    MaterialModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only

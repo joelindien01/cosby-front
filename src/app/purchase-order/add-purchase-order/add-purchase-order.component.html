@@ -1,63 +1,117 @@
 <h2>Add Order</h2>
 <div>
-  <p>you are going to generate a purchase order for customer: <span>{{ customer.name }}</span></p>
-
-</div>
-<div>
-  <form class="form-horizontal" [formGroup]="productToFindForm">
-    <label class="col-md-4 control-label">Find a product first</label>
-    <input formControlName="productToFindName" type="text" class="form-control input-md" required="">
-    <button type="button" (click)="findProductByName()">search product</button>
-  </form>
+  <p>you are going to generate a purchase order for customer: <b>{{(currentCustomer$ |async)?.name }}</b></p>
 </div>
 
-<form [formGroup]="selectedProductForm">
-  <div *ngFor="let product of foundProducts">
-    <input name="product" type="radio" [value]="product" formControlName="product">
-    <p>product: {{ product.name }} with prices <span *ngFor="let price of product.prices">({{price.label}} -> {{price.value}})</span>
-    </p>
-  </div>
-  <button *ngIf="selectedProductForm.get('product').value" type="button" (click)="addProductToItems()">set
-    product items
-  </button>
-  <div *ngIf="showItemConfig">
-    <div>
-      <label class="col-md-4 control-label">add a description</label>
-      <input formControlName="description" type="text" class="form-control input-md" required="">
+<mat-horizontal-stepper>
+  <mat-step label="Select product">
+    <div *ngIf="!showAddAnotherProductButton">
+      <form class="form-horizontal" [formGroup]="productToFindForm">
+        <mat-form-field>
+          <input matInput formControlName="productToFindName" placeholder="Find a product first" type="text"
+                 class="form-control input-md" required="">
+        </mat-form-field>
+        <div>
+          <button mat-stroked-button color="primary" type="button" (click)="findProductByName()">search product</button>
+        </div>
+      </form>
     </div>
+
     <div>
-      <label class="col-md-4 control-label">quantity</label>
-      <input formControlName="quantity" type="number" class="form-control input-md" required="">
+      <form [formGroup]="selectedProductForm">
+        <div *ngIf="(foundProducts$ | async) != null">
+          <div *ngFor="let product of foundProducts$ | async">
+            <input name="product" type="radio" [value]="product" formControlName="product">
+            <p>product: {{ product.name }} with prices <span *ngFor="let price of product.prices">({{price.label}} -> {{price.value}})</span>
+            </p>
+          </div>
+          <button mat-stroked-button color="primary" *ngIf="selectedProductForm.get('product').value" type="button"
+                  (click)="addProductToItems()">
+            set product items
+          </button>
+
+          <div *ngIf="selectedProduct">
+
+            <mat-form-field>
+              <textarea matInput formControlName="description" placeholder="Description" type="text"
+                        class="form-control input-md" required=""></textarea>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="quantity" placeholder="Quantity" type="number"
+                     class="form-control input-md" required="">
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-select placeholder="Select the price you want to apply" formControlName="unit">
+                <mat-option *ngFor="let price of selectedProduct.prices" [value]="price.value">{{price.label}} ->
+                  {{price.value}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div>
+              <label>Override the price?</label>
+              <input type="checkbox" name="overridePrice" formControlName="overridePrice">
+            </div>
+            <div *ngIf="selectedProductForm.get('overridePrice').value">
+              <mat-form-field>
+                <input placeholder="Unit price" matInput formControlName="unit" type="number" class="form-control input-md" required="">
+              </mat-form-field>
+            </div>
+            <button mat-stroked-button color="primary" type="button" (click)="saveItem()">
+              save item
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="showAddAnotherProductButton">
+          <button mat-flat-button color="primary" type="button" (click)="addAnotherProduct()">
+            add another product
+          </button>
+          <button mat-stroked-button color="primary" type="button" matStepperNext (click)="selectDeliveryAddress()">
+            select delivery address
+          </button>
+        </div>
+      </form>
     </div>
-    <div>
-      <label class="col-md-4 control-label">unit price</label>
-      <input formControlName="unit" type="number" class="form-control input-md" required="">
+  </mat-step>
+  <mat-step label="Select delivery info">
+    <div *ngIf="showSelectDeliveryAddress">
+      <form [formGroup]="deliveryAddressForm">
+        <label> select delivery address</label>
+        <div *ngFor="let information of customer.deliveryInformations">
+          <input name="address" type="radio" [value]="information" formControlName="address">
+          <p> {{information |json}}</p>
+        </div>
+      </form>
+      <button *ngIf="deliveryAddressForm.get('address').value" mat-flat-button color="primary" type="button" matStepperNext>
+        Next
+      </button>
     </div>
-    <button type="button" (click)="saveItem()">
-      save item
+  </mat-step>
+  <mat-step label="Payment info">
+    <form [formGroup]="paymentInfoForm">
+      <div>
+        <label>select payment method</label>
+        <mat-form-field>
+          <mat-select formControlName="payMeans">
+            <mat-option *ngFor="let payMean of paymentMeans" [value]="payMean.value">{{payMean.label}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <label>select payment status</label>
+        <mat-form-field>
+          <mat-select formControlName="payStatus">
+            <mat-option *ngFor="let payStatus of paymentStatus" [value]="payStatus.value">{{payStatus.label}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <button mat-flat-button color="primary" type="button" (click)="createOrder()">
+      create purchase order
     </button>
-  </div>
-
-
-</form>
-
-<div *ngIf="showAddAnotherProductButton">
-  <button type="button" (click)="addAnotherProduct()">
-    add another product
-  </button>
-  <button type="button" (click)="selectDeliveryAddress()">
-    select delivery address
-  </button>
-</div>
-
-<form [formGroup]="deliveryAddressForm" *ngIf="showSelectDeliveryAddress">
-  <label> select delivery address</label>
-  <div *ngFor="let address of customer.deliveryAddress">
-    <input name="address" type="radio" [value]="address" formControlName="address">
-    <p> street: {{ address.street }} | city: {{address.city}} | country: {{address.country}}</p>
-  </div>
-  <button type="button" (click)="createOrder()">
-    create purchase order
-  </button>
-</form>
-
+  </mat-step>
+</mat-horizontal-stepper>

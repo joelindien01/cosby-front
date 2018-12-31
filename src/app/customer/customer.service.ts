@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Address, Customer, DeliveryInformation} from "./customer";
 import {Observable} from "rxjs/index";
 
@@ -18,7 +18,17 @@ export class CustomerService {
     return this.http.post(this.baseUrl,customer);
   }
 
-  getCustomers() {
-    return this.http.get(this.baseUrl);
+  getCustomers(): Observable<Array<Customer>> {
+    return this.http.get<Array<Customer>>(this.baseUrl);
   }
+
+  findCustomerById(customerId: number): Observable<Customer> {
+    const params = new HttpParams({
+      fromObject: {
+        customerId: customerId.toString()
+      }
+    });
+    return this.http.get<Customer>(this.baseUrl+"search", {params: params});
+  }
+
 }

@@ -31,4 +31,8 @@ export class ListCustomerComponent implements OnInit {
   goToBillsPage(customerId: number) {
     this.router.navigate(['/bills', {customerId: customerId}]).then();
   }
+
+  goToDeliveryNotePage(customerId: number) {
+    this.router.navigate(['/delivery-notes', {customerId: customerId}]).then();
+  }
 }

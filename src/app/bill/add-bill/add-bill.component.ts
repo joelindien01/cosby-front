@@ -17,7 +17,7 @@ export class AddBillComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private billService: BillService, private route: ActivatedRoute) {
     this.billForm = this.fb.group({
-      date: [],
+      deadLine: [],
       discount: 0,
       applyDiscount: false
     });

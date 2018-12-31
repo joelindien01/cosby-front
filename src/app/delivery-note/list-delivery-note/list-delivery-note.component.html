@@ -1,0 +1,19 @@
+<p>Delivery notes for customer : <b>{{(customer$ |async)?.name}}</b> </p>
+
+<table style="width:100%" border="1">
+  <tr>
+    <th>Purchase order Id</th>
+    <th>Delivery date</th>
+    <th>Creation date</th>
+    <th>action</th>
+  </tr>
+  <tr *ngFor="let deliveryNote of deliveryNotes$ | async">
+    <td>{{deliveryNote.purchaseOrder.id}}</td>
+    <td>{{deliveryNote.deliveryDate | date}}</td>
+    <td>{{deliveryNote.creationDate | date}}</td>
+    <td>
+      <button type="button" (click)="generateDeliveryNote(deliveryNote)">generate delivery note</button>
+      <button type="button" (click)="sendBillByEmail(deliveryNote)">send delivery note by email (pdf)</button>
+    </td>
+  </tr>
+</table>

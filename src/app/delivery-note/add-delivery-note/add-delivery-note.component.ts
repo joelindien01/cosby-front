@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
-import {PurchaseOrderService} from "../../purchase-order/purchase-order.service";
-import {ShipService} from "../../common/ship.service";
+import {ActivatedRoute} from "@angular/router";
+import {DeliveryNoteService} from "../delivery-note.service";
+import {DeliveryNoteDTO} from "../../purchase-order/PurchaseOrder";
 
 @Component({
   selector: 'app-add-delivery-note',
@@ -11,19 +11,33 @@ import {ShipService} from "../../common/ship.service";
 })
 export class AddDeliveryNoteComponent implements OnInit {
   deliveryNoteForm: FormGroup;
+  private orderId: number;
 
   constructor(private fb: FormBuilder,
-              private httpClient: HttpClient,
-              private orderService: PurchaseOrderService,
-              private shipService: ShipService) {
+              private route: ActivatedRoute,
+              private deliveryNoteService: DeliveryNoteService) {
 
     this.deliveryNoteForm = this.fb.group({
-      deliveryDate: [],
-      deliveryAddress: this.fb.array([this.shipService.initShip()])
+      deliveryDate: []
     });
+
+
+    this.route.params.subscribe(params => {
+      if (params['orderId']) {
+        this.orderId = params['orderId']
+      }
+    });
+
   }
 
   ngOnInit() {
   }
 
+  saveDeliveryNote() {
+    let deliveryNoteDTO: DeliveryNoteDTO = this.deliveryNoteForm.value;
+    deliveryNoteDTO.purchaseOrderId = this.orderId;
+    this.deliveryNoteService.saveDeliveryNote(deliveryNoteDTO).subscribe(result =>{
+      alert("delivery note saved");
+    });
+  }
 }

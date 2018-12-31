@@ -1,0 +1,21 @@
+<p>Bills for customer : <b>{{(customer$ |async)?.name}}</b> </p>
+
+<table style="width:100%" border="1">
+  <tr>
+    <th>Purchase order Id</th>
+    <th>Deadline</th>
+    <th>Discount</th>
+    <th>Creation date</th>
+    <th>action</th>
+  </tr>
+  <tr *ngFor="let bill of billList$ | async">
+    <td>{{bill.purchaseOrder.id}}</td>
+    <td>{{bill.deadLine | date}}</td>
+    <td>{{bill.discount}}</td>
+    <td>{{bill.creationDate | date}}</td>
+    <td>
+      <button type="button" (click)="generateBill(bill)">generate bill</button>
+      <button type="button" (click)="sendBillByEmail(bill)">send bill by email (pdf)</button>
+    </td>
+  </tr>
+</table>

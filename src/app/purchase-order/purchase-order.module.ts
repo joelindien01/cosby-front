@@ -5,6 +5,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {PurchaseOrderService} from "./purchase-order.service";
 import { ListPurchaseOrdersComponent } from './list-purchase-orders/list-purchase-orders.component';
+import {MaterialModule} from "../common/material/material.module";
 
 @NgModule({
   declarations: [AddPurchaseOrderComponent, ListPurchaseOrdersComponent],
@@ -14,7 +15,8 @@ import { ListPurchaseOrdersComponent } from './list-purchase-orders/list-purchas
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MaterialModule
   ]
 })
 export class PurchaseOrderModule { }

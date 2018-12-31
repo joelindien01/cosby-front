@@ -1,3 +1,6 @@
+<h2>Generate delivery note</h2>
 <form [formGroup]="deliveryNoteForm">
-
+  <label>Delivery date</label>
+  <input formControlName="deliveryDate" type="date" name="deliveryDate"/>
+  <button type="button" (click)="saveDeliveryNote()">save delivery note</button>
 </form>
