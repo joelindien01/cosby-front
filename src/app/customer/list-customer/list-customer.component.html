@@ -1,15 +1,18 @@
-<div class="row">
-  <div class="col-2 page-header">
-    <a routerLink="/customers/add" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add customer</a>
+<div class="row page-header">
+  <div class="col-2">
+    <h2>Customers </h2>
+  </div>
+  <div class="col-10 text-right">
+    <button routerLink="/customers/add" type="button" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add customer</button>
   </div>
 </div>
 
 <div class="row">
   <div class="col-12">
-    <table style="width:100%" border="1">
+    <!--<table style="width:100%" border="1">
       <tr>
         <th>Customer name</th>
-        <th>location country</th>
+        <th>Location country</th>
         <th>actions</th>
       </tr>
       <tr *ngFor='let customer of customerList$ | async'>
@@ -23,6 +26,10 @@
         </td>
       </tr>
     </table>
+-->
+    <ng2-smart-table [settings]="settings"
+                     (custom)="onCustom($event)"
+                     [source]="customerList$ | async"></ng2-smart-table>
   </div>
 </div>
 

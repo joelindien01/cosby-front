@@ -7,4 +7,14 @@ nav {
     margin-bottom: 10px !important;
   }
 
+  a :hover, a :-webkit-any-link {
+    text-decoration: none !important;
+  }
+
+  & .space-bottom {
+    margin-bottom: 10px !important;
+  }
+
+
+
 }

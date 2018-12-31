@@ -13,6 +13,9 @@ import {EmailAddressService} from "./email-address.service";
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus';
+import {Ng2SmartTableModule} from 'ng2-smart-table';
+import {MaterialModule} from './material/material.module';
+import {faMinus} from '@fortawesome/free-solid-svg-icons/faMinus';
 
 @NgModule({
   declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent],
@@ -21,14 +24,17 @@ import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    Ng2SmartTableModule,
+    MaterialModule
   ],
-  exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule],
+  exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule],
   providers: [ConfigService, AddressService, ShipService, EmailAddressService]
 })
 export class CosbyCommonModule {
 
   constructor() {
     library.add(faPlus);
+    library.add(faMinus);
   }
 }
