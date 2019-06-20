@@ -43,13 +43,6 @@ export class AddPurchaseOrderComponent implements OnInit {
               private purchaseOrderService: PurchaseOrderService,
               private productService: ProductService,
               private route: ActivatedRoute) {
-    let customerId;
-    this.route.params.subscribe(params => {
-      console.log(params);
-      if (params['customerId']) {
-        customerId = params['customerId']
-      }
-    });
 
     const routeParams$ = this.route.params;
     this.currentCustomer$ = routeParams$.pipe(
@@ -78,10 +71,12 @@ export class AddPurchaseOrderComponent implements OnInit {
       payMeans: "",
       payStatus: ""
     });
-    this.purchaseOrder = {id: null, customer: null, deliveryInformation: null, itemList: [] }
+
   }
 
   ngOnInit() {
+    this.purchaseOrder = new PurchaseOrder();
+    this.purchaseOrder.itemList = [];
   }
 
   findProductByName() {

@@ -21,19 +21,30 @@ import {AddDeliveryNoteComponent} from "./delivery-note/add-delivery-note/add-de
 import {ListDeliveryNoteComponent} from "./delivery-note/list-delivery-note/list-delivery-note.component";
 import {MaterialModule} from "./common/material/material.module";
 import { HomePageComponent } from './home-page/home-page.component';
+import {ListProductComponent} from "./product/list-product/list-product.component";
+import {ViewCustomerComponent} from "./customer/view-customer/view-customer.component";
+import {ViewPurchaseOrderComponent} from "./purchase-order/view-purchase-order/view-purchase-order.component";
+import {ViewDeliveryNoteComponent} from "./delivery-note/view-delivery-note/view-delivery-note.component";
+import {ViewBillComponent} from "./bill/view-bill/view-bill.component";
+import {FileSaverModule} from "ngx-filesaver";
 
 const appRoutes: Routes = [
   { path: 'customers/add', component: AddCustomerComponent },
   { path: 'delivery-notes/add', component: AddDeliveryNoteComponent },
   { path: 'delivery-notes', component: ListDeliveryNoteComponent },
+  { path: 'delivery-notes/:deliveryNoteId', component: ViewDeliveryNoteComponent },
   { path: 'customers', component: ListCustomerComponent },
+  { path: 'customer', component: ViewCustomerComponent },
   { path: 'product', component: AddProductComponent },
+  { path: 'products', component: ListProductComponent },
   { path: 'bills/add', component: AddBillComponent },
   { path: 'bills', component: ListBillComponent },
-  { path: 'purchase-order/:customerId', component: AddPurchaseOrderComponent },
+  { path: 'bills/:billId', component: ViewBillComponent },
+  { path: 'purchase-order', component: AddPurchaseOrderComponent },
+  { path: 'purchase-order/:orderId', component: ViewPurchaseOrderComponent },
   { path: 'purchase-orders', component: ListPurchaseOrdersComponent },
   { path: '',
-    redirectTo: '/customers',
+    redirectTo: 'customers',
     pathMatch: 'full'
   }
 ];
@@ -53,6 +64,7 @@ const appRoutes: Routes = [
     BillModule,
     DeliveryNoteModule,
     MaterialModule,
+    FileSaverModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only

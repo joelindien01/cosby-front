@@ -1,8 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {PurchaseOrder} from "../PurchaseOrder";
 import {PurchaseOrderService} from "../purchase-order.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
+import {DeliveryInformation} from "../../customer/customer";
+import {Observable} from "rxjs/Rx";
+import {map} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-list-purchase-orders',
@@ -10,30 +12,26 @@ import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
   styleUrls: ['./list-purchase-orders.component.scss']
 })
 export class ListPurchaseOrdersComponent implements OnInit {
-  purchaseOrderList$;
-  customerId: number;
-  displayedColumns: string[] = ['Customer name', 'Order creation date', 'Delivery address', 'Action'];
-  dataSource;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  purchaseOrderList$: Observable<Array<PurchaseOrder>>;
+  ordersTableData$: Observable<Array<OrderTable>>;
+  purchaseOrderList: Array<PurchaseOrder>;
 
 
   constructor(private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
       if (params['customerId']) {
-        this.customerId = params['customerId'];
-        this.purchaseOrderList$ = orderService.getOrderByCustomerId(this.customerId);
+        const customerId = params['customerId'];
+        this.loadOrdersByCustomerId(customerId);
+      } else {
+        this.loadAllOrders();
       }
-
-
+      this.mapOrdersTable();
     });
   }
 
   ngOnInit() {
     this.purchaseOrderList$.subscribe(purchaseOrderList =>  {
-      this.dataSource = new MatTableDataSource<PurchaseOrder>(purchaseOrderList);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.purchaseOrderList = purchaseOrderList;
     });
   }
 
@@ -42,6 +40,44 @@ export class ListPurchaseOrdersComponent implements OnInit {
   }
 
   createBill(orderId: number, customerId: number) {
-    this.router.navigate(['/bill/add', {customerId: customerId, orderId: orderId}]).then();
+    this.router.navigate(['/bills/add', {customerId: customerId, orderId: orderId}]).then();
   }
+
+  private loadOrdersByCustomerId(customerId: number) {
+    this.purchaseOrderList$ = this.orderService.getOrderByCustomerId(customerId);
+
+  }
+
+  private loadAllOrders() {
+    this.purchaseOrderList$ = this.orderService.findAll();
+  }
+
+  private mapOrdersTable() {
+    this.ordersTableData$ = this.purchaseOrderList$
+      .pipe(
+        map( purchaseOrderList => {
+          return purchaseOrderList.map(purchaseOrder => {
+            let orderTable = new OrderTable();
+            orderTable.id = purchaseOrder.id;
+            orderTable.customerName = purchaseOrder.customer.name;
+            orderTable.orderCreationDate = purchaseOrder.creationDate;
+            orderTable.deliveryInformation = purchaseOrder.deliveryInformation;
+            orderTable.customerId = purchaseOrder.customer.id;
+            return orderTable;
+          });
+        })
+      );
+  }
+
+  viewOrder(orderId: number) {
+    this.router.navigateByUrl('/purchase-order/'+ orderId).then();
+  }
+}
+
+export class OrderTable {
+  id: number;
+  customerId: number;
+  orderCreationDate: Date;
+  customerName: string;
+  deliveryInformation: DeliveryInformation;
 }

@@ -1,19 +1,54 @@
-<p>Delivery notes for customer : <b>{{(customer$ |async)?.name}}</b> </p>
+<div class="row">
+  <div class="col-12">
+    <h2>Delivery Notes</h2>
+  </div>
+  <div class="col-12" *ngIf="customer$">
+    <p>Delivery notes for customer : <b>{{(customer$ |async)?.name}}</b></p>
+  </div>
+  <div class="col-12">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Purchase order Id</th>
+        <th>Delivery date</th>
+        <th>Creation date</th>
+        <th class="text-center">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let deliveryNote of deliveryNotesTable$ | async" [shAttachMenu]="deliveryNoteMenu" [shMenuData]="deliveryNote">
+          <td>{{deliveryNote.purchaseOrderId}}</td>
+          <td>{{deliveryNote.deliveryDate | date}}</td>
+          <td>{{deliveryNote.creationDate | date}}</td>
+          <td class="text-center">
+            <button mat-stroked-button class="mr-1" color="primary" (click)="viewDeliveryNote(deliveryNote.deliveryNoteId)"><fa-icon icon="eye"></fa-icon></button>
+            <button mat-stroked-button color="primary" (click)="createBill(deliveryNote.deliveryNoteId)">Create bill</button>
+            <button mat-stroked-button class="mr-1" color="primary" (click)="generateDeliveryNote(deliveryNote.deliveryNoteId)">Generate Delivery Note</button>
+            <button mat-stroked-button class="mr-1" color="primary" (click)="sendBillByEmail(deliveryNote.deliveryNoteId)">Send Delivery Note by Email</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-<table style="width:100%" border="1">
-  <tr>
-    <th>Purchase order Id</th>
-    <th>Delivery date</th>
-    <th>Creation date</th>
-    <th>action</th>
-  </tr>
-  <tr *ngFor="let deliveryNote of deliveryNotes$ | async">
-    <td>{{deliveryNote.purchaseOrder.id}}</td>
-    <td>{{deliveryNote.deliveryDate | date}}</td>
-    <td>{{deliveryNote.creationDate | date}}</td>
-    <td>
-      <button type="button" (click)="generateDeliveryNote(deliveryNote)">generate delivery note</button>
-      <button type="button" (click)="sendBillByEmail(deliveryNote)">send delivery note by email (pdf)</button>
-    </td>
-  </tr>
-</table>
+<sh-context-menu #deliveryNoteMenu>
+  <ng-template shContextMenuItem (click)="viewDeliveryNote($event.data.deliveryNoteId)">
+    <div>View delivery Note</div>
+  </ng-template>
+  <ng-template shContextMenuItem (click)="createBill($event.data.deliveryNoteId, $event.data.customerId)">
+    <div>Create bill</div>
+  </ng-template>
+  <ng-template shContextMenuItem (click)="generateDeliveryNote($event.data.deliveryNoteId)">
+    <div>Generate Delivery Note</div>
+  </ng-template>
+  <ng-template shContextMenuItem (click)="sendBillByEmail($event.data.deliveryNoteId)">
+    <div>Send Delivery Note by Email</div>
+  </ng-template>
+</sh-context-menu>
+
+<!--
+<td>
+  <button type="button" (click)="generateDeliveryNote(deliveryNoteId)">generate delivery note</button>
+  <button type="button" (click)="sendBillByEmail(deliveryNoteId)">send delivery note by email (pdf)</button>
+</td>-->

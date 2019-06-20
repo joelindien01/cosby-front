@@ -1,21 +1,53 @@
-<p>Bills for customer : <b>{{(customer$ |async)?.name}}</b> </p>
+<script src="../../product/product.ts"></script>
+<div class="row">
+  <div class="col-12">
+    <h2>Bills</h2>
+  </div>
+  <div class="col-12" *ngIf="customer$">
+    <p>Bills for customer : <b>{{(customer$ |async)?.name}}</b> </p>
+  </div>
 
-<table style="width:100%" border="1">
-  <tr>
-    <th>Purchase order Id</th>
-    <th>Deadline</th>
-    <th>Discount</th>
-    <th>Creation date</th>
-    <th>action</th>
-  </tr>
-  <tr *ngFor="let bill of billList$ | async">
-    <td>{{bill.purchaseOrder.id}}</td>
-    <td>{{bill.deadLine | date}}</td>
-    <td>{{bill.discount}}</td>
-    <td>{{bill.creationDate | date}}</td>
-    <td>
-      <button type="button" (click)="generateBill(bill)">generate bill</button>
-      <button type="button" (click)="sendBillByEmail(bill)">send bill by email (pdf)</button>
-    </td>
-  </tr>
-</table>
+
+  <div class="col-12">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Bill Id</th>
+          <th>Purchase order Id</th>
+          <th>Delivery note Id</th>
+          <th>Deadline</th>
+          <th>Discount</th>
+          <th>Creation date</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let bill of billTable$ | async" [shAttachMenu]="billMenu" [shMenuData]="bill">
+          <td>{{bill.billId}}</td>
+          <td>{{bill.purchaseOrderId}}</td>
+          <td>{{bill.deliveryNoteId}}</td>
+          <td>{{bill.deadLine | date}}</td>
+          <td>{{bill.discount}} %</td>
+          <td>{{bill.creationDate | date}}</td>
+          <td class="text-center">
+            <button mat-stroked-button color="primary" (click)="viewBill(bill.billId)" class="mr-2 mb-2"><fa-icon icon="eye"></fa-icon></button>
+            <button mat-stroked-button color="primary" (click)="generateBill(bill.billId)" class="mr-2 mb-2">Generate bill</button>
+            <button mat-stroked-button color="primary" (click)="sendBillByEmail(bill.billId)" class="mr-2 mb-2">Send by Email</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<sh-context-menu #billMenu>
+  <ng-template shContextMenuItem (click)="viewBill($event.data.billId)">
+    <div>View bill</div>
+  </ng-template>
+  <ng-template shContextMenuItem (click)="generateBill($event.data.billId)">
+    <div>Generate bill</div>
+  </ng-template>
+  <ng-template shContextMenuItem (click)="sendBillByEmail($event.data.billId)">
+    <div>Send bill by Email</div>
+  </ng-template>
+</sh-context-menu>

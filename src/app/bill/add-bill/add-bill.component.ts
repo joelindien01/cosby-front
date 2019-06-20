@@ -24,11 +24,11 @@ export class AddBillComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       console.log(params);
-      if (params['orderId']) {
-        this.orderId = params['orderId']
+      if (params['deliveryNoteId']) {
+        this.orderId = params['deliveryNoteId']
       }
       if (params['customerId']) {
-        this.customerId = params['customerId']
+        this.customerId = params['customerId'];
       }
     });
 
@@ -41,7 +41,7 @@ export class AddBillComponent implements OnInit {
 
   saveBill() {
     let bill: BillDTO = <BillDTO> this.billForm.value;
-    bill.purchaseOrderId = this.orderId;
+    bill.deliveryNoteId = this.orderId;
     this.billService.saveBill(bill).subscribe(result => {
       alert("bill saved");
     });

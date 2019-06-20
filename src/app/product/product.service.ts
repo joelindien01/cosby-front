@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Product} from "./product";
 import {Observable} from "rxjs/index";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
+
+  baseUrl="http://localhost:8081/product/";
 
   constructor(private httpClient: HttpClient) {
 
@@ -14,7 +17,7 @@ export class ProductService {
 
   saveProduct(product: Product) {
     console.log(product);
-    return this.httpClient.post("http://localhost:8080/product/", product);
+    return this.httpClient.post(this.baseUrl, product);
   }
 
   findProductByName(productToFound: string): Observable<Product[]> {
@@ -24,6 +27,15 @@ export class ProductService {
       }
     });
 
-    return this.httpClient.get<Product[]>("http://localhost:8080/product/",{params: params});
+    return this.httpClient.get<Product[]>(this.baseUrl,{params: params});
+  }
+
+  findAll() {
+    return this.httpClient.get<Product[]>(this.baseUrl);
+  }
+
+  findProductById(productId: number): Observable<Product> {
+
+    return this.httpClient.get<Product>(this.baseUrl+productId);
   }
 }

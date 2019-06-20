@@ -7,6 +7,7 @@ import {ShipService} from "../../common/ship.service";
 import {ContactService} from "../../common/contact.service";
 import {deepEqual} from "assert";
 import {Address} from "../customer";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -23,14 +24,16 @@ export class AddCustomerComponent implements OnInit {
               private addressService: AddressService,
               private customerService: CustomerService,
               private shipService: ShipService,
-              private contactService: ContactService) {
+              private contactService: ContactService,
+              private router: Router) {
     this.customerForm = this.fb.group({
       name: ['',Validators.required],
       useLocationAddress: [false],
       contacts: this.fb.array([this.contactService.initForm()]),
       billingAddress: this.addressService.initAddress(),
       location: this.addressService.initAddress(),
-      deliveryInformations: this.fb.array([this.shipService.initShip()])
+      deliveryInformations: this.fb.array([this.shipService.initShip()]),
+      addAnotherCustomer: [true]
     });
     this.onUseLocationAddressChanges();
   }
@@ -44,8 +47,14 @@ export class AddCustomerComponent implements OnInit {
   saveCustomer() {
     let customer = this.customerForm.value;
     customer.contactEmailAddresses = [{email:this.customerForm.value.contactEmailAddresses}] ;
-    this.customerService.addCustomer(customer).subscribe(data => {
+    const addAnotherCustomer = customer.addAnotherCustomer;
+    this.customerService.addCustomer(customer).subscribe(addedCustomer => {
       alert("customer added");
+      if(addAnotherCustomer) {
+        this.customerForm.reset();
+      } else {
+        this.router.navigate(['/customer', {customerId: addedCustomer.id}]).then();
+      }
     });
   }
 

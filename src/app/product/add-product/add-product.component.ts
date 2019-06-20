@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 import {ProductService} from "../product.service";
+import {ActivatedRoute} from "@angular/router";
+import {Price, Product} from "../product";
 
 @Component({
   selector: 'app-add-product',
@@ -11,42 +13,87 @@ export class AddProductComponent implements OnInit {
 
   productForm: FormGroup;
   priceModel: any;
-  constructor(private fb: FormBuilder, private productService: ProductService) {
-    this.priceModel = this.initPriceForm();
-    this.productForm = this.fb.group({
-      name: [''],
-      prices: this.fb.array([this.priceModel])
-    });
+  private isEditMode: boolean;
+  private editedProduct: Product;
+  constructor(private fb: FormBuilder,
+              private productService: ProductService,
+              private activatedRoute: ActivatedRoute) {
 
+    this.activatedRoute.params.subscribe(routeParams => {
+      const productId = routeParams['productId'];
+      if(productId) {
+        this.isEditMode = true;
+         this.editProductWithName(productId);
+      }else {
+        this.initForm();
+      }
+    });
 
   }
 
   ngOnInit() {
+    this.productForm = this.fb.group({name: '', prices:this.fb.array([this.initPriceForm()])});
   }
 
   addPrice() {
     // add address to the list
-    const control = <FormArray>this.productForm.controls['prices'];
+    let control: FormArray = <FormArray>this.productForm.controls['prices'];
     control.push(this.initPriceForm());
   }
 
   removePrice(i: number) {
     // remove address from the list
-    const control = <FormArray>this.productForm.controls['prices'];
+    let control = <FormArray>this.productForm.controls['prices'];
     control.removeAt(i);
   }
 
-  private initPriceForm() {
-    return this.fb.group({
-      label: [''],
-      value: ['']
-    });
+  private initPriceForm(prices?: Array<Price>) {
+    let formModel;
+    if (prices) {
+      formModel = prices.map(price => this.fb.group({
+        id: price.id,
+        label: [price.label],
+        value: [price.value]
+      }));
+    } else {
+      formModel = this.fb.group({
+        label: [''],
+        value: ['']
+      });
+    }
+    return formModel;
   }
 
   saveProduct() {
+    let product = this.productForm.value;
+    if (this.isEditMode) product.id = this.editedProduct.id;
     this.productService
-      .saveProduct(this.productForm.value)
+      .saveProduct(product)
       .subscribe(result=> alert('product added'));
   }
 
+  private editProductWithName(productId: any) {
+   this.productService.findProductById(productId).subscribe(product => {
+     this.editedProduct = product;
+     this.initForm(product);
+   });
+  }
+
+  private initForm(product?: Product) {
+
+    this.priceModel = product ? this.initPriceForm(product.prices): this.initPriceForm();
+    //TODO to be properly refactored
+    if(product) {
+      this.productForm = this.fb.group({
+        name: [product.name],
+        prices: this.fb.array(this.priceModel)
+      });
+
+    } else {
+      this.productForm = this.fb.group({
+        name: [''],
+        prices: this.fb.array([this.priceModel])
+      });
+    }
+  }
 }

@@ -32,7 +32,11 @@
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "./node_modules/jszip-utils/dist/jszip-utils.js",
+              "./node_modules/docxtemplater/build/docxtemplater.js",
+              "./node_modules/jszip/dist/jszip.js",
+              "./node_modules/angular-expressions/lib/main.js"
             ]
           },
           "configurations": {

@@ -4,8 +4,10 @@ import {Product} from "../product/product";
 export class PurchaseOrder {
   id: number;
   customer: Customer;
+  creationDate: Date;
   deliveryInformation: DeliveryInformation;
   itemList: Item[];
+  totalAmount: number;
 }
 
 export class Item {
@@ -16,7 +18,13 @@ export class Item {
   unit: number;
   amount: number;
 }
-
+export class ItemDto {
+  productName: string;
+  description: string;
+  quantity: number;
+  unit: number;
+  amount: number;
+}
 export class PurchaseOrderDTO {
 
   order: PurchaseOrder;
@@ -38,4 +46,6 @@ export class DeliveryNote {
 export class DeliveryNoteDTO {
   purchaseOrderId: number;
   deliveryDate: Date;
+  creationDate: Date;
+  id: number;
 }

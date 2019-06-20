@@ -8,9 +8,10 @@ import {CosbyCommonModule} from "../common/cosby-common.module";
 import { ListCustomerComponent } from './list-customer/list-customer.component';
 import {MaterialModule} from '../common/material/material.module';
 import {RouterModule} from '@angular/router';
+import { ViewCustomerComponent } from './view-customer/view-customer.component';
 
 @NgModule({
-  declarations: [AddCustomerComponent, ListCustomerComponent],
+  declarations: [AddCustomerComponent, ListCustomerComponent, ViewCustomerComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

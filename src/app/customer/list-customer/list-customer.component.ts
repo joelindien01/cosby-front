@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CustomerService} from '../customer.service';
-import {Address, Customer, EmailAddress} from '../customer';
+import {Customer} from '../customer';
 import {Router} from "@angular/router";
 import {Observable} from 'rxjs';
+import {map} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-list-customer',
@@ -12,51 +13,23 @@ import {Observable} from 'rxjs';
 export class ListCustomerComponent implements OnInit {
 
   customerList$: Observable<Array<Customer>>;
-  settings = {
-    hideSubHeader: true,
-    actions: {
-      add: false,
-      position: "right",
-      custom: [
-        {
-          name: 'createPurchaseOrder',
-          title: 'Create purchase order ',
-        },
-        {
-          name: 'goToPurchaseOrdersPage',
-          title: 'Purchase orders ',
-        },
-        {
-          name: 'goToBillsPage',
-          title: 'Bills ',
-        },
-        {
-          name: 'goToDeliveryNotePage',
-          title: 'Delivery notes',
-        },
-      ],
-    },
-    columns: {
-      customerName: {
-        title: 'Customer name',
-        editable: false
-      },
-      locationCountry: {
-        title: 'Location country',
-        editable: false
-      }
-    }
-  };
+  customerTableData$: Observable<Array<CustomerTable>>;
+  customerList: Array<Customer>;
+
 
   constructor(private customerService: CustomerService, private router: Router) {
     this.customerList$ = this.customerService.getCustomers();
+    this.customerTableData$ = this.customerList$.pipe(
+      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.location.country)))
+    );
+    this.customerList$.subscribe(customerList => this.customerList = customerList);
   }
 
   ngOnInit() {
   }
 
   createPurchaseOrder(customerId: number) {
-    this.router.navigateByUrl('/purchase-order/' + customerId).then();
+    this.router.navigate(['/purchase-order', {customerId: customerId}]).then();
   }
 
   goToPurchaseOrdersPage(customerId: number) {
@@ -71,23 +44,19 @@ export class ListCustomerComponent implements OnInit {
     this.router.navigate(['/delivery-notes', {customerId: customerId}]).then();
   }
 
-  onCustom($event: any) {
-    const customer: Customer = $event.data;
-    switch ($event.action) {
-      case "createPurchaseOrder":
-        this.createPurchaseOrder(customer.id);
-        break;
-      case "goToPurchaseOrdersPage":
-        this.goToPurchaseOrdersPage(customer.id);
-        break;
-      case "goToBillsPage":
-        this.goToBillsPage(customer.id);
-        break;
-      case "goToDeliveryNotePage":
-        this.goToDeliveryNotePage(customer.id);
-        break;
-      default:
-        console.log("unsupported action");
-    }
+  goToCustomerViewInfo(customerId: number) {
+    this.router.navigate(['/customer', {customerId: customerId}]).then();
+  }
+}
+
+export class CustomerTable {
+  id;
+  name;
+  locationCountry;
+
+  constructor(id, name, locationCountry) {
+    this.id = id;
+    this.name = name;
+    this.locationCountry = locationCountry;
   }
 }

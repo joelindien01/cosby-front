@@ -16,9 +16,17 @@ import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus';
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {MaterialModule} from './material/material.module';
 import {faMinus} from '@fortawesome/free-solid-svg-icons/faMinus';
+import {ShContextMenuModule} from "ng2-right-click-menu";
+import {faEdit} from "@fortawesome/free-solid-svg-icons/faEdit";
+import { ViewAddressComponent } from './view-address/view-address.component';
+import { ViewContactComponent } from './view-contact/view-contact.component';
+import { ViewShipComponent } from './view-ship/view-ship.component';
+import {faPen} from "@fortawesome/free-solid-svg-icons/faPen";
+import {faEye} from "@fortawesome/free-solid-svg-icons";
+import {DocGeneratorService} from "./doc-generator.service";
 
 @NgModule({
-  declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent],
+  declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent, ViewAddressComponent, ViewContactComponent, ViewShipComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -26,15 +34,19 @@ import {faMinus} from '@fortawesome/free-solid-svg-icons/faMinus';
     FormsModule,
     FontAwesomeModule,
     Ng2SmartTableModule,
-    MaterialModule
+    MaterialModule,
+    ShContextMenuModule,
   ],
-  exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule],
-  providers: [ConfigService, AddressService, ShipService, EmailAddressService]
+  exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule, ShContextMenuModule, ViewAddressComponent, ViewContactComponent, ViewShipComponent],
+  providers: [ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService]
 })
 export class CosbyCommonModule {
 
   constructor() {
     library.add(faPlus);
     library.add(faMinus);
+    library.add(faEdit);
+    library.add(faPen);
+    library.add(faEye)
   }
 }

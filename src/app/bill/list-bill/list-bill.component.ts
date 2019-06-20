@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {BillService} from "../bill.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs/index";
-import {Bill} from "../bill";
+import {Bill, BillDTO} from "../bill";
 import {map} from "rxjs/internal/operators";
 import {Customer} from "../../customer/customer";
 
@@ -14,33 +14,76 @@ import {Customer} from "../../customer/customer";
 export class ListBillComponent implements OnInit {
   private billList$: Observable<Array<Bill>>;
   private customer$: Observable<Customer>;
+  billTable$: Observable<Array<BillTable>>;
+  private customerId: number;
 
-  constructor(private billService: BillService, private route: ActivatedRoute) {
+  constructor(private billService: BillService,
+              private route: ActivatedRoute,
+              private router: Router) {
     this.route.params.subscribe(params => {
       if (params['customerId']) {
         const customerId = params['customerId'];
-        this.billList$ = billService.getBillsByCustomerId(customerId);
+        this.loadBillsByCustomerId(customerId);
+
+      } else {
+        this.loadAllBills();
       }
     });
-    this.customer$ = this.billList$.pipe(
-      map(billList => {
-        if (billList && billList.length > 0) {
-          return billList[0].purchaseOrder.customer;
-        }
-      })
-    )
+    this.mapBillTable();
   }
 
   ngOnInit() {
   }
 
-  generateBill(bill: Bill) {
-    this.billService.generateBill(bill.id).subscribe(result => {
-      alert("bill generated");
-    });
+  generateBill(billId: number) {
+    this.billService.generateBill(billId);
   }
 
-  sendBillByEmail(bill: Bill) {
-    this.billService.sendBillByEmail(bill.id)
+  sendBillByEmail(billId: number) {
+    this.billService.sendBillByEmail(billId);
   }
+
+  private loadBillsByCustomerId(customerId: number) {
+    this.billList$ = this.billService.getBillsByCustomerId(customerId);
+    this.customer$ = this.billList$.pipe(
+      map(billList => billList[0].purchaseOrder.customer)
+    );
+
+  }
+
+  private loadAllBills() {
+    this.billList$ = this.billService.findAll();
+  }
+
+  private mapBillTable() {
+    this.billTable$ = this.billList$.pipe(
+      map(billList => {
+        return billList.map( bill => {
+          let billTable = new BillTable();
+          billTable.billId = bill.id;
+          billTable.deliveryNoteId = bill.deliveryNote.id;
+          billTable.creationDate = bill.creationDate;
+          billTable.deadLine = bill.deadLine;
+          billTable.discount = bill.discount;
+          billTable.purchaseOrderId = bill.deliveryNote.purchaseOrder.id;
+
+          return billTable;
+        })
+      })
+    )
+  }
+
+  viewBill(billId: number) {
+    this.router.navigateByUrl("/bills/"+billId).then();
+  }
+
+}
+
+export class BillTable {
+  billId;
+  purchaseOrderId;
+  deliveryNoteId;
+  deadLine;
+  discount;
+  creationDate;
 }

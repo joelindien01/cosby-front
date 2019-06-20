@@ -6,17 +6,19 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {PurchaseOrderService} from "./purchase-order.service";
 import { ListPurchaseOrdersComponent } from './list-purchase-orders/list-purchase-orders.component';
 import {MaterialModule} from "../common/material/material.module";
+import {CosbyCommonModule} from "../common/cosby-common.module";
+import { ViewPurchaseOrderComponent } from './view-purchase-order/view-purchase-order.component';
 
 @NgModule({
-  declarations: [AddPurchaseOrderComponent, ListPurchaseOrdersComponent],
-  exports: [AddPurchaseOrderComponent],
+  declarations: [AddPurchaseOrderComponent, ListPurchaseOrdersComponent, ViewPurchaseOrderComponent],
+  exports: [AddPurchaseOrderComponent, ListPurchaseOrdersComponent, ViewPurchaseOrderComponent],
   providers: [PurchaseOrderService],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    MaterialModule
+    CosbyCommonModule
   ]
 })
 export class PurchaseOrderModule { }

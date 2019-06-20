@@ -8,14 +8,14 @@ import {Observable} from "rxjs/index";
 })
 export class CustomerService {
 
-  baseUrl="http://localhost:8080/customers/";
+  baseUrl="http://localhost:8081/customers/";
 
   public customerList: Array<Customer>;
   constructor(private http: HttpClient) { }
 
-  addCustomer(customer:Customer) {
+  addCustomer(customer:Customer): Observable<Customer> {
     console.log(customer);
-    return this.http.post(this.baseUrl,customer);
+    return this.http.post<Customer>(this.baseUrl,customer);
   }
 
   getCustomers(): Observable<Array<Customer>> {

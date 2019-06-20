@@ -14,7 +14,8 @@ export class ShipService {
       vessel: [''],
       imo: [''],
       flag: [''],
-      master: ['']
+      master: [''],
+      port: ['']
     });
   }
 }

@@ -10,8 +10,10 @@ export class DeliveryNoteService {
 
   constructor(private httpClient: HttpClient) { }
 
+  baseUrl="http://localhost:8081/delivery-note/";
+
   saveDeliveryNote(deliveryNoteDTO: DeliveryNoteDTO): Observable<any> {
-    return this.httpClient.post("http://localhost:8080/delivery-note", deliveryNoteDTO);
+    return this.httpClient.post(this.baseUrl, deliveryNoteDTO);
   }
 
   getDeliveryNotesByCustomerId(customerId: number): Observable<Array<DeliveryNote>> {
@@ -20,7 +22,7 @@ export class DeliveryNoteService {
         customerId: customerId.toString()
       }
     });
-    return this.httpClient.get<Array<DeliveryNote>>("http://localhost:8080/delivery-note/search", {params: params});
+    return this.httpClient.get<Array<DeliveryNote>>(this.baseUrl+"search", {params: params});
   }
 
   generateDeliveryNote(deliveryNoteId: number) {
@@ -29,10 +31,20 @@ export class DeliveryNoteService {
         deliveryNoteId: deliveryNoteId.toString()
       }
     });
-    return this.httpClient.get<Array<DeliveryNote>>("http://localhost:8080/delivery-note/generate", {params: params});
+    return this.httpClient.get<Array<DeliveryNote>>(this.baseUrl+"generate", {params: params});
   }
 
   sendDeliveryNoteByEmail(deliveryNoteId: number) {
 
   }
+
+  findAll() {
+    return this.httpClient.get<Array<DeliveryNote>>(this.baseUrl+"search");
+  }
+
+  findById(deliveryNoteId: number) {
+    return this.httpClient.get<DeliveryNoteDTO>(this.baseUrl+deliveryNoteId);
+  }
 }
+
+

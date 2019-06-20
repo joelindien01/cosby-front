@@ -1,11 +1,31 @@
-<h2>Generate bill</h2>
-<form [formGroup]="billForm">
-  <label>Payment DeadLine</label>
-  <input formControlName="deadLine" type="date" name="deadLine"/>
-  <p>Would you like to apply a discount? <input formControlName="applyDiscount" type="checkbox"/></p>
-  <div *ngIf="billForm.get('applyDiscount').value">
-    <label>discount (%)</label>
-    <input formControlName="discount" type="number" name="discount"/>
+<div class="row">
+  <div class="col-12">
+    <h2>Generate bill</h2>
   </div>
-  <button type="button" (click)="saveBill()">save bill</button>
-</form>
+</div>
+<div class="row">
+  <div class="col-12">
+    <form [formGroup]="billForm">
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field>
+            <input matInput placeholder="Payment DeadLine" [matDatepicker]="picker1" formControlName="deadLine">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-12">
+          <p>Would you like to apply a discount? <input formControlName="applyDiscount" type="checkbox"/></p>
+        </div>
+        <div class="col-12" *ngIf="billForm.get('applyDiscount').value">
+          <mat-form-field>
+            <input matInput placeholder="discount (%)" formControlName="discount" type="number" name="discount"/>
+          </mat-form-field>
+        </div>
+        <div class="col-12">
+          <button mat-flat-button color="primary" type="button" (click)="saveBill()">save bill</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

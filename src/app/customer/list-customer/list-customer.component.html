@@ -3,33 +3,52 @@
     <h2>Customers </h2>
   </div>
   <div class="col-10 text-right">
-    <button routerLink="/customers/add" type="button" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add customer</button>
+    <button type="button" routerLink="/customers/add" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add customer</button>
   </div>
 </div>
 
 <div class="row">
   <div class="col-12">
-    <!--<table style="width:100%" border="1">
+    <table class="table table-striped">
+      <thead>
       <tr>
         <th>Customer name</th>
         <th>Location country</th>
-        <th>actions</th>
+        <th class="text-center">Actions</th>
       </tr>
-      <tr *ngFor='let customer of customerList$ | async'>
+      </thead>
+      <tbody>
+      <tr *ngFor='let customer of customerTableData$ | async' [shAttachMenu]="customerListMenu" [shMenuData]="customer">
         <td>{{customer.name}}</td>
-        <td>{{customer.location.country}}</td>
-        <td>
-          <button type="button" (click)="createPurchaseOrder(customer.id)">Create purchase order</button>
-          <button type="button" (click)="goToPurchaseOrdersPage(customer.id)">Purchase orders</button>
-          <button type="button" (click)="goToBillsPage(customer.id)">Bills</button>
-          <button type="button" (click)="goToDeliveryNotePage(customer.id)">Delivery notes</button>
+        <td>{{customer.locationCountry}}</td>
+        <td class="text-center">
+          <button mat-stroked-button color="primary" class="mr-1" (click)="goToCustomerViewInfo(customer.id)"><fa-icon icon="eye"></fa-icon></button>
+          <button mat-stroked-button color="primary" class="mr-1" (click)="createPurchaseOrder(customer.id)">create purchase order</button>
+          <button mat-stroked-button color="primary" class="mr-1" (click)="goToPurchaseOrdersPage(customer.id)">purchase orders</button>
+          <button mat-stroked-button color="primary" class="mr-1" (click)="goToBillsPage(customer.id)">bills</button>
+          <button mat-stroked-button color="primary" (click)="goToDeliveryNotePage(customer.id)">delivery notes</button>
         </td>
       </tr>
+      </tbody>
     </table>
--->
-    <ng2-smart-table [settings]="settings"
-                     (custom)="onCustom($event)"
-                     [source]="customerList$ | async"></ng2-smart-table>
+
   </div>
 </div>
 
+<sh-context-menu #customerListMenu>
+  <ng-template shContextMenuItem let-data (click)="goToCustomerViewInfo($event.data.id)">
+    <div>view {{data.name}} info</div>
+  </ng-template>
+  <ng-template shContextMenuItem (click)="createPurchaseOrder($event.data.id)">
+    <div>Create purchase order</div>
+  </ng-template>
+  <ng-template shContextMenuItem (click)="goToPurchaseOrdersPage($event.data.id)">
+    <div>Purchase orders</div>
+  </ng-template>
+  <ng-template shContextMenuItem (click)="goToBillsPage($event.data.id)">
+    <div>Bills</div>
+  </ng-template>
+  <ng-template shContextMenuItem (click)="goToDeliveryNotePage($event.data.id)">
+    <div>Delivery notes</div>
+  </ng-template>
+</sh-context-menu>

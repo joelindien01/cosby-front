@@ -1,19 +1,21 @@
-import { Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {Bill, BillDTO} from "./bill";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs/index";
+import {DocGeneratorService, FileGeneratorHelper} from "../common/doc-generator.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BillService {
 
-  constructor(private httpClient: HttpClient) {
+  baseUrl="http://localhost:8081/bill/";
 
-  }
+  constructor(private httpClient: HttpClient,
+              private docGenerator: DocGeneratorService) {}
 
   saveBill(bill: BillDTO) {
-    return this.httpClient.post("http://localhost:8080/bill", bill);
+    return this.httpClient.post(this.baseUrl, bill);
   }
 
   getBillsByCustomerId(customerId: number): Observable<Array<Bill>> {
@@ -22,7 +24,7 @@ export class BillService {
         customerId: customerId.toString()
       }
     });
-    return this.httpClient.get<Array<Bill>>("http://localhost:8080/bill/search", {params: params});
+    return this.httpClient.get<Array<Bill>>(this.baseUrl+"search", {params: params});
   }
 
   generateBill(billId: number) {
@@ -31,10 +33,27 @@ export class BillService {
         billId: billId.toString()
       }
     });
-    return this.httpClient.get<Array<Bill>>("http://localhost:8080/bill/generate", {params: params});
+    this.httpClient
+      .get<Bill>(this.baseUrl+"generate", {params: params})
+      .subscribe(billData => {
+        let docGeneratorHelper = new FileGeneratorHelper();
+        docGeneratorHelper.outputName = "invoice";
+        docGeneratorHelper.templateName = "invoice";
+        docGeneratorHelper.data = billData;
+        this.docGenerator.generateFile(docGeneratorHelper);
+    });
   }
 
   sendBillByEmail(billId: number) {
 
   }
+
+  findAll() {
+    return this.httpClient.get<Array<Bill>>(this.baseUrl+"search");
+  }
+
+  findBillById(billId: number): Observable<BillDTO> {
+    return this.httpClient.get<BillDTO>(this.baseUrl+billId);
+  }
+
 }
