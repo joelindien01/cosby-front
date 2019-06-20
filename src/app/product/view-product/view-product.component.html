@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-12">
+    <h5>Product Name: {{ product.name }}</h5>
+  </div>
+  <div class="col-12">
+    <h6>Prices</h6>
+  </div>
+  <div class="col-12">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <td>Label</td>
+        <td>Value</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let price of product.prices">
+        <td>{{ price.label }}</td>
+        <td>{{ price.value }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

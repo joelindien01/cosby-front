@@ -1,0 +1,89 @@
+<div class="row">
+
+  <div class="col-12 mb-3">
+    <div class="row">
+      <div class="col-3">
+        <h3>Customer</h3>
+      </div>
+      <div class="col-9 text-right">
+        <button mat-flat-button color="primary" class="mr-1" (click)="createPurchaseOrder()">create purchase order</button>
+        <button mat-flat-button color="primary" class="mr-1" (click)="goToPurchaseOrdersPage()">purchase orders</button>
+        <button mat-flat-button color="primary" class="mr-1" (click)="goToBillsPage()">bills</button>
+        <button mat-flat-button color="primary" (click)="goToDeliveryNotePage()">delivery notes</button>
+      </div>
+    </div>
+    <p>Name: {{(customer$ |async)?.name}} <span class="edit-name" (click)="editName()">(edit name)</span></p>
+
+  </div>
+  <div class="col-12 mb-3">
+    <h4>Contacts</h4>
+    <div class="row">
+      <div class="col-3 mr-3" *ngFor="let contact of (customer$ |async)?.contacts">
+        <app-view-contact [contact]="contact"></app-view-contact>
+      </div>
+      <div class="col-3">
+        <div (click)="addAddress()" class="card add-card-button add-contact" style="width: 18rem;">
+          <div class="card-body text-center vertical-align">
+            <fa-icon icon="plus"></fa-icon>
+            <p>Add contact</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 mb-3">
+    <h4>Delivery Informations</h4>
+    <div class="row">
+      <div class="col-3 mr-3" *ngFor="let ship of (customer$ |async)?.deliveryInformations, let i=index">
+        <app-view-ship [title]="'Ship '+ i +1" [ship]="ship"></app-view-ship>
+      </div>
+      <div class="col-3">
+        <div (click)="addShip()" class="card add-card-button add-ship" style="width: 18rem;">
+          <div class="card-body text-center vertical-align">
+            <fa-icon icon="plus"></fa-icon>
+            <p>Add ship</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-12 mb-3">
+    <h4>Addresses</h4>
+    <div class="row">
+      <div class="col-3 mr-3">
+        <app-view-address title="Billing Address" [address]="(customer$ |async)?.billingAddress"></app-view-address>
+      </div>
+      <div class="col-3 mr-3">
+        <app-view-address title="Location Address" [address]="(customer$ |async)?.location"></app-view-address>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal fade"
+     id="generic-modal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="generic-modal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button mat-flat-button color="warn" type="button" data-dismiss="modal">Close</button>
+        <button mat-stroked-button color="primary" type="button" data-dismiss="modal" (click)="editSelectedProduct()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-12">
+    <h5>Bill</h5>
+  </div>
+  <div class="col-12">
+    <p>Bill n° {{ (bill$ |async)?.id }}</p>
+    <p>Deadline: {{ (bill$ |async)?.deadLine | date }}</p>
+    <p>Discount: {{ (bill$ |async)?.discount }} %</p>
+    <p>Creation Date: {{ (bill$ |async)?.creationDate | date }}</p>
+  </div>
+  <div class="col-12" *ngIf="deliveryNoteId">
+    <app-view-delivery-note [deliveryNoteId]="deliveryNoteId"></app-view-delivery-note>
+  </div>
+</div>

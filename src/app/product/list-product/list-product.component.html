@@ -1,0 +1,64 @@
+<div class="row">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-6">
+        <h2>Products</h2>
+      </div>
+      <div class="col-6 text-right">
+        <button type="button" routerLink="/product" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add Product</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of productTable$ |async" [shAttachMenu]="productMenu" [shMenuData]="product">
+          <td> {{product.name}}</td>
+          <td class="text-center">
+            <button mat-stroked-button color="primary" class="mr-3" data-toggle="modal" data-target="#productModal" (click)="viewSelectedProduct(product.id)"><fa-icon icon="eye"></fa-icon></button>
+            <button mat-stroked-button color="primary" (click)="editSelectedProduct(product.id)"><fa-icon icon="pen"></fa-icon></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<sh-context-menu #productMenu>
+  <ng-template let-data shContextMenuItem (click)="viewSelectedProduct($event.data.id)">
+    <div data-toggle="modal" data-target="#productModal">View product: {{data.name}}</div>
+  </ng-template>
+</sh-context-menu>
+
+<div class="modal fade"
+     id="productModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="productModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12" *ngIf="selectedProduct">
+              <app-view-product [product]="selectedProduct"></app-view-product>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button mat-flat-button color="warn" type="button" data-dismiss="modal">Close</button>
+        <button mat-stroked-button color="primary" type="button" data-dismiss="modal" (click)="editSelectedProduct()">Edit</button>
+      </div>
+    </div>
+  </div>
+</div>
+

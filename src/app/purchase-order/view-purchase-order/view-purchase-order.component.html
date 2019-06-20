@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-12 mb-3">
+    <div class="row">
+      <div class="col-3">
+        <h4 *ngIf="!title">Purchase Order</h4>
+        <h4 *ngIf="title">{{title}}</h4>
+      </div>
+      <div class="col-9 text-right" *ngIf="!title">
+        <button mat-flat-button color="primary" (click)="createDeliveryNote()" class="mr-3 mb-1">Create delivery note</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <p> Order N° {{(purchaseOrder$|async)?.id}}</p>
+    <p>Created on {{(purchaseOrder$|async)?.creationDate |date }}</p>
+    <p>Payment Status: {{(purchaseOrder$|async)?.paymentInformation.paymentStatus }}</p>
+    <p>Payment Method: {{(purchaseOrder$|async)?.paymentInformation.paymentMethod }}</p>
+  </div>
+
+  <div class="col-3 mr-5">
+    <app-view-ship title="Delivery Information" [ship]="(purchaseOrder$|async)?.deliveryInformation"></app-view-ship>
+  </div>
+  <div class="col-7">
+    <h4>Items</h4>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>Product Name</th>
+        <th class="text-right">Description</th>
+        <th class="text-right">Quantity</th>
+        <th class="text-right">Unit</th>
+        <th class="text-right">Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of (items$ |async)">
+        <td>{{ item.productName }}</td>
+        <td class="text-right">{{ item.description }}</td>
+        <td class="text-right">{{ item.quantity }}</td>
+        <td class="text-right">{{ item.unit }}</td>
+        <td class="text-right">{{ item.amount }}</td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

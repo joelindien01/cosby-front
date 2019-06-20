@@ -1,0 +1,14 @@
+<div class="card" style="width: 18rem;">
+  <div class="card-header">
+    {{title}}
+  </div>
+  <div class="card-body">
+    <p>{{ address?.street }}</p>
+    <p>
+      <span *ngIf="address?.state">{{ address?.state }}, </span>
+      <span>{{ address?.city }}, </span>
+      <span>{{ address?.zipCode}}</span>
+    </p>
+    <p>{{ address?.country }}</p>
+  </div>
+</div>
