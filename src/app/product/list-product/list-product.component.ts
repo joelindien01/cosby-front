@@ -4,6 +4,7 @@ import {ProductService} from "../product.service";
 import {Product} from "../product";
 import {map} from "rxjs/internal/operators";
 import {Router} from "@angular/router";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-list-product',
@@ -15,14 +16,16 @@ export class ListProductComponent implements OnInit {
   products$: Observable<Array<Product>>;
   selectedProduct: Product;
   private products: Array<Product>;
+  productSearchForm: FormGroup;
 
-  constructor(private productService: ProductService, private router: Router) {
+  constructor(private productService: ProductService, private router: Router, private fb: FormBuilder) {
     this.products$ = this.productService.findAll();
     this.productTable$ = this.products$.pipe(
       map(products => products.map(product => {
         return new ProductTable(product.id, product.name);
       }))
     );
+    this.productSearchForm = this.fb.group({productNameCSV: ''});
   }
 
   ngOnInit() {
@@ -36,6 +39,18 @@ export class ListProductComponent implements OnInit {
   editSelectedProduct(productId?: number) {
     const productToEditId = productId ? productId : this.selectedProduct.id;
     this.router.navigate(['/product', {productId: productToEditId}]).then();
+  }
+
+  findProduct() {
+    let productNameCSV: string  = this.productSearchForm.value.productNameCSV;
+    let customerNameList: Array<string> = productNameCSV != undefined && productNameCSV.trim().length > 0 ? productNameCSV.split(';') : [];
+    this.products$ = this.productService.findProduct(customerNameList);
+    this.productTable$ = this.products$.pipe(
+      map(products => products.map(product => {
+        return new ProductTable(product.id, product.name);
+      }))
+    );
+    this.products$.subscribe(product => this.products = product);
   }
 }
 

@@ -9,6 +9,7 @@ import {EmailAddressService} from "./email-address.service";
 export class ContactService implements FormInitiator {
   initForm() {
     return this.fb.group({
+      id: "",
       name: "",
       phoneNumber: "",
       email: ""

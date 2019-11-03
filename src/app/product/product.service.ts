@@ -38,4 +38,14 @@ export class ProductService {
 
     return this.httpClient.get<Product>(this.baseUrl+productId);
   }
+
+  findProduct(productNameList: Array<string>) {
+    let params = new HttpParams({
+      fromObject: {
+        productNameList: productNameList.join(',')
+      }
+    });
+    return this.httpClient.get<Product>(this.baseUrl+"find", {params: params});
+
+  }
 }

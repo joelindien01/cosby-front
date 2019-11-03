@@ -1,6 +1,15 @@
-<div class="card" style="width: 18rem;">
+<div class="card" style="width: 18rem;" *ngIf="address?.id">
   <div class="card-header">
-    {{title}}
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <h6>{{title}}</h6>
+        </div>
+        <div class="col-6 text-right">
+          <span data-toggle="modal" [attr.data-target]="'#editAddressModal_'+address.id"><fa-icon icon="pen"></fa-icon></span>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="card-body">
     <p>{{ address?.street }}</p>
@@ -11,4 +20,9 @@
     </p>
     <p>{{ address?.country }}</p>
   </div>
+  <app-modal  [contentId]="'editAddressModal_'+address.id" [withFooter]="true" (modalSaved)="addressEditForm.edit('address')">
+    <form class="form-horizontal" [formGroup]="addressEditForm.form">
+      <app-contact [contact]="address" [formGroup]="addressEditForm.form" [groupName]="'address'" ></app-contact>
+    </form>
+  </app-modal>
 </div>

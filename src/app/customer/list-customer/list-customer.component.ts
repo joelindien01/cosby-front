@@ -4,6 +4,7 @@ import {Customer} from '../customer';
 import {Router} from "@angular/router";
 import {Observable} from 'rxjs';
 import {map} from "rxjs/internal/operators";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-list-customer',
@@ -15,14 +16,16 @@ export class ListCustomerComponent implements OnInit {
   customerList$: Observable<Array<Customer>>;
   customerTableData$: Observable<Array<CustomerTable>>;
   customerList: Array<Customer>;
+  customerSearchForm: FormGroup;
 
 
-  constructor(private customerService: CustomerService, private router: Router) {
+  constructor(private customerService: CustomerService, private router: Router, private fb: FormBuilder) {
     this.customerList$ = this.customerService.getCustomers();
     this.customerTableData$ = this.customerList$.pipe(
       map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.location.country)))
     );
     this.customerList$.subscribe(customerList => this.customerList = customerList);
+    this.customerSearchForm = this.fb.group({customerNameCSV: ''});
   }
 
   ngOnInit() {
@@ -46,6 +49,20 @@ export class ListCustomerComponent implements OnInit {
 
   goToCustomerViewInfo(customerId: number) {
     this.router.navigate(['/customer', {customerId: customerId}]).then();
+  }
+
+  findCustomer() {
+    let customerNameCSV: string  = this.customerSearchForm.value.customerNameCSV;
+    let customerNameList: Array<string> = customerNameCSV != undefined && customerNameCSV.trim().length > 0 ? customerNameCSV.split(';') : [];
+    this.customerList$ = this.customerService.findCustomer(customerNameList);
+    this.customerTableData$ = this.customerList$.pipe(
+      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.location.country)))
+    );
+    this.customerList$.subscribe(customerList => this.customerList = customerList);
+  }
+
+  executeUpdate(customerList$) {
+
   }
 }
 

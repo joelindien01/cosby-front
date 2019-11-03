@@ -24,9 +24,11 @@ import { ViewShipComponent } from './view-ship/view-ship.component';
 import {faPen} from "@fortawesome/free-solid-svg-icons/faPen";
 import {faEye} from "@fortawesome/free-solid-svg-icons";
 import {DocGeneratorService} from "./doc-generator.service";
+import { ModalComponent } from './modal/modal.component';
+import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
 
 @NgModule({
-  declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent, ViewAddressComponent, ViewContactComponent, ViewShipComponent],
+  declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -37,7 +39,7 @@ import {DocGeneratorService} from "./doc-generator.service";
     MaterialModule,
     ShContextMenuModule,
   ],
-  exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule, ShContextMenuModule, ViewAddressComponent, ViewContactComponent, ViewShipComponent],
+  exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule, ShContextMenuModule, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
   providers: [ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService]
 })
 export class CosbyCommonModule {
@@ -47,6 +49,7 @@ export class CosbyCommonModule {
     library.add(faMinus);
     library.add(faEdit);
     library.add(faPen);
-    library.add(faEye)
+    library.add(faEye);
+    library.add(faSearch);
   }
 }

@@ -9,6 +9,27 @@
       </div>
     </div>
   </div>
+
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12" id="search">
+
+        <form id="search-form" [formGroup]="productSearchForm">
+          <div class="row">
+            <div class="form-group col-9">
+              <input class="form-control" formControlName="productNameCSV" type="text" placeholder="Search" />
+            </div>
+            <div class="form-group col-3">
+              <button type="button" class="btn btn-block btn-primary" (click)="findProduct()"><fa-icon icon="search"></fa-icon></button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+
   <div class="col-12">
     <table class="table table-bordered">
       <thead>

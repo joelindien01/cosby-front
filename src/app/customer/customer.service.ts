@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {Address, Customer, DeliveryInformation} from "./customer";
+import {Address, Contact, Customer, DeliveryInformation} from "./customer";
 import {Observable} from "rxjs/index";
 
 @Injectable({
@@ -31,4 +31,21 @@ export class CustomerService {
     return this.http.get<Customer>(this.baseUrl+"search", {params: params});
   }
 
+  editName(customerId: number, customerName: any) {
+    return this.http.post(this.baseUrl+"update-name", {id: customerId, name: customerName});
+  }
+
+  editContact(customerId: number, contacts: Array<Contact>) {
+
+    return this.http.post(this.baseUrl+"edit-contact", {id: customerId, contacts: contacts});
+  }
+
+  findCustomer(customerNameList: Array<string>): Observable<Array<Customer>> {
+    let params = new HttpParams({
+      fromObject: {
+        customerNameList: customerNameList.join(',')
+      }
+    });
+    return this.http.get<Customer>(this.baseUrl+"find", {params: params});
+  }
 }

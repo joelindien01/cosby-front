@@ -1,0 +1,24 @@
+<div class="modal fade"
+     [id]="contentId"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="generic-modal"
+     aria-hidden="true">
+  <div class="modal-dialog {{modalType}}" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="container-fluid">
+
+
+          <ng-content></ng-content>
+        </div>
+      </div>
+      <div class="modal-footer" *ngIf="withFooter">
+        <button mat-flat-button color="warn" type="button" data-dismiss="modal">Close</button>
+        <button mat-stroked-button color="primary" type="button" data-dismiss="modal" (click)="onModalSaved()">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
