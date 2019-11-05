@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {DeliveryInformation} from "../../customer/customer";
 import {Observable} from "rxjs/Rx";
 import {map} from "rxjs/internal/operators";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-list-purchase-orders',
@@ -15,9 +16,10 @@ export class ListPurchaseOrdersComponent implements OnInit {
   purchaseOrderList$: Observable<Array<PurchaseOrder>>;
   ordersTableData$: Observable<Array<OrderTable>>;
   purchaseOrderList: Array<PurchaseOrder>;
+  orderSearchForm: FormGroup;
 
 
-  constructor(private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute) {
+  constructor(private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
     this.route.params.subscribe(params => {
       if (params['customerId']) {
         const customerId = params['customerId'];
@@ -26,6 +28,11 @@ export class ListPurchaseOrdersComponent implements OnInit {
         this.loadAllOrders();
       }
       this.mapOrdersTable();
+    });
+    this.orderSearchForm = this.fb.group({
+      customerNameCSV: '',
+      orderCreationDateFrom: [],
+      orderCreationDateTo: []
     });
   }
 
@@ -71,6 +78,10 @@ export class ListPurchaseOrdersComponent implements OnInit {
 
   viewOrder(orderId: number) {
     this.router.navigateByUrl('/purchase-order/'+ orderId).then();
+  }
+
+  findOrders() {
+
   }
 }
 

@@ -5,6 +5,7 @@ import {DeliveryNoteService} from "../delivery-note.service";
 import {Customer} from "../../customer/customer";
 import {map} from "rxjs/internal/operators";
 import {DeliveryNote} from "../../purchase-order/PurchaseOrder";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-list-delivery-note',
@@ -13,13 +14,15 @@ import {DeliveryNote} from "../../purchase-order/PurchaseOrder";
 })
 export class ListDeliveryNoteComponent implements OnInit {
   deliveryNotes$: Observable<Array<DeliveryNote>>;
-  private customer$: Observable<Customer>;
+  public customer$: Observable<Customer>;
   deliveryNotesTable$: Observable<Array<DeliveryNoteTable>>;
-  private deliveryNotes: Array<DeliveryNote>;
+  public deliveryNotes: Array<DeliveryNote>;
+  delNotesSearchForm: FormGroup;
 
   constructor(private route: ActivatedRoute,
               private deliveryNoteService: DeliveryNoteService,
-              private router: Router) {
+              private router: Router,
+              private fb: FormBuilder) {
 
 
     this.route.params.subscribe(params => {
@@ -30,6 +33,12 @@ export class ListDeliveryNoteComponent implements OnInit {
         this.loadAllNotes();
       }
       this.mapDeliveryNoteTable();
+    });
+
+    this.delNotesSearchForm = this.fb.group({
+      customerNameCSV: '',
+      orderCreationDateFrom: [],
+      orderCreationDateTo: []
     });
 
   }
@@ -81,6 +90,10 @@ export class ListDeliveryNoteComponent implements OnInit {
 
   viewDeliveryNote(deliveryNoteId: number) {
     this.router.navigateByUrl("/delivery-notes/"+deliveryNoteId).then();
+  }
+
+  findNotes() {
+
   }
 }
 

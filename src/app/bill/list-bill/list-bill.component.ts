@@ -5,6 +5,7 @@ import {Observable} from "rxjs/index";
 import {Bill, BillDTO} from "../bill";
 import {map} from "rxjs/internal/operators";
 import {Customer} from "../../customer/customer";
+import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-list-bill',
@@ -12,10 +13,11 @@ import {Customer} from "../../customer/customer";
   styleUrls: ['./list-bill.component.scss']
 })
 export class ListBillComponent implements OnInit {
-  private billList$: Observable<Array<Bill>>;
-  private customer$: Observable<Customer>;
-  billTable$: Observable<Array<BillTable>>;
-  private customerId: number;
+  public billList$: Observable<Array<Bill>>;
+  public customer$: Observable<Customer>;
+  public billTable$: Observable<Array<BillTable>>;
+  public customerId: number;
+  billSearchForm: FormGroup;
 
   constructor(private billService: BillService,
               private route: ActivatedRoute,
@@ -43,7 +45,7 @@ export class ListBillComponent implements OnInit {
     this.billService.sendBillByEmail(billId);
   }
 
-  private loadBillsByCustomerId(customerId: number) {
+  public loadBillsByCustomerId(customerId: number) {
     this.billList$ = this.billService.getBillsByCustomerId(customerId);
     this.customer$ = this.billList$.pipe(
       map(billList => billList[0].purchaseOrder.customer)
@@ -51,11 +53,11 @@ export class ListBillComponent implements OnInit {
 
   }
 
-  private loadAllBills() {
+  public loadAllBills() {
     this.billList$ = this.billService.findAll();
   }
 
-  private mapBillTable() {
+  public mapBillTable() {
     this.billTable$ = this.billList$.pipe(
       map(billList => {
         return billList.map( bill => {
@@ -77,6 +79,9 @@ export class ListBillComponent implements OnInit {
     this.router.navigateByUrl("/bills/"+billId).then();
   }
 
+  findBills() {
+
+  }
 }
 
 export class BillTable {

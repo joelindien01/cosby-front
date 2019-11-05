@@ -28,15 +28,15 @@ export class AddPurchaseOrderComponent implements OnInit {
   productToFindForm: FormGroup;
   foundProducts$: Observable<Array<Product>>;
   selectedProductForm: FormGroup;
-  private showItemConfig: boolean;
-  private purchaseOrder: PurchaseOrder;
-  private showAddAnotherProductButton: boolean;
-  private showSelectDeliveryAddress: boolean;
-  private selectedProduct: Product;
-  private currentCustomer$: Observable<Customer>;
-  private paymentInfoForm: FormGroup;
-  private paymentMeans: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
-  private paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
+  public showItemConfig: boolean;
+  public purchaseOrder: PurchaseOrder;
+  public showAddAnotherProductButton: boolean;
+  public showSelectDeliveryAddress: boolean;
+  public selectedProduct: Product;
+  public currentCustomer$: Observable<Customer>;
+  public paymentInfoForm: FormGroup;
+  public paymentMeans: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
+  public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
 
   constructor(private customerService: CustomerService,
               private fb: FormBuilder,

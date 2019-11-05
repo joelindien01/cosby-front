@@ -11,9 +11,9 @@ import {DeliveryNoteDTO, ItemDto, PurchaseOrder} from "../../purchase-order/Purc
   styleUrls: ['./view-delivery-note.component.scss']
 })
 export class ViewDeliveryNoteComponent implements OnInit {
-  private deliveryNote$: Observable<DeliveryNoteDTO>;
-  private purchaseOrder$: Observable<PurchaseOrder>;
-  private items$: Observable<Array<ItemDto>>;
+  public deliveryNote$: Observable<DeliveryNoteDTO>;
+  public purchaseOrder$: Observable<PurchaseOrder>;
+  public items$: Observable<Array<ItemDto>>;
   @Input() deliveryNoteId;
 
   constructor(private route: ActivatedRoute,

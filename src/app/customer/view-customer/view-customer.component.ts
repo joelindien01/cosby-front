@@ -10,9 +10,9 @@ import {Customer} from "../customer";
   styleUrls: ['./view-customer.component.scss']
 })
 export class ViewCustomerComponent implements OnInit {
-  private customer$: Observable<Customer>;
-  private currentCustomer: Customer;
-  private fieldEdit: CustomerEditActivationHandler;
+  public customer$: Observable<Customer>;
+  public currentCustomer: Customer;
+  public fieldEdit: CustomerEditActivationHandler;
 
   constructor(private route: ActivatedRoute, private customerService: CustomerService, private router: Router) {
     this.fieldEdit = new CustomerEditActivationHandler();

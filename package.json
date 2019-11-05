@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "build:dev": "ng build --prod --base-href http://cosby-demo.s3-website-eu-west-1.amazonaws.com/ --aot=false --build-optimizer=false",
+    "build:devbis": "ng build --prod --base-href /usr/share/nginx/html/dist/donation-explorer/donation-explorer/",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

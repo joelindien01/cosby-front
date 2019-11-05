@@ -12,11 +12,11 @@ import {FormBuilder, FormGroup} from "@angular/forms";
   styleUrls: ['./list-product.component.scss']
 })
 export class ListProductComponent implements OnInit {
-  productTable$: Observable<Array<ProductTable>>;
-  products$: Observable<Array<Product>>;
-  selectedProduct: Product;
-  private products: Array<Product>;
-  productSearchForm: FormGroup;
+  public productTable$: Observable<Array<ProductTable>>;
+  public products$: Observable<Array<Product>>;
+  public selectedProduct: Product;
+  public products: Array<Product>;
+  public productSearchForm: FormGroup;
 
   constructor(private productService: ProductService, private router: Router, private fb: FormBuilder) {
     this.products$ = this.productService.findAll();

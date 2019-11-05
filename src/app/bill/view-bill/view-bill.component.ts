@@ -12,10 +12,10 @@ import {PurchaseOrderService} from "../../purchase-order/purchase-order.service"
   styleUrls: ['./view-bill.component.scss']
 })
 export class ViewBillComponent implements OnInit {
-  private bill$: Observable<BillDTO>;
-  private purchaseOrder$: Observable<PurchaseOrder>;
-  private items$: Observable<Array<ItemDto>>;
-  private deliveryNoteId: number;
+  public bill$: Observable<BillDTO>;
+  public purchaseOrder$: Observable<PurchaseOrder>;
+  public items$: Observable<Array<ItemDto>>;
+  public deliveryNoteId: number;
 
   constructor(private route: ActivatedRoute,
               private billService: BillService,

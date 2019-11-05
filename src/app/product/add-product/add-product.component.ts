@@ -13,8 +13,8 @@ export class AddProductComponent implements OnInit {
 
   productForm: FormGroup;
   priceModel: any;
-  private isEditMode: boolean;
-  private editedProduct: Product;
+  public isEditMode: boolean;
+  public editedProduct: Product;
   constructor(private fb: FormBuilder,
               private productService: ProductService,
               private activatedRoute: ActivatedRoute) {

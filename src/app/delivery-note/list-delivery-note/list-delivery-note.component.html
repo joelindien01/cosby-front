@@ -2,6 +2,95 @@
   <div class="col-12">
     <h2>Delivery Notes</h2>
   </div>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-12" id="search">
+
+            <form id="search-form" [formGroup]="delNotesSearchForm">
+              <div class="row align-items-center">
+
+                <div class="form-group col-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="picker1" placeholder="Note created after" formControlName="orderCreationDateFrom" name="orderCreationDateFrom"/>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="form-group col-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="picker2" placeholder="Note created before" formControlName="orderCreationDateTo" name="orderCreationDateTo"/>
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="picker1" placeholder="PO created after" formControlName="orderCreationDateFrom" name="orderCreationDateFrom"/>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="form-group col-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="picker2" placeholder="PO created before" formControlName="orderCreationDateTo" name="orderCreationDateTo"/>
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="picker1" placeholder="To be deliver after" formControlName="orderCreationDateFrom" name="orderCreationDateFrom"/>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="form-group col-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="picker2" placeholder="To be deliver before" formControlName="orderCreationDateTo" name="orderCreationDateTo"/>
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-group col-3">
+                  <select data-filter="model" class="filter-model filter form-control">
+                    <option value="">Payment Status</option>
+                    <option value="">Show All</option>
+                  </select>
+                </div>
+                <div class="form-group col-3">
+                  <select data-filter="model" class="filter-model filter form-control">
+                    <option value="">Payment Method</option>
+                    <option value="">Show All</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-3">
+                  <input class="form-control" formControlName="customerNameCSV" type="text" placeholder="Customer name" />
+                </div>
+                <div class="form-group col-3">
+                  <input class="form-control" formControlName="customerNameCSV" type="text" placeholder="Note Id" />
+                </div>
+                <div class="form-group col-3">
+                  <input class="form-control" formControlName="customerNameCSV" type="text" placeholder="PO Id" />
+                </div>
+                <div class="form-group col-3 ">
+                  <button type="button" class="btn btn-block btn-primary" (click)="findNotes()"><fa-icon icon="search"></fa-icon></button>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="col-12" *ngIf="customer$">
     <p>Delivery notes for customer : <b>{{(customer$ |async)?.name}}</b></p>
   </div>
@@ -36,7 +125,7 @@
   <ng-template shContextMenuItem (click)="viewDeliveryNote($event.data.deliveryNoteId)">
     <div>View delivery Note</div>
   </ng-template>
-  <ng-template shContextMenuItem (click)="createBill($event.data.deliveryNoteId, $event.data.customerId)">
+  <ng-template shContextMenuItem (click)="createBill($event.data.deliveryNoteId)">
     <div>Create bill</div>
   </ng-template>
   <ng-template shContextMenuItem (click)="generateDeliveryNote($event.data.deliveryNoteId)">

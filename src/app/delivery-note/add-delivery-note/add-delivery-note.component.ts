@@ -10,8 +10,8 @@ import {DeliveryNoteDTO} from "../../purchase-order/PurchaseOrder";
   styleUrls: ['./add-delivery-note.component.scss']
 })
 export class AddDeliveryNoteComponent implements OnInit {
-  deliveryNoteForm: FormGroup;
-  private orderId: number;
+  public deliveryNoteForm: FormGroup;
+  public orderId: number;
 
   constructor(private fb: FormBuilder,
               private route: ActivatedRoute,

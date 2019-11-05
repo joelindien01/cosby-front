@@ -46,6 +46,6 @@ export class CustomerService {
         customerNameList: customerNameList.join(',')
       }
     });
-    return this.http.get<Customer>(this.baseUrl+"find", {params: params});
+    return this.http.get<Array<Customer>>(this.baseUrl+"find", {params: params});
   }
 }

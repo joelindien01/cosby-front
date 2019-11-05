@@ -11,9 +11,9 @@ import {map} from "rxjs/internal/operators";
   styleUrls: ['./view-purchase-order.component.scss']
 })
 export class ViewPurchaseOrderComponent implements OnInit {
-  @Input() purchaseOrder$: Observable<PurchaseOrder>;
-  @Input() title: string;
-  @Input() items$: Observable<Array<ItemDto>>;
+  @Input() public purchaseOrder$: Observable<PurchaseOrder>;
+  @Input() public title: string;
+  @Input() public items$: Observable<Array<ItemDto>>;
 
   constructor(private activatedRoute: ActivatedRoute,
               private orderService: PurchaseOrderService,

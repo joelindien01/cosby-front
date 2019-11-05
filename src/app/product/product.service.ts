@@ -45,7 +45,7 @@ export class ProductService {
         productNameList: productNameList.join(',')
       }
     });
-    return this.httpClient.get<Product>(this.baseUrl+"find", {params: params});
+    return this.httpClient.get<Product[]>(this.baseUrl+"find", {params: params});
 
   }
 }

@@ -15,7 +15,7 @@ export class AddressComponent implements OnInit {
   @Input() groupName: string;
   @Input() arrayName: string;
   @Input() formGroup: FormGroup;
-  isArrayForm: boolean;
+  public isArrayForm: boolean;
   @Input() formTitle: string;
 
 

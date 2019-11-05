@@ -9,7 +9,7 @@ import {Contact} from "../../customer/customer";
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent extends MultiAddableForm implements OnInit {
-  @Input() contact: Contact;
+  @Input() public contact: Contact;
 
   constructor(private contactService: ContactService) {
     super(contactService);

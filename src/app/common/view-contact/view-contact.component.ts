@@ -12,8 +12,8 @@ import {ContactService} from "../contact.service";
 })
 export class ViewContactComponent implements OnInit {
 
-  @Input() contact: Contact;
-  @Input() customerId: number;
+  @Input() public contact: Contact;
+  @Input() public customerId: number;
   public contactEditForm: ContactEditForm;
 
   constructor(private fb :FormBuilder, private customerService: CustomerService, private contactService: ContactService) {

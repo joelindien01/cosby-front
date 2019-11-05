@@ -10,10 +10,10 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./add-bill.component.scss']
 })
 export class AddBillComponent implements OnInit {
-  billForm: FormGroup;
-  applyDiscount: boolean;
-  private orderId: number;
-  private customerId: number;
+  public billForm: FormGroup;
+  public applyDiscount: boolean;
+  public orderId: number;
+  public customerId: number;
 
   constructor(private fb: FormBuilder, private billService: BillService, private route: ActivatedRoute) {
     this.billForm = this.fb.group({
