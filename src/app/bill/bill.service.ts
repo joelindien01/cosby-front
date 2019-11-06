@@ -3,13 +3,15 @@ import {Bill, BillDTO} from "./bill";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs/index";
 import {DocGeneratorService, FileGeneratorHelper} from "../common/doc-generator.service";
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BillService {
 
-  baseUrl="http://localhost:8081/bill/";
+  apiUrl = environment.apiUrl;
+  baseUrl= apiUrl+"bill/";
 
   constructor(private httpClient: HttpClient,
               private docGenerator: DocGeneratorService) {}
