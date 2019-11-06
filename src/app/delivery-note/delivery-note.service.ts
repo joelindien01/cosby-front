@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from "rxjs/index";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {DeliveryNote, DeliveryNoteDTO} from "../purchase-order/PurchaseOrder";
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ export class DeliveryNoteService {
 
   constructor(private httpClient: HttpClient) { }
 
-  baseUrl="http://localhost:8081/delivery-note/";
+  apiUrl = environment.apiUrl;
+  baseUrl= apiUrl+"delivery-note/";
 
   saveDeliveryNote(deliveryNoteDTO: DeliveryNoteDTO): Observable<any> {
     return this.httpClient.post(this.baseUrl, deliveryNoteDTO);
