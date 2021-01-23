@@ -7,6 +7,12 @@ import {map} from "rxjs/internal/operators";
 import {DeliveryNote} from "../../purchase-order/PurchaseOrder";
 import {FormBuilder, FormGroup} from "@angular/forms";
 
+class ReferenceItem {
+  label: string;
+  value: string;
+
+}
+
 @Component({
   selector: 'app-list-delivery-note',
   templateUrl: './list-delivery-note.component.html',
@@ -18,6 +24,9 @@ export class ListDeliveryNoteComponent implements OnInit {
   deliveryNotesTable$: Observable<Array<DeliveryNoteTable>>;
   public deliveryNotes: Array<DeliveryNote>;
   delNotesSearchForm: FormGroup;
+  public paymentMethod: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
+  public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
+
 
   constructor(private route: ActivatedRoute,
               private deliveryNoteService: DeliveryNoteService,
@@ -35,11 +44,20 @@ export class ListDeliveryNoteComponent implements OnInit {
       this.mapDeliveryNoteTable();
     });
 
-    this.delNotesSearchForm = this.fb.group({
-      customerNameCSV: '',
-      orderCreationDateFrom: [],
-      orderCreationDateTo: []
-    });
+    this.delNotesSearchForm = this.fb.group(
+      {
+        customerNameCSV: '',
+        paymentStatus: [],
+        paymentMeans: [],
+        purchaseOrderIdCSV: '',
+        noteIdCSV: '',
+        toBeDeliveredBefore: [],
+        toBeDeliveredAfter: [],
+        poCreatedBefore: [],
+        poCreatedAfter: [],
+        noteCreatedAfter: [],
+        noteCreatedBefore: []
+      });
 
   }
 
@@ -93,7 +111,12 @@ export class ListDeliveryNoteComponent implements OnInit {
   }
 
   findNotes() {
-
+    var searchForm = this.delNotesSearchForm.getRawValue();
+    this.deliveryNotes$ = this.deliveryNoteService.findNotes(searchForm);
+    this.mapDeliveryNoteTable();
+/*    this.deliveryNoteService.findNotes(searchForm).subscribe(s => {
+      console.log(s);
+    })*/
   }
 }
 

@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class PurchaseOrderService {
 
   apiUrl = environment.apiUrl;
-  baseUrl= apiUrl+"purchase-order/";
+  baseUrl= this.apiUrl+"purchase-order/";
 
   constructor(private httpClient: HttpClient) {
   }
@@ -38,5 +38,9 @@ export class PurchaseOrderService {
 
   findItemsByOrderId(purchaseOrderId: number) {
     return this.httpClient.get<Array<ItemDto>>(this.baseUrl+purchaseOrderId+"/items");
+  }
+
+  findOrders(searchForm: any) {
+    return this.httpClient.post<Array<PurchaseOrder>>(this.baseUrl+"search", searchForm);
   }
 }

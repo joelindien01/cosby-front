@@ -6,6 +6,7 @@ import {DeliveryInformation} from "../../customer/customer";
 import {Observable} from "rxjs/Rx";
 import {map} from "rxjs/internal/operators";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {ReferenceItem} from "../add-purchase-order/add-purchase-order.component";
 
 @Component({
   selector: 'app-list-purchase-orders',
@@ -17,6 +18,9 @@ export class ListPurchaseOrdersComponent implements OnInit {
   ordersTableData$: Observable<Array<OrderTable>>;
   purchaseOrderList: Array<PurchaseOrder>;
   orderSearchForm: FormGroup;
+  public paymentMeans: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
+  public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
+
 
 
   constructor(private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
@@ -31,8 +35,11 @@ export class ListPurchaseOrdersComponent implements OnInit {
     });
     this.orderSearchForm = this.fb.group({
       customerNameCSV: '',
-      orderCreationDateFrom: [],
-      orderCreationDateTo: []
+      poCreatedAfter: [],
+      poCreatedBefore: [],
+      paymentStatus: [],
+      paymentMeans: [],
+      purchaseOrderIdCSV: ''
     });
   }
 
@@ -70,6 +77,7 @@ export class ListPurchaseOrdersComponent implements OnInit {
             orderTable.orderCreationDate = purchaseOrder.creationDate;
             orderTable.deliveryInformation = purchaseOrder.deliveryInformation;
             orderTable.customerId = purchaseOrder.customer.id;
+            orderTable.paymentStatus = purchaseOrder.paymentInformation.paymentStatus;
             return orderTable;
           });
         })
@@ -81,6 +89,13 @@ export class ListPurchaseOrdersComponent implements OnInit {
   }
 
   findOrders() {
+    var searchForm = this.orderSearchForm.getRawValue();
+    this.purchaseOrderList$ = this.orderService.findOrders(searchForm);
+    this.mapOrdersTable();
+
+    this.orderService.findOrders(searchForm).subscribe(s => {
+      console.log(s);
+    })
 
   }
 }
@@ -91,4 +106,5 @@ export class OrderTable {
   orderCreationDate: Date;
   customerName: string;
   deliveryInformation: DeliveryInformation;
+  paymentStatus: string;
 }

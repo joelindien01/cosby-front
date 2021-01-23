@@ -2,13 +2,18 @@
   <div class="col-12">
     <h5>Bill</h5>
   </div>
-  <div class="col-12">
-    <p>Bill n° {{ (bill$ |async)?.id }}</p>
-    <p>Deadline: {{ (bill$ |async)?.deadLine | date }}</p>
-    <p>Discount: {{ (bill$ |async)?.discount }} %</p>
-    <p>Creation Date: {{ (bill$ |async)?.creationDate | date }}</p>
+  <div class="col-12 align-elmts">
+    <div>
+      <p>Bill n° {{ (bill$ |async)?.id }}</p>
+      <p>Deadline: {{ (bill$ |async)?.deadLine | date }}</p>
+      <p>Discount: {{ (bill$ |async)?.discount }} %</p>
+      <p>Transportation Fee: {{ (bill$ |async)?.transportationFee }}</p>
+      <p>Delivery Fee: {{ (bill$ |async)?.deliveryFee }}</p>
+      <p>Creation Date: {{ (bill$ |async)?.creationDate | date }}</p>
+    </div>
+
   </div>
   <div class="col-12" *ngIf="deliveryNoteId">
-    <app-view-delivery-note [deliveryNoteId]="deliveryNoteId"></app-view-delivery-note>
+    <app-view-delivery-note [deliveryNoteId]="deliveryNoteId" [bill]="(bill$ |async)"></app-view-delivery-note>
   </div>
 </div>

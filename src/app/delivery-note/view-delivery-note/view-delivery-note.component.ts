@@ -4,6 +4,7 @@ import {PurchaseOrderService} from "../../purchase-order/purchase-order.service"
 import { DeliveryNoteService} from "../delivery-note.service";
 import {Observable} from "rxjs/Rx";
 import {DeliveryNoteDTO, ItemDto, PurchaseOrder} from "../../purchase-order/PurchaseOrder";
+import {BillDTO} from "../../bill/bill";
 
 @Component({
   selector: 'app-view-delivery-note',
@@ -15,6 +16,7 @@ export class ViewDeliveryNoteComponent implements OnInit {
   public purchaseOrder$: Observable<PurchaseOrder>;
   public items$: Observable<Array<ItemDto>>;
   @Input() deliveryNoteId;
+  @Input() bill: BillDTO;
 
   constructor(private route: ActivatedRoute,
               private deliveryNoteService: DeliveryNoteService,

@@ -3,7 +3,53 @@
   <p>You are going to generate a purchase order for customer: <b>{{(currentCustomer$ |async)?.name }}</b></p>
 </div>
 
+<div class="col-12" *ngIf="selectedProducts != undefined">
+  <h3>Added products list</h3>
+  <div class="align-self-center col-6">
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let prdct of selectedProducts">
+        <td>{{prdct.name}}</td>
+        <td>{{prdct.description}}</td>
+        <td>{{prdct.quantity}} {{prdct.unitOfMeasurement.symbol}}</td>
+        <td>{{prdct.unit}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <mat-horizontal-stepper>
+  <mat-step label="PO Setup">
+    <form [formGroup]="poSetupForm">
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field>
+            <input matInput formControlName="poNumber" placeholder="PO Number" type="text"
+                   class="form-control input-md" required="">
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field>
+            <mat-select placeholder="Select the currency for this PO" formControlName="currency">
+              <mat-option *ngFor="let currency of (currencyList$| async)" [value]="currency.id">{{currency.label}} ({{currency.symbol}})</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <button *ngIf="poSetupForm.get('poNumber').value && poSetupForm.get('currency').value" mat-flat-button color="primary" type="button" matStepperNext>
+        Next
+      </button>
+    </form>
+  </mat-step>
   <mat-step label="Select product">
     <div *ngIf="!showAddAnotherProductButton">
       <form class="form-horizontal" [formGroup]="productToFindForm">
@@ -46,6 +92,14 @@
               <mat-select placeholder="Select the price you want to apply" formControlName="unit">
                 <mat-option *ngFor="let price of selectedProduct.prices" [value]="price.value">{{price.label}} ->
                   {{price.value}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-select placeholder="Unit of Measurement" formControlName="unitOfMeasurement">
+                <mat-option *ngFor="let uom of selectedProduct.uomSet" [value]="uom">{{uom.label}} (
+                  {{uom.symbol}})
                 </mat-option>
               </mat-select>
             </mat-form-field>

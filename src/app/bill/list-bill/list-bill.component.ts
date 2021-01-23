@@ -5,7 +5,8 @@ import {Observable} from "rxjs/index";
 import {Bill, BillDTO} from "../bill";
 import {map} from "rxjs/internal/operators";
 import {Customer} from "../../customer/customer";
-import {FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {ReferenceItem} from "../../purchase-order/add-purchase-order/add-purchase-order.component";
 
 @Component({
   selector: 'app-list-bill',
@@ -18,10 +19,14 @@ export class ListBillComponent implements OnInit {
   public billTable$: Observable<Array<BillTable>>;
   public customerId: number;
   billSearchForm: FormGroup;
+  public paymentMethod: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
+  public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
+
 
   constructor(private billService: BillService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private fb: FormBuilder) {
     this.route.params.subscribe(params => {
       if (params['customerId']) {
         const customerId = params['customerId'];
@@ -32,6 +37,27 @@ export class ListBillComponent implements OnInit {
       }
     });
     this.mapBillTable();
+
+    this.billSearchForm = this.fb.group(
+      {
+        customerNameCSV: '',
+        paymentStatus: [],
+        paymentMeans: [],
+        purchaseOrderIdCSV: '',
+        noteIdCSV: '',
+        toBeDeliveredBefore: [],
+        toBeDeliveredAfter: [],
+        poCreatedBefore: [],
+        poCreatedAfter: [],
+        noteCreatedAfter: [],
+        noteCreatedBefore: [],
+        billCreatedAfter: [],
+        billCreatedBefore: [],
+        deadlineAfter: [],
+        deadlineBefore: [],
+        discount: '',
+        billId: ''
+      });
   }
 
   ngOnInit() {
@@ -80,7 +106,12 @@ export class ListBillComponent implements OnInit {
   }
 
   findBills() {
-
+    var searchForm = this.billSearchForm.getRawValue();
+    this.billList$ = this.billService.findbills(searchForm);
+    this.mapBillTable();
+    /*this.billService.findbills(searchForm).subscribe(s => {
+      console.log(s);
+    })*/
   }
 }
 

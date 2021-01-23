@@ -52,6 +52,9 @@ export class ViewCustomerComponent implements OnInit {
   goToDeliveryNotePage() {
     this.router.navigate(['/delivery-notes', {customerId: this.currentCustomer.id}]).then();
   }
+  addShip() {
+
+  }
 }
 
 class CustomerEditActivationHandler {

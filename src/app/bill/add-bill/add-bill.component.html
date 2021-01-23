@@ -7,7 +7,18 @@
   <div class="col-12">
     <form [formGroup]="billForm">
       <div class="row">
-        <div class="col-12">
+        <div class="col-6">
+          <mat-form-field>
+            <input matInput formControlName="deadlines" placeholder="DeadLines (in days)" type="number"
+                   class="form-control input-md" required="">
+          </mat-form-field>
+
+          <button mat-icon-button color="primary" aria-label="Compute payment Deadline" (click)="computeDeadline()">
+            <mat-icon>calculate</mat-icon>
+          </button>
+        </div>
+
+        <div class="col-6">
           <mat-form-field>
             <input matInput placeholder="Payment DeadLine" [matDatepicker]="picker1" formControlName="deadLine">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -20,6 +31,16 @@
         <div class="col-12" *ngIf="billForm.get('applyDiscount').value">
           <mat-form-field>
             <input matInput placeholder="discount (%)" formControlName="discount" type="number" name="discount"/>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field>
+            <input matInput placeholder="Delivery Fee" formControlName="deliveryFee" type="number"/>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field>
+            <input matInput placeholder="Transportation Fee" formControlName="transportationFee" type="number"/>
           </mat-form-field>
         </div>
         <div class="col-12">

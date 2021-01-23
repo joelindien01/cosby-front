@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {BillService} from "../bill.service";
 import {BillDTO} from "../bill";
 import {ActivatedRoute} from "@angular/router";
@@ -17,9 +17,12 @@ export class AddBillComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private billService: BillService, private route: ActivatedRoute) {
     this.billForm = this.fb.group({
-      deadLine: [],
+      deadLine: new FormControl(new Date()),
       discount: 0,
-      applyDiscount: false
+      applyDiscount: false,
+      deadlines: [],
+      deliveryFee: 0,
+      transportationFee: 0
     });
 
     this.route.params.subscribe(params => {
@@ -45,5 +48,12 @@ export class AddBillComponent implements OnInit {
     this.billService.saveBill(bill).subscribe(result => {
       alert("bill saved");
     });
+  }
+
+  computeDeadline() {
+    const nbDays = this.billForm.controls['deadlines'].value;
+    const deadlineDate = new Date().setDate(new Date().getDate() +nbDays);
+    this.billForm.controls['deadLine'].setValue(new Date(deadlineDate));
+    console.log(this.billForm.controls['deadLine'].value);
   }
 }

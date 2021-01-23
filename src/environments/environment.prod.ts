@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://bill-cosby-dev.eu-west-1.elasticbeanstalk.com/'
+  apiUrl: 'http://b883bc9.online-server.cloud/api',
+  frontUrl: 'http://b883bc9.online-server.cloud/'
 };

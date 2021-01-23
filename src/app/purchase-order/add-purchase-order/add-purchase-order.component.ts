@@ -9,8 +9,10 @@ import {PurchaseOrderService} from "../purchase-order.service";
 import {Observable} from "rxjs/index";
 import {ActivatedRoute} from "@angular/router";
 import {switchMap} from "rxjs/internal/operators";
+import {Currency} from "../../uom/UnitOfMeasurement";
+import {GlobalUomService} from "../../uom/global-uom.service";
 
-class ReferenceItem {
+export class ReferenceItem {
 label: string;
 value: string;
 
@@ -23,6 +25,7 @@ value: string;
 })
 export class AddPurchaseOrderComponent implements OnInit {
 
+  currencyList$: Observable<Array<Currency>>;
   customer: Customer;
   deliveryAddressForm: FormGroup;
   productToFindForm: FormGroup;
@@ -33,8 +36,10 @@ export class AddPurchaseOrderComponent implements OnInit {
   public showAddAnotherProductButton: boolean;
   public showSelectDeliveryAddress: boolean;
   public selectedProduct: Product;
+  public selectedProducts: any = [];
   public currentCustomer$: Observable<Customer>;
   public paymentInfoForm: FormGroup;
+  public poSetupForm: FormGroup;
   public paymentMeans: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
 
@@ -42,8 +47,10 @@ export class AddPurchaseOrderComponent implements OnInit {
               private fb: FormBuilder,
               private purchaseOrderService: PurchaseOrderService,
               private productService: ProductService,
+              private uomService: GlobalUomService,
               private route: ActivatedRoute) {
 
+    this.currencyList$ = this.uomService.findAllCurrencyList();
     const routeParams$ = this.route.params;
     this.currentCustomer$ = routeParams$.pipe(
       switchMap(params => {
@@ -57,12 +64,17 @@ export class AddPurchaseOrderComponent implements OnInit {
     this.productToFindForm = this.fb.group({
       productToFindName: [null]
     });
+    this.poSetupForm = this.fb.group({
+      poNumber: '',
+      currency: ''
+    });
     this.selectedProductForm = this.fb.group({
       product: [],
       overridePrice: false,
       description: [''],
       quantity: [0],
-      unit: [0]
+      unit: [0],
+      unitOfMeasurement: ['']
     });
     this.deliveryAddressForm = this.fb.group({
       address: []
@@ -96,6 +108,11 @@ export class AddPurchaseOrderComponent implements OnInit {
     this.purchaseOrder.itemList.push(item);
     console.log(this.purchaseOrder);
     alert("item saved");
+    this.selectedProducts.push({name: this.selectedProduct.name,
+      description: this.selectedProductForm.get('description').value,
+      quantity: this.selectedProductForm.get('quantity').value,
+      unit: this.selectedProductForm.get('unit').value,
+      unitOfMeasurement: this.selectedProductForm.get('unitOfMeasurement').value});
     this.resetForms();
     this.showAddAnotherProductButton = true;
   }

@@ -23,7 +23,7 @@
       </div>
     </div>
   </div>
-  <app-modal  [contentId]="'editContactModal_'+contact.name" [withFooter]="true" (modalSaved)="contactEditForm.edit('contacts')">
+  <app-modal  [contentId]="'editContactModal_'+contact.id" [withFooter]="true" (modalSaved)="contactEditForm.edit('contacts')">
     <form class="form-horizontal" [formGroup]="contactEditForm.form">
       <app-contact [contact]="contact" [formGroup]="contactEditForm.form" [groupName]="'contacts'" ></app-contact>
     </form>

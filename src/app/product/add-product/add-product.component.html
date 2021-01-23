@@ -12,6 +12,34 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field class="example-chip-list">
+            <mat-label>Allowed Units</mat-label>
+            <mat-chip-list #chipList aria-label="unit of measure selection">
+              <mat-chip
+                *ngFor="let uom of allowedUomSet"
+                [selectable]="true"
+                [removable]="true"
+                (removed)="remove(uom.id)">
+                {{uom.label}} ({{uom.symbol}})
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input
+                placeholder="Enter unit of measure..."
+                #fruitInput
+                formControlName="uom"
+                [matAutocomplete]="auto"
+                [matChipInputFor]="chipList"
+                (matChipInputTokenEnd)="add($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              <mat-option *ngFor="let uom of filteredUoms$ | async" [value]="uom.label">
+                {{uom.label}} ({{uom.symbol}})
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
       <div class="row" formArrayName="prices">
         <div class="col-12">
           <h3>Add Prices</h3>
@@ -40,6 +68,10 @@
               </mat-form-field>
             </div>
           </div>
+        </div>
+      </div>
+
+
         </div>
       </div>
 

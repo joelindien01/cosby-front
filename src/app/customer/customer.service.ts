@@ -8,8 +8,8 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class CustomerService {
-  const apiUrl = environment.apiUrl;
-  baseUrl = apiUrl+"customers/";
+  apiUrl = environment.apiUrl;
+  baseUrl = this.apiUrl+"customers/";
 
   public customerList: Array<Customer>;
   constructor(private http: HttpClient) { }

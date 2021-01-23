@@ -27,24 +27,36 @@ import {ViewPurchaseOrderComponent} from "./purchase-order/view-purchase-order/v
 import {ViewDeliveryNoteComponent} from "./delivery-note/view-delivery-note/view-delivery-note.component";
 import {ViewBillComponent} from "./bill/view-bill/view-bill.component";
 import {FileSaverModule} from "ngx-filesaver";
+import {LoginComponent} from "./user/login/login.component";
+import {UserModule} from "./user/user.module";
+import {RegisterComponent} from "./user/register/register.component";
+import {AuthGuardServiceService as AuthGuard} from "./common/auth-guard-service.service";
+import {UserViewComponent} from "./user/user-view/user-view.component";
+import {LoadProductComponent} from "./product/load-product/load-product.component";
+import {UomModule} from "./uom/uom.module";
+
 
 const appRoutes: Routes = [
-  { path: 'customers/add', component: AddCustomerComponent },
-  { path: 'delivery-notes/add', component: AddDeliveryNoteComponent },
-  { path: 'delivery-notes', component: ListDeliveryNoteComponent },
-  { path: 'delivery-notes/:deliveryNoteId', component: ViewDeliveryNoteComponent },
-  { path: 'customers', component: ListCustomerComponent },
-  { path: 'customer', component: ViewCustomerComponent },
-  { path: 'product', component: AddProductComponent },
-  { path: 'products', component: ListProductComponent },
-  { path: 'bills/add', component: AddBillComponent },
-  { path: 'bills', component: ListBillComponent },
-  { path: 'bills/:billId', component: ViewBillComponent },
-  { path: 'purchase-order', component: AddPurchaseOrderComponent },
-  { path: 'purchase-order/:orderId', component: ViewPurchaseOrderComponent },
-  { path: 'purchase-orders', component: ListPurchaseOrdersComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'user', component: UserViewComponent },
+  { path: 'customers/add', component: AddCustomerComponent, canActivate: [AuthGuard]},
+  { path: 'delivery-notes/add', component: AddDeliveryNoteComponent, canActivate: [AuthGuard] },
+  { path: 'delivery-notes', component: ListDeliveryNoteComponent, canActivate: [AuthGuard] },
+  { path: 'delivery-notes/:deliveryNoteId', component: ViewDeliveryNoteComponent , canActivate: [AuthGuard]},
+  { path: 'customers', component: ListCustomerComponent , canActivate: [AuthGuard]},
+  { path: 'customer', component: ViewCustomerComponent , canActivate: [AuthGuard]},
+  { path: 'product', component: AddProductComponent , canActivate: [AuthGuard]},
+  { path: 'products', component: ListProductComponent , canActivate: [AuthGuard]},
+  { path: 'load-products', component: LoadProductComponent , canActivate: [AuthGuard]},
+  { path: 'bills/add', component: AddBillComponent , canActivate: [AuthGuard]},
+  { path: 'bills', component: ListBillComponent , canActivate: [AuthGuard]},
+  { path: 'bills/:billId', component: ViewBillComponent , canActivate: [AuthGuard]},
+  { path: 'purchase-order', component: AddPurchaseOrderComponent , canActivate: [AuthGuard]},
+  { path: 'purchase-order/:orderId', component: ViewPurchaseOrderComponent , canActivate: [AuthGuard]},
+  { path: 'purchase-orders', component: ListPurchaseOrdersComponent, canActivate: [AuthGuard] },
   { path: '',
-    redirectTo: 'customers',
+    redirectTo: 'login',
     pathMatch: 'full'
   }
 ];
@@ -65,6 +77,8 @@ const appRoutes: Routes = [
     DeliveryNoteModule,
     MaterialModule,
     FileSaverModule,
+    UserModule,
+    UomModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only

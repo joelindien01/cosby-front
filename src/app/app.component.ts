@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {UserService} from "./common/user.service";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'cosby-front';
+
+
+  constructor(public userService: UserService) {
+
+  }
+
+  logout() {
+    this.userService.logOut();
+  }
 }

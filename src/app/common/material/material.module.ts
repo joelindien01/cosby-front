@@ -1,9 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  MatButtonModule, MatDatepickerModule, MatInputModule, MatMenuModule, MatNativeDateModule, MatSelectModule,
+  MatAutocomplete, MatAutocompleteModule,
+  MatButtonModule, MatChipsModule, MatDateFormats, MatDatepickerModule, MatIconModule, MatInputModule, MatMenuModule,
+  MatNativeDateModule,
+  MatSelectModule,
   MatStepperModule,
-  MatTableModule
+  MatTableModule, NativeDateAdapter
 } from "@angular/material";
 
 @NgModule({
@@ -17,7 +20,10 @@ import {
     MatTableModule,
     MatMenuModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatChipsModule,
+    MatIconModule,
+    MatAutocompleteModule
   ],
   exports: [
     MatStepperModule,
@@ -27,7 +33,11 @@ import {
     MatTableModule,
     MatMenuModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatChipsModule,
+    MatIconModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule { }
+

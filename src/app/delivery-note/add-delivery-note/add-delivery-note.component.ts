@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DeliveryNoteService} from "../delivery-note.service";
 import {DeliveryNoteDTO} from "../../purchase-order/PurchaseOrder";
+import {startWith} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-add-delivery-note',
@@ -12,6 +13,7 @@ import {DeliveryNoteDTO} from "../../purchase-order/PurchaseOrder";
 export class AddDeliveryNoteComponent implements OnInit {
   public deliveryNoteForm: FormGroup;
   public orderId: number;
+  calendarStartDate: Date;
 
   constructor(private fb: FormBuilder,
               private route: ActivatedRoute,
@@ -19,9 +21,9 @@ export class AddDeliveryNoteComponent implements OnInit {
               private router: Router) {
 
     this.deliveryNoteForm = this.fb.group({
-      deliveryDate: []
-    });
+      deliveryDate: new FormControl(new Date()),
 
+    });
 
     this.route.params.subscribe(params => {
       if (params['orderId']) {
@@ -43,4 +45,7 @@ export class AddDeliveryNoteComponent implements OnInit {
       this.router.navigateByUrl("/delivery-notes/"+deliveryNote.id).then();
     });
   }
+
+
 }
+

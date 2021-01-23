@@ -19,10 +19,11 @@
       <span>{{ address?.zipCode}}</span>
     </p>
     <p>{{ address?.country }}</p>
+
   </div>
   <app-modal  [contentId]="'editAddressModal_'+address.id" [withFooter]="true" (modalSaved)="addressEditForm.edit('address')">
     <form class="form-horizontal" [formGroup]="addressEditForm.form">
-      <app-contact [contact]="address" [formGroup]="addressEditForm.form" [groupName]="'address'" ></app-contact>
+      <app-address [address]="address" [formGroup]="addressEditForm.form" [groupName]="'address'" ></app-address>
     </form>
   </app-modal>
 </div>

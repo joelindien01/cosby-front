@@ -1,0 +1,23 @@
+<div class="sidenav">
+  <div class="login-main-text">
+    <h2>Cosby<br> Bill Manager</h2>
+    <p><a routerLink="/login" href="#">Login</a> or <a routerLink="/register" href="#">register</a> from here to access.</p>
+  </div>
+</div>
+<div class="main">
+  <div class="col-6 col-12">
+    <div class="login-form">
+      <form [formGroup]="loginForm">
+        <div class="form-group">
+          <label>User Name</label>
+          <input matInput type="text" formControlName="username" class="form-control" placeholder="">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input matInput type="password" formControlName="password" class="form-control" placeholder="">
+        </div>
+        <button mat-stroked-button color="primary" (click)="login()">Login</button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -10,41 +10,95 @@
       </div>
     </div>
   </div>
-  <div class="col-12">
-    <p> Order N° {{(purchaseOrder$|async)?.id}}</p>
-    <p>Created on {{(purchaseOrder$|async)?.creationDate |date }}</p>
-    <p>Payment Status: {{(purchaseOrder$|async)?.paymentInformation.paymentStatus }}</p>
-    <p>Payment Method: {{(purchaseOrder$|async)?.paymentInformation.paymentMethod }}</p>
+  <div class="col-12 align-elmts">
+    <div class="row">
+      <div class="col-4">
+        <p> Order N° {{(purchaseOrder$|async)?.id}}</p>
+        <p>Created on {{(purchaseOrder$|async)?.creationDate |date }}</p>
+        <p>Payment Status: {{(purchaseOrder$|async)?.paymentInformation.paymentStatus }}</p>
+        <p>Payment Method: {{(purchaseOrder$|async)?.paymentInformation.paymentMethod }}</p>
+      </div>
+      <div class="col-4">
+        <ng-content select="slot1"></ng-content>
+      </div>
+      <div class="col-4">
+        <ng-content select="slot2"></ng-content>
+      </div>
+    </div>
+
   </div>
 
-  <div class="col-3 mr-5">
-    <app-view-ship title="Delivery Information" [ship]="(purchaseOrder$|async)?.deliveryInformation"></app-view-ship>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-3 mr-5">
+        <app-view-ship title="Delivery Information" [ship]="(purchaseOrder$|async)?.deliveryInformation"></app-view-ship>
+      </div>
+      <div class="col-7">
+        <h4>Items</h4>
+        <table class="table table-bordered">
+          <thead>
+
+            <th>Product Name</th>
+            <th class="text-right">Description</th>
+            <th class="text-right">Quantity</th>
+            <th class="text-right">Price</th>
+            <th class="text-right">Amount</th>
+
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of (items$ |async)">
+            <td>{{ item.productName }}</td>
+            <td class="text-right">{{ item.description }}</td>
+            <td class="text-right">{{ item.quantity }}</td>
+            <td class="text-right">{{ item.unit }} {{item.unitOfMeasurement?.symbol}}</td>
+            <td class="text-right">{{ item.amount }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>SUB TOTAL</td>
+            <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount}}</td>
+          </tr>
+          <tr *ngIf="bill != undefined && bill.discount != 0">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>DISCOUNT {{bill?.discount}} %</td>
+            <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount * this.bill.discount /100}}</td>
+          </tr>
+          <tr *ngIf="bill != undefined">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>TOTAL AMOUNT</td>
+            <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount * (100 - this.bill.discount)/100 }}</td>
+          </tr>
+          <tr *ngIf="bill != undefined && bill.deliveryFee != 0 ">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>DELIVERY FEE</td>
+            <td colspan="4" class="text-right">{{bill?.deliveryFee}}</td>
+          </tr>
+          <tr *ngIf="bill != undefined && bill.transportationFee != 0">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>TRANSPORTATION FEE</td>
+            <td colspan="4" class="text-right">{{bill?.transportationFee}}</td>
+          </tr>
+          <tr *ngIf="bill != undefined">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>NET TOTAL</td>
+            <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount * (100 - this.bill.discount)/100 + bill.transportationFee + bill.deliveryFee}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-  <div class="col-7">
-    <h4>Items</h4>
-    <table class="table table-bordered">
-      <thead>
-      <tr>
-        <th>Product Name</th>
-        <th class="text-right">Description</th>
-        <th class="text-right">Quantity</th>
-        <th class="text-right">Unit</th>
-        <th class="text-right">Total</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let item of (items$ |async)">
-        <td>{{ item.productName }}</td>
-        <td class="text-right">{{ item.description }}</td>
-        <td class="text-right">{{ item.quantity }}</td>
-        <td class="text-right">{{ item.unit }}</td>
-        <td class="text-right">{{ item.amount }}</td>
-      </tr>
-      <tr>
-        <td>Total</td>
-        <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount}}</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+
 </div>

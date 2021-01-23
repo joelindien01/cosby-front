@@ -1,0 +1,7 @@
+<form [formGroup]="passwordResetForm">
+  <div class="form-group">
+    <label>User Name</label>
+    <input matInput type="password" formControlName="password" class="form-control" placeholder="">
+  </div>
+  <button mat-stroked-button color="primary" (click)="resetPassword()">change password</button>
+</form>

@@ -8,17 +8,21 @@ import {CosbyCommonModule} from "../common/cosby-common.module";
 import { ListProductComponent } from './list-product/list-product.component';
 import { ViewProductComponent } from './view-product/view-product.component';
 import {RouterModule} from "@angular/router";
+import { LoadProductComponent } from './load-product/load-product.component';
+import { AngularFileUploaderModule } from "angular-file-uploader";
+
 
 @NgModule({
-  declarations: [AddProductComponent, ListProductComponent, ViewProductComponent],
-  exports:[AddProductComponent],
+  declarations: [AddProductComponent, ListProductComponent, ViewProductComponent, LoadProductComponent],
+  exports:[AddProductComponent, LoadProductComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
     CosbyCommonModule,
-    RouterModule
+    RouterModule,
+    AngularFileUploaderModule
   ],
   providers: [ProductService]
 })

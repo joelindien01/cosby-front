@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as JSZip from "jszip";
 import {FileSaverService} from "ngx-filesaver";
 import * as angularExpressions from "angular-expressions";
+import { environment } from '../../environments/environment';
 
 //declare let JSZipUtils: any;
 
@@ -28,9 +29,12 @@ export class DocGeneratorService {
     window.JSZipUtils.getBinaryContent(url,callback);
   }
 
+  frontUrl = environment.frontUrl;
+  assetUrl= this.frontUrl+"assets/";
+
   generateFile(fileGeneratorHelper: FileGeneratorHelper) {
     let ctrl = this;
-    this.loadFile("http://localhost:4200/assets/"+fileGeneratorHelper.templateName+".docx",function(error,content){
+    this.loadFile(this.assetUrl+fileGeneratorHelper.templateName+".docx",function(error,content){
       if (error) { throw error }
       let zip = new JSZip(content);
 
@@ -42,8 +46,17 @@ export class DocGeneratorService {
       };
       const angularParser = function(tag) {
         return {
-          get: tag === '.' ? function(s){ return s;} : function(s) {
-            return angularExpressions.compile(tag.replace(/(’|“|”)/g, "'"))(s);
+          get: function(scope, context) {
+            let result = null;
+            if(tag === '.') {
+              result = scope;
+            } else if (tag === "$index") {
+              const indexes = context.scopePathItem;
+              result = indexes[indexes.length - 1]+1;
+            } else {
+              result = angularExpressions.compile(tag.replace(/(’|“|”)/g, "'"))(scope);
+            }
+            return result;
           }
         };
       };

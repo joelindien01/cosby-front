@@ -12,7 +12,7 @@ export class DeliveryNoteService {
   constructor(private httpClient: HttpClient) { }
 
   apiUrl = environment.apiUrl;
-  baseUrl= apiUrl+"delivery-note/";
+  baseUrl= this.apiUrl+"delivery-note/";
 
   saveDeliveryNote(deliveryNoteDTO: DeliveryNoteDTO): Observable<any> {
     return this.httpClient.post(this.baseUrl, deliveryNoteDTO);
@@ -46,6 +46,10 @@ export class DeliveryNoteService {
 
   findById(deliveryNoteId: number) {
     return this.httpClient.get<DeliveryNoteDTO>(this.baseUrl+deliveryNoteId);
+  }
+
+  findNotes(searchForm: any) {
+    return this.httpClient.post<Array<DeliveryNote>>(this.baseUrl+"find", searchForm);
   }
 }
 

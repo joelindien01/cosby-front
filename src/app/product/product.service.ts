@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 export class ProductService {
 
   apiUrl = environment.apiUrl;
-  baseUrl= apiUrl+"product/";
+  baseUrl= this.apiUrl+"product/";
 
   constructor(private httpClient: HttpClient) {
 
@@ -49,5 +49,9 @@ export class ProductService {
     });
     return this.httpClient.get<Product[]>(this.baseUrl+"find", {params: params});
 
+  }
+
+  getProductLoadUrl(): string {
+    return this.baseUrl + "load";
   }
 }

@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {ConfigService} from "./config.service";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AddressComponent} from './address/address.component';
 import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -22,10 +22,14 @@ import { ViewAddressComponent } from './view-address/view-address.component';
 import { ViewContactComponent } from './view-contact/view-contact.component';
 import { ViewShipComponent } from './view-ship/view-ship.component';
 import {faPen} from "@fortawesome/free-solid-svg-icons/faPen";
-import {faEye} from "@fortawesome/free-solid-svg-icons";
+import {faEye, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import {DocGeneratorService} from "./doc-generator.service";
 import { ModalComponent } from './modal/modal.component';
 import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
+import {UserService} from "./user.service";
+import {BasicAuthHttpInterceptorService} from "./basic-auth-http-interceptor.service";
+import {faPowerOff} from "@fortawesome/free-solid-svg-icons/faPowerOff";
+import {MatDateFormats, NativeDateAdapter} from "@angular/material";
 
 @NgModule({
   declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
@@ -40,7 +44,7 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
     ShContextMenuModule,
   ],
   exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule, ShContextMenuModule, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
-  providers: [ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService]
+  providers: [ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService, {provide:HTTP_INTERCEPTORS, useClass: BasicAuthHttpInterceptorService, multi:true}]
 })
 export class CosbyCommonModule {
 
@@ -51,5 +55,7 @@ export class CosbyCommonModule {
     library.add(faPen);
     library.add(faEye);
     library.add(faSearch);
+    library.add(faPowerOff)
   }
 }
+

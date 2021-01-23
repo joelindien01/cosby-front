@@ -7,6 +7,9 @@ export class BillDTO {
   deadLine: Date;
   discount: number;
   creationDate: Date;
+  totalAmount: number;
+  deliveryFee: number;
+  transportationFee: number;
 }
 
 export class Bill {

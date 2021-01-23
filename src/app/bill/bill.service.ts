@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 export class BillService {
 
   apiUrl = environment.apiUrl;
-  baseUrl= apiUrl+"bill/";
+  baseUrl= this.apiUrl+"bill/";
 
   constructor(private httpClient: HttpClient,
               private docGenerator: DocGeneratorService) {}
@@ -40,7 +40,7 @@ export class BillService {
       .subscribe(billData => {
         let docGeneratorHelper = new FileGeneratorHelper();
         docGeneratorHelper.outputName = "invoice";
-        docGeneratorHelper.templateName = "invoice";
+        docGeneratorHelper.templateName = "invoice_2";
         docGeneratorHelper.data = billData;
         this.docGenerator.generateFile(docGeneratorHelper);
     });
@@ -58,4 +58,7 @@ export class BillService {
     return this.httpClient.get<BillDTO>(this.baseUrl+billId);
   }
 
+  findbills(searchForm: any) {
+    return this.httpClient.post<Array<Bill>>(this.baseUrl+"search", searchForm);
+  }
 }

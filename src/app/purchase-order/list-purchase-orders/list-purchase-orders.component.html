@@ -13,28 +13,28 @@
 
             <div class="form-group col-3">
               <mat-form-field>
-                <input matInput [matDatepicker]="picker1" placeholder="From" formControlName="orderCreationDateFrom" name="orderCreationDateFrom"/>
+                <input matInput [matDatepicker]="picker1" placeholder="From" formControlName="poCreatedAfter" name="orderCreationDateFrom"/>
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
               </mat-form-field>
             </div>
             <div class="form-group col-3">
               <mat-form-field>
-                <input matInput [matDatepicker]="picker2" placeholder="To" formControlName="orderCreationDateTo" name="orderCreationDateTo"/>
+                <input matInput [matDatepicker]="picker2" placeholder="To" formControlName="poCreatedBefore" name="orderCreationDateTo"/>
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
               </mat-form-field>
             </div>
             <div class="form-group col-3">
-              <select data-filter="model" class="filter-model filter form-control">
-                <option value="">Payment Status</option>
-                <option value="">Show All</option>
+              <select formControlName="paymentStatus" data-filter="model" class="filter-model filter form-control">
+                <option value="" [selected]="true">Payment Status</option>
+                <option *ngFor="let payStatus of paymentStatus" [value]="payStatus.value">{{payStatus.label}}</option>
               </select>
             </div>
             <div class="form-group col-3">
-              <select data-filter="model" class="filter-model filter form-control">
-                <option value="">Payment Method</option>
-                <option value="">Show All</option>
+              <select formControlName="paymentMeans" data-filter="model" class="filter-model filter form-control">
+                <option value="" [selected]="true">Payment Method</option>
+                <option *ngFor="let payMean of paymentMeans" [value]="payMean.value">{{payMean.label}}</option>
               </select>
             </div>
           </div>
@@ -43,7 +43,7 @@
               <input class="form-control" formControlName="customerNameCSV" type="text" placeholder="Customer name" />
             </div>
             <div class="form-group col-3">
-              <input class="form-control" formControlName="customerNameCSV" type="text" placeholder="PO Id" />
+              <input class="form-control" formControlName="purchaseOrderIdCSV" type="text" placeholder="PO Id" />
             </div>
             <div class="form-group col-3 ">
               <button type="button" class="btn btn-block btn-primary" (click)="findOrders()"><fa-icon icon="search"></fa-icon></button>
@@ -63,7 +63,8 @@
       <tr>
         <th>Customer name</th>
         <th>Order creation date</th>
-        <th>Delivery information</th>
+        <th>Order Id</th>
+        <th>Payment Status</th>
         <th class="text-center">Actions</th>
       </tr>
       </thead>
@@ -71,7 +72,8 @@
       <tr *ngFor="let order of ordersTableData$ | async" [shAttachMenu]="orderListMenu" [shMenuData]="order">
         <td>{{ order.customerName }}</td>
         <td>{{ order.orderCreationDate | date }}</td>
-        <td>{{ order.deliveryInformation | json }}</td>
+        <td>{{ order.id }}</td>
+        <td>{{ order.paymentStatus }}</td>
         <td class="text-center">
           <button mat-stroked-button color="primary" (click)="viewOrder(order.id)" class="mr-3 mb-1"><fa-icon icon="eye"></fa-icon></button>
           <button mat-stroked-button color="primary" (click)="createDeliveryNote(order.id, order.customerId)" class="mr-3 mb-1">Create delivery note</button>

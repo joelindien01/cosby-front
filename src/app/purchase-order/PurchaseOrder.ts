@@ -1,5 +1,6 @@
 import {Address, Customer, DeliveryInformation} from "../customer/customer";
 import {Product} from "../product/product";
+import {UnitOfMeasurement} from "../uom/UnitOfMeasurement";
 
 export class PurchaseOrder {
   id: number;
@@ -8,6 +9,7 @@ export class PurchaseOrder {
   deliveryInformation: DeliveryInformation;
   itemList: Item[];
   totalAmount: number;
+  paymentInformation: any
 }
 
 export class Item {
@@ -24,6 +26,7 @@ export class ItemDto {
   quantity: number;
   unit: number;
   amount: number;
+  unitOfMeasurement: UnitOfMeasurement;
 }
 export class PurchaseOrderDTO {
 

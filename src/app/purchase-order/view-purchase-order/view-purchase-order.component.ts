@@ -4,6 +4,8 @@ import {Item, ItemDto, PurchaseOrder} from "../PurchaseOrder";
 import {Observable} from "rxjs/Rx";
 import {PurchaseOrderService} from "../purchase-order.service";
 import {map} from "rxjs/internal/operators";
+import {BillDTO} from "../../bill/bill";
+import {isDefined} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-view-purchase-order',
@@ -14,6 +16,9 @@ export class ViewPurchaseOrderComponent implements OnInit {
   @Input() public purchaseOrder$: Observable<PurchaseOrder>;
   @Input() public title: string;
   @Input() public items$: Observable<Array<ItemDto>>;
+  @Input() bill: BillDTO;
+  totalAmount: number;
+  netTotal: number;
 
   constructor(private activatedRoute: ActivatedRoute,
               private orderService: PurchaseOrderService,
@@ -29,6 +34,10 @@ export class ViewPurchaseOrderComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(isDefined(this.bill)){
+      this.totalAmount = 0;
+      this.netTotal = 0;
+    }
   }
 
   private loadPurchaseOrder(purchaseOrderId: number) {

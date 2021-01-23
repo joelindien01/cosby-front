@@ -1,6 +1,24 @@
-<div class="row">
+<div class="row product-view">
   <div class="col-12">
-    <h5>Product Name: {{ product.name }}</h5>
+    <h5>Product: {{ product.name }}</h5>
+  </div>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12">
+        <h6>Allowed unit of measurement</h6>
+      </div>
+      <div class="col-12">
+        <mat-chip-list #chipList aria-label="unit of measure selection">
+          <mat-chip
+            *ngFor="let uom of product.uomSet"
+            [selectable]="false"
+            [removable]="false">
+            {{uom.label}} ({{uom.symbol}})
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+
   </div>
   <div class="col-12">
     <h6>Prices</h6>
