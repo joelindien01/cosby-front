@@ -1,15 +1,7 @@
 <div class="row">
-  <div class="col-12 align-elmts">
 
-    <div>
-      <h3>Delivery Note</h3>
-      <p>Note n° {{ (deliveryNote$ |async)?.id }}</p>
-      <p>Created on {{ (deliveryNote$ |async)?.creationDate |date }}</p>
-      <p>Delivery date: {{ (deliveryNote$ |async)?.deliveryDate |date }}</p>
-    </div>
-  </div>
   <div class="col-12">
-    <app-view-purchase-order [items$]="items$" [purchaseOrder$]="purchaseOrder$" [bill]="bill" title="Purchase Order">
+    <app-view-purchase-order [deliveryNote$]="deliveryNote$" [items$]="items$" [purchaseOrder$]="purchaseOrder$" [bill]="bill" title="Purchase Order">
 
     </app-view-purchase-order>
   </div>

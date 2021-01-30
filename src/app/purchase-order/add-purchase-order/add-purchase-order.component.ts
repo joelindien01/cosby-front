@@ -15,7 +15,6 @@ import {GlobalUomService} from "../../uom/global-uom.service";
 export class ReferenceItem {
 label: string;
 value: string;
-
 }
 
 @Component({
@@ -81,7 +80,8 @@ export class AddPurchaseOrderComponent implements OnInit {
     });
     this.paymentInfoForm = this.fb.group({
       payMeans: "",
-      payStatus: ""
+      payStatus: "",
+      currency: ''
     });
 
   }
@@ -142,5 +142,10 @@ export class AddPurchaseOrderComponent implements OnInit {
 
   selectDeliveryAddress() {
     this.showSelectDeliveryAddress = true;
+  }
+
+  addSetupToProduct() {
+    this.paymentInfoForm.get('currency').setValue(this.poSetupForm.get('currency').value);
+    this.purchaseOrder.poNumber = this.poSetupForm.get('poNumber').value;
   }
 }

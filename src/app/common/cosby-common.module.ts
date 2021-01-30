@@ -22,7 +22,7 @@ import { ViewAddressComponent } from './view-address/view-address.component';
 import { ViewContactComponent } from './view-contact/view-contact.component';
 import { ViewShipComponent } from './view-ship/view-ship.component';
 import {faPen} from "@fortawesome/free-solid-svg-icons/faPen";
-import {faEye, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
+import {faDownload, faEye, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import {DocGeneratorService} from "./doc-generator.service";
 import { ModalComponent } from './modal/modal.component';
 import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
@@ -55,7 +55,9 @@ export class CosbyCommonModule {
     library.add(faPen);
     library.add(faEye);
     library.add(faSearch);
-    library.add(faPowerOff)
+    library.add(faPowerOff);
+    library.add(faDownload);
+
   }
 }
 

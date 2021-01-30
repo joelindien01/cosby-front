@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {BillService} from "../bill.service";
-import {BillDTO} from "../bill";
+import {Account, BillDTO} from "../bill";
 import {ActivatedRoute} from "@angular/router";
+import {Observable} from "rxjs/Rx";
+import {AccountService} from "../../account/account.service";
 
 @Component({
   selector: 'app-add-bill',
@@ -14,15 +16,22 @@ export class AddBillComponent implements OnInit {
   public applyDiscount: boolean;
   public orderId: number;
   public customerId: number;
+  accounts$: Observable<Account>;
 
-  constructor(private fb: FormBuilder, private billService: BillService, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private billService: BillService, private accountService :AccountService , private route: ActivatedRoute) {
+    this.accounts$ = this.accountService.findAllAccounts();
     this.billForm = this.fb.group({
       deadLine: new FormControl(new Date()),
       discount: 0,
       applyDiscount: false,
       deadlines: [],
       deliveryFee: 0,
-      transportationFee: 0
+      transportationFee: 0,
+      ourSignatory:'',
+      ourSignatoryFunction: '',
+      customerSignatory: '',
+      customerSignatoryFunction: '',
+      impactedAccount: ''
     });
 
     this.route.params.subscribe(params => {

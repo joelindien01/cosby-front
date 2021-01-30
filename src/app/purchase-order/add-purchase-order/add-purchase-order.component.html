@@ -40,12 +40,12 @@
         <div class="col-6">
           <mat-form-field>
             <mat-select placeholder="Select the currency for this PO" formControlName="currency">
-              <mat-option *ngFor="let currency of (currencyList$| async)" [value]="currency.id">{{currency.label}} ({{currency.symbol}})</mat-option>
+              <mat-option *ngFor="let currency of (currencyList$| async)" [value]="currency">{{currency.label}} ({{currency.symbol}})</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
       </div>
-      <button *ngIf="poSetupForm.get('poNumber').value && poSetupForm.get('currency').value" mat-flat-button color="primary" type="button" matStepperNext>
+      <button *ngIf="poSetupForm.get('poNumber').value && poSetupForm.get('currency').value" (click)="addSetupToProduct()" mat-flat-button color="primary" type="button" matStepperNext>
         Next
       </button>
     </form>
@@ -80,7 +80,7 @@
 
             <mat-form-field>
               <textarea matInput formControlName="description" placeholder="Description" type="text"
-                        class="form-control input-md" required=""></textarea>
+                        class="form-control input-md" required="">{{ selectedProduct.name }}</textarea>
             </mat-form-field>
 
             <mat-form-field>

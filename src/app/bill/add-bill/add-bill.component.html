@@ -7,6 +7,15 @@
   <div class="col-12">
     <form [formGroup]="billForm">
       <div class="row">
+
+        <div class="col-9 account">
+          <mat-form-field>
+            <mat-select placeholder="Account to use for payment" formControlName="impactedAccount">
+              <mat-option *ngFor="let account of (accounts$| async)" [value]="account">{{account.bankName}} ({{account.reference}})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
         <div class="col-6">
           <mat-form-field>
             <input matInput formControlName="deadlines" placeholder="DeadLines (in days)" type="number"
@@ -25,14 +34,6 @@
             <mat-datepicker #picker1></mat-datepicker>
           </mat-form-field>
         </div>
-        <div class="col-12">
-          <p>Would you like to apply a discount? <input formControlName="applyDiscount" type="checkbox"/></p>
-        </div>
-        <div class="col-12" *ngIf="billForm.get('applyDiscount').value">
-          <mat-form-field>
-            <input matInput placeholder="discount (%)" formControlName="discount" type="number" name="discount"/>
-          </mat-form-field>
-        </div>
         <div class="col-6">
           <mat-form-field>
             <input matInput placeholder="Delivery Fee" formControlName="deliveryFee" type="number"/>
@@ -42,6 +43,47 @@
           <mat-form-field>
             <input matInput placeholder="Transportation Fee" formControlName="transportationFee" type="number"/>
           </mat-form-field>
+        </div>
+
+        <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field>
+                <input matInput placeholder="Our Signatory" formControlName="ourSignatory" type="text"/>
+              </mat-form-field>
+            </div>
+            <div class="col-6">
+              <mat-form-field>
+                <input matInput placeholder="Our Signatory Function" formControlName="ourSignatoryFunction" type="text"/>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field>
+                <input matInput placeholder="Customer Signatory" formControlName="customerSignatory" type="text"/>
+              </mat-form-field>
+            </div>
+            <div class="col-6">
+              <mat-form-field>
+                <input matInput placeholder="Customer Signatory Function" formControlName="customerSignatoryFunction" type="text"/>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <p>Would you like to apply a discount? <input formControlName="applyDiscount" type="checkbox"/></p>
+            </div>
+            <div class="col-6">
+              <mat-form-field *ngIf="billForm.get('applyDiscount').value">
+                <input matInput placeholder="discount (%)" formControlName="discount" type="number" name="discount"/>
+              </mat-form-field>
+            </div>
+          </div>
         </div>
         <div class="col-12">
           <button mat-flat-button color="primary" type="button" (click)="saveBill()">save bill</button>

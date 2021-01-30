@@ -34,6 +34,7 @@ import {AuthGuardServiceService as AuthGuard} from "./common/auth-guard-service.
 import {UserViewComponent} from "./user/user-view/user-view.component";
 import {LoadProductComponent} from "./product/load-product/load-product.component";
 import {UomModule} from "./uom/uom.module";
+import {AccountModule} from "./account/account.module";
 
 
 const appRoutes: Routes = [
@@ -79,6 +80,7 @@ const appRoutes: Routes = [
     FileSaverModule,
     UserModule,
     UomModule,
+    AccountModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only

@@ -16,6 +16,7 @@ export class ViewPurchaseOrderComponent implements OnInit {
   @Input() public purchaseOrder$: Observable<PurchaseOrder>;
   @Input() public title: string;
   @Input() public items$: Observable<Array<ItemDto>>;
+  @Input() public deliveryNote$: Observable<any>;
   @Input() bill: BillDTO;
   totalAmount: number;
   netTotal: number;

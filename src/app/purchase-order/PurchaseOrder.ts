@@ -1,6 +1,6 @@
 import {Address, Customer, DeliveryInformation} from "../customer/customer";
 import {Product} from "../product/product";
-import {UnitOfMeasurement} from "../uom/UnitOfMeasurement";
+import {Currency, UnitOfMeasurement} from "../uom/UnitOfMeasurement";
 
 export class PurchaseOrder {
   id: number;
@@ -9,7 +9,8 @@ export class PurchaseOrder {
   deliveryInformation: DeliveryInformation;
   itemList: Item[];
   totalAmount: number;
-  paymentInformation: any
+  paymentInformation: any;
+  poNumber: string;
 }
 
 export class Item {
@@ -37,6 +38,7 @@ export class PurchaseOrderDTO {
 export class PaymentInformationDTO {
   payMean: string;
   payStatus: string;
+  currency: Currency;
 }
 
 export class DeliveryNote {
