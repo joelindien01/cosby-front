@@ -6,7 +6,7 @@ import {
   MatNativeDateModule,
   MatSelectModule,
   MatStepperModule,
-  MatTableModule, NativeDateAdapter
+  MatTableModule, NativeDateAdapter, MatPaginatorModule
 } from "@angular/material";
 
 @NgModule({
@@ -23,7 +23,8 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatIconModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatPaginatorModule
   ],
   exports: [
     MatStepperModule,
@@ -36,7 +37,8 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatIconModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule { }

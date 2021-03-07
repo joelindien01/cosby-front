@@ -5,7 +5,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Price, Product} from "../product";
 import {GlobalUomService} from "../../uom/global-uom.service";
 import {Observable} from "rxjs/Rx";
-import {UnitOfMeasurement} from "../../uom/UnitOfMeasurement";
+import {Category, UnitOfMeasurement} from "../../uom/UnitOfMeasurement";
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent} from "@angular/material";
 import {isUndefined} from "util";
 import {map, startWith} from "rxjs/internal/operators";
@@ -23,6 +23,7 @@ export class AddProductComponent implements OnInit {
   public isEditMode: boolean;
   public editedProduct: Product;
   public  uoms$: Observable<Array<UnitOfMeasurement>>;
+  public availableCategories$: Observable<Array<Category>>;
   public uoms: Array<UnitOfMeasurement> = [];
   public allowedUomSet: Array<UnitOfMeasurement> = [];
   public filteredUoms$: Observable<UnitOfMeasurement[]>;
@@ -41,7 +42,8 @@ export class AddProductComponent implements OnInit {
     });
 
     this.uoms$ = uomService.findAllUOM();
-    this.productForm = this.fb.group({name: '', prices:this.fb.array([this.initPriceForm()]), uom: ''});
+    this.availableCategories$ = uomService.findAllCategoriesList();
+    this.productForm = this.fb.group({name: '', prices:this.fb.array([this.initPriceForm()]), uom: '', categories: ''});
 
     this.uoms$.subscribe( result => {
       this.uoms = result;

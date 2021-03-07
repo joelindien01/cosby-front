@@ -15,7 +15,7 @@ export class BillDTO {
   ourSignatoryFunction: string;
   customerSignatory: string;
   customerSignatoryFunction: string;
-  impactedAccount: string;
+
 }
 
 export class Bill {

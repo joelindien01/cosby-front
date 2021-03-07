@@ -21,6 +21,24 @@
 
   </div>
   <div class="col-12">
+    <div class="row">
+      <div class="col-12">
+        <h6>Categories</h6>
+      </div>
+      <div class="col-12">
+        <mat-chip-list #chipList aria-label="Category">
+          <mat-chip
+            *ngFor="let category of product.categories"
+            [selectable]="false"
+            [removable]="false">
+            {{category.label}}
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-12">
     <h6>Prices</h6>
   </div>
   <div class="col-12">

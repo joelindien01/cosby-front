@@ -36,10 +36,14 @@ export class BillService {
       }
     });
     this.httpClient
-      .get<Bill>(this.baseUrl+"generate", {params: params})
+      .get<any>(this.baseUrl+"generate", {params: params})
       .subscribe(billData => {
         let docGeneratorHelper = new FileGeneratorHelper();
-        docGeneratorHelper.outputName = "invoice";
+        docGeneratorHelper.outputName = "invoice"+
+          "_"+billData.id+ "_" +
+          billData.deliveryNote.purchaseOrder.customer.name+
+          "_"+
+          new Date().toISOString();
         docGeneratorHelper.templateName = "invoice_2";
         docGeneratorHelper.data = billData;
         this.docGenerator.generateFile(docGeneratorHelper);

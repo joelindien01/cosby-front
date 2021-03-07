@@ -51,6 +51,13 @@
         </tr>
       </tbody>
     </table>
+    <mat-paginator #paginator
+                   [length]="(productTable$ |async).length"
+                   [pageIndex]="0"
+                   [pageSize]="10"
+                   [pageSizeOptions]="[5, 10, 25, 100]">
+
+    </mat-paginator>
   </div>
 
 </div>

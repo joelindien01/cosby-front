@@ -100,8 +100,8 @@
       <tr *ngFor="let item of (items$ |async)">
         <td>{{ item.productName }}</td>
         <td class="text-right">{{ item.description }}</td>
-        <td class="text-right">{{ item.quantity }}</td>
-        <td class="text-right">{{ item.unit }} {{item.unitOfMeasurement?.symbol}}</td>
+        <td class="text-right">{{ item.quantity }} {{item.unitOfMeasurement?.symbol}}</td>
+        <td class="text-right">{{ item.unit }} </td>
         <td class="text-right">{{ item.amount }}</td>
       </tr>
       <tr>

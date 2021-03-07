@@ -40,6 +40,13 @@
             </mat-autocomplete>
           </mat-form-field>
 
+          <mat-form-field>
+            <mat-select placeholder="Categories" formControlName="categories" multiple>
+              <mat-option *ngFor="let category of (availableCategories$| async)" [value]="category">{{category.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
       <div class="row" formArrayName="prices">
         <div class="col-12">
           <h3>Add Prices</h3>
