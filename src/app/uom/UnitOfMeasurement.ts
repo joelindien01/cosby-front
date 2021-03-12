@@ -17,4 +17,9 @@ export class Category extends RefData {
 
 }
 
+export class LinkedProductGroup extends RefData {
+
+  multiSelect: boolean;
+}
+
 

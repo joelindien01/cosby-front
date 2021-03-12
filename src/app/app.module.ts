@@ -35,6 +35,8 @@ import {UserViewComponent} from "./user/user-view/user-view.component";
 import {LoadProductComponent} from "./product/load-product/load-product.component";
 import {UomModule} from "./uom/uom.module";
 import {AccountModule} from "./account/account.module";
+import {GroupComponent} from "./reference-data/group/group.component";
+import {ReferenceDataModule} from "./reference-data/reference-data.module";
 
 
 const appRoutes: Routes = [
@@ -49,6 +51,7 @@ const appRoutes: Routes = [
   { path: 'customer', component: ViewCustomerComponent , canActivate: [AuthGuard]},
   { path: 'product', component: AddProductComponent , canActivate: [AuthGuard]},
   { path: 'products', component: ListProductComponent , canActivate: [AuthGuard]},
+  { path: 'group', component: GroupComponent , canActivate: [AuthGuard]},
   { path: 'load-products', component: LoadProductComponent , canActivate: [AuthGuard]},
   { path: 'bills/add', component: AddBillComponent , canActivate: [AuthGuard]},
   { path: 'bills', component: ListBillComponent , canActivate: [AuthGuard]},
@@ -81,6 +84,7 @@ const appRoutes: Routes = [
     UserModule,
     UomModule,
     AccountModule,
+    ReferenceDataModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only

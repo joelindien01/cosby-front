@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {MatSortModule} from '@angular/material/sort';
 import {
   MatAutocomplete, MatAutocompleteModule,
   MatButtonModule, MatChipsModule, MatDateFormats, MatDatepickerModule, MatIconModule, MatInputModule, MatMenuModule,
@@ -25,7 +26,8 @@ import {
     MatIconModule,
     MatAutocompleteModule,
     MatPaginatorModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSortModule
   ],
   exports: [
     MatStepperModule,
@@ -40,7 +42,8 @@ import {
     MatIconModule,
     MatAutocompleteModule,
     MatPaginatorModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSortModule
   ]
 })
 export class MaterialModule { }
