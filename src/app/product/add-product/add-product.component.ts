@@ -7,6 +7,7 @@ import {GlobalUomService} from "../../uom/global-uom.service";
 import {Observable} from "rxjs/Rx";
 import {Category, UnitOfMeasurement} from "../../uom/UnitOfMeasurement";
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent} from "@angular/material";
+import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import {isUndefined} from "util";
 import {map, startWith} from "rxjs/internal/operators";
 
@@ -27,6 +28,21 @@ export class AddProductComponent implements OnInit {
   public uoms: Array<UnitOfMeasurement> = [];
   public allowedUomSet: Array<UnitOfMeasurement> = [];
   public filteredUoms$: Observable<UnitOfMeasurement[]>;
+  public linkOtherProduct: boolean;
+  public productToFindForm: FormGroup;
+  private foundProducts$: Observable<Product[]>;
+  selectedProductList: MatTableDataSource<any> = new MatTableDataSource();
+  displayedColumns: string[] = ['productName', 'chargeAsExtra', 'maxQuantityForExtra', 'group'];
+  linkedProductsFormArray: FormArray = this.fb.array([]);
+  productSetupForm: FormGroup = this.fb.group({ 'linkedProducts': this.linkedProductsFormArray });
+
+  onLinkOtherProduct(checkedValue: boolean) {
+    console.log(checkedValue);
+    if(!checkedValue) {
+      this.selectedProductList = new MatTableDataSource();
+      this.foundProducts$ = Observable.create();
+    }
+  }
   constructor(private fb: FormBuilder,
               private productService: ProductService,
               private activatedRoute: ActivatedRoute, private uomService: GlobalUomService) {
@@ -43,13 +59,24 @@ export class AddProductComponent implements OnInit {
 
     this.uoms$ = uomService.findAllUOM();
     this.availableCategories$ = uomService.findAllCategoriesList();
-    this.productForm = this.fb.group({name: '', prices:this.fb.array([this.initPriceForm()]), uom: '', categories: ''});
+    this.productForm = this.fb.group(
+      {name: '',
+        prices:this.fb.array([this.initPriceForm()]),
+        uom: '',
+        categories: '',
+        description: '',
+        mealCompositionSetup: this.fb.array([this.initMealCompositionSetup()])
+      });
 
     this.uoms$.subscribe( result => {
       this.uoms = result;
       this.filteredUoms$ = this.productForm.controls['uom'].valueChanges.pipe(
         startWith(null),
         map((uomLabel: string | null) => uomLabel ? this._filter(uomLabel) : this.uoms.slice()));
+    });
+
+    this.productToFindForm = this.fb.group({
+      productToFindName: [null]
     });
 
   }
@@ -88,12 +115,19 @@ export class AddProductComponent implements OnInit {
   }
 
   saveProduct() {
-    let product = this.productForm.value;
+    /*let product = this.productForm.value;
     product.uomSet = this.allowedUomSet;
     if (this.isEditMode) product.id = this.editedProduct.id;
     this.productService
       .saveProduct(product)
-      .subscribe(result=> alert('product added'));
+      .subscribe(result=> alert('product added'));*/
+     console.log(this.productSetupForm.value);
+  }
+
+  findProductByName() {
+    console.log("product to find: "+ this.productToFindForm.get('productToFindName').value);
+    const productToFound = this.productToFindForm.get('productToFindName').value;
+    this.foundProducts$ = this.productService.findProductByName(productToFound);
   }
 
   private editProductWithName(productId: any) {
@@ -167,5 +201,45 @@ export class AddProductComponent implements OnInit {
     return this.uoms.filter(uom => uom.label.includes(filterValue)) //  recherche par contenu;
   }
 
+  /*
+   id,
+   linkedProduct,
+   chargeAsExtra,
+   maxQuantityForExtra,
+   linkedProductGroup
+   */
 
+  private initMealCompositionSetup() {
+    return this.fb.group({
+      id: null,
+      linkedProduct: {id: null},
+      chargeAsExtra: false,
+      maxQuantityForExtra: 1,
+      linkedProductGroup: {id: null}
+    })
+  }
+
+  addToSelectedProductsList(product: Product) {
+    console.log(product);
+    const datasource = this.selectedProductList.data;
+    if(datasource.findIndex(d => d.linkedProduct.id == product.id) != -1) {
+      return;
+    }
+    datasource.push({
+      linkedProduct : product,
+      chargeAsExtra: false,
+      maxQuantityForExtra: 0,
+      linkedProductGroup: {id: null}
+    });
+    this.selectedProductList.data = datasource;
+    this.linkedProductsFormArray.push(this.initLinkedProduct(product.id));
+  }
+
+  private initLinkedProduct(linkedProductId?: number) {
+    return this.fb.group({
+      linkedProduct: {id: linkedProductId},
+      chargeAsExtra: false,
+      maxQuantityForExtra: 0
+    });
+  }
 }

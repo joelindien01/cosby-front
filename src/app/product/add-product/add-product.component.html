@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-12">
+  <div class="col-5">
     <h2 *ngIf="!isEditMode">Add Product</h2>
     <h2 *ngIf="isEditMode">Edit Product</h2>
 
@@ -47,16 +47,18 @@
             </mat-select>
           </mat-form-field>
 
-      <div class="row" formArrayName="prices">
+
+
+          <div class="row" formArrayName="prices">
         <div class="col-12">
           <h3>Add Prices</h3>
         </div>
-        <div class="col-4" *ngFor="let price of productForm.controls['prices'].controls; let i=index">
+        <div class="col-12" *ngFor="let price of productForm.controls['prices'].controls; let i=index">
 
           <div class="row" [formGroupName]="i">
-            <div class="col-sm-12">
+            <div class="col-12">
               <div class="row">
-                <div class="col-sm-3 justify-content-center">
+                <div class="col-3 justify-content-center">
                   <h5>Price {{i + 1}}</h5>
                 </div>
                 <div class="col-sm-2">
@@ -64,12 +66,12 @@
                 </div>
               </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-6">
               <mat-form-field>
                 <input matInput formControlName="label" type="text"  placeholder="label" class="form-control input-md" required="">
               </mat-form-field>
             </div>
-            <div class="col-sm-6">
+            <div class="col-6">
               <mat-form-field>
                 <input matInput formControlName="value" type="number" placeholder="value" class="form-control input-md" required="">
               </mat-form-field>
@@ -94,5 +96,98 @@
         </div>
       </div>
     </form>
+  </div>
+  <div class="col-7" *ngIf = "selectedProductList !== undefined">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <p>Link other products to create a meal? <mat-checkbox [checked]="linkOtherProduct" (change)="linkOtherProduct = !linkOtherProduct; onLinkOtherProduct($event.checked)"></mat-checkbox>
+          </p>
+        </div>
+        <div *ngIf="linkOtherProduct" class="col-12">
+          <form class="form-horizontal" [formGroup]="productToFindForm">
+            <div class="row d-flex h-100 align-items-center">
+              <div class="col-6">
+                <mat-form-field>
+                  <input matInput formControlName="productToFindName" placeholder="Find a product first" type="text"
+                         class="form-control input-md" required="">
+                </mat-form-field>
+              </div>
+
+              <div class="col-4">
+                <button mat-stroked-button color="primary" type="button" (click)="findProductByName()">search product</button>
+              </div>
+            </div>
+
+          </form>
+
+          <div class="col-12" *ngIf="(foundProducts$ | async) != null">
+            <div class="row d-flex h-100 align-items-center" *ngFor="let product of foundProducts$ | async">
+              <div class="col-6">{{ product.name }}</div>
+              <div class="col-6"><button mat-stroked-button color="primary" (click)="addToSelectedProductsList(product)"> link</button></div>
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    <div class="col-12" *ngIf="linkOtherProduct && selectedProductList.data?.length >0">
+      <div class="row">
+        <div class="col-6"></div>
+        <div class="col-6 mb-2">
+          <button mat-button class="float-right" color="primary"><mat-icon>add</mat-icon>add link group</button>
+        </div>
+        <div class="col-12">
+
+          <form [formGroup]="productSetupForm">
+            <table mat-table [dataSource]="selectedProductList" class="mat-elevation-z8" formArrayName="linkedProducts">
+
+              <!-- Position Column -->
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef>Product Name</th>
+                <td mat-cell *matCellDef="let element; let index = index"> {{element.linkedProduct.name}}
+                </td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="chargeAsExtra">
+                <th mat-header-cell *matHeaderCellDef>Charge as extra </th>
+                <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                  <mat-checkbox [checked]="linkOtherProduct" formControlName="chargeAsExtra"></mat-checkbox>
+                </td>
+              </ng-container>
+
+              <!-- Weight Column -->
+              <ng-container matColumnDef="maxQuantityForExtra">
+                <th mat-header-cell *matHeaderCellDef>Max For extra </th>
+                <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                  <div class="row">
+                    <div class="col-6">
+                      <mat-form-field>
+                        <input matInput formControlName="maxQuantityForExtra" type="number">
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </td>
+              </ng-container>
+
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="group">
+                <th mat-header-cell *matHeaderCellDef>Group </th>
+                <td mat-cell *matCellDef="let element"> {{element.group}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns; let index = index;" [formGroupName]="index"></tr>
+            </table>
+          </form>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
