@@ -5,11 +5,15 @@ import {ActivatedRoute} from "@angular/router";
 import {Price, Product} from "../product";
 import {GlobalUomService} from "../../uom/global-uom.service";
 import {Observable} from "rxjs/Rx";
-import {Category, UnitOfMeasurement} from "../../uom/UnitOfMeasurement";
+import {Category, LinkedProductGroup, UnitOfMeasurement} from "../../uom/UnitOfMeasurement";
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent} from "@angular/material";
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import {isUndefined} from "util";
 import {map, startWith} from "rxjs/internal/operators";
+import {GroupComponent} from "../../reference-data/group/group.component";
+
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {ReferenceDataService} from "../../reference-data/reference-data.service";
 
 @Component({
   selector: 'app-add-product',
@@ -35,6 +39,8 @@ export class AddProductComponent implements OnInit {
   displayedColumns: string[] = ['productName', 'chargeAsExtra', 'maxQuantityForExtra', 'group'];
   linkedProductsFormArray: FormArray = this.fb.array([]);
   productSetupForm: FormGroup = this.fb.group({ 'linkedProducts': this.linkedProductsFormArray });
+  groups$: Observable<Array<LinkedProductGroup>>;
+
 
   onLinkOtherProduct(checkedValue: boolean) {
     console.log(checkedValue);
@@ -45,7 +51,10 @@ export class AddProductComponent implements OnInit {
   }
   constructor(private fb: FormBuilder,
               private productService: ProductService,
-              private activatedRoute: ActivatedRoute, private uomService: GlobalUomService) {
+              private activatedRoute: ActivatedRoute,
+              private uomService: GlobalUomService,
+              private referenceDataService: ReferenceDataService,
+              public dialog: MatDialog) {
 
     this.activatedRoute.params.subscribe(routeParams => {
       const productId = routeParams['productId'];
@@ -79,6 +88,21 @@ export class AddProductComponent implements OnInit {
       productToFindName: [null]
     });
 
+    this.groups$ = this.referenceDataService.findAllGroup();
+
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(GroupComponent, {
+      width: '50%',
+      data: {showList: false}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.groups$ = this.referenceDataService.findAllGroup();
+      }
+    });
   }
 
   ngOnInit() {
@@ -215,7 +239,7 @@ export class AddProductComponent implements OnInit {
       linkedProduct: {id: null},
       chargeAsExtra: false,
       maxQuantityForExtra: 1,
-      linkedProductGroup: {id: null}
+      linkedProductGroup: this.fb.array([])
     })
   }
 
@@ -229,7 +253,7 @@ export class AddProductComponent implements OnInit {
       linkedProduct : product,
       chargeAsExtra: false,
       maxQuantityForExtra: 0,
-      linkedProductGroup: {id: null}
+      linkedProductGroup: ''
     });
     this.selectedProductList.data = datasource;
     this.linkedProductsFormArray.push(this.initLinkedProduct(product.id));
@@ -239,7 +263,8 @@ export class AddProductComponent implements OnInit {
     return this.fb.group({
       linkedProduct: {id: linkedProductId},
       chargeAsExtra: false,
-      maxQuantityForExtra: 0
+      maxQuantityForExtra: 2,
+      linkedProductGroup: ''
     });
   }
 }

@@ -136,7 +136,7 @@
       <div class="row">
         <div class="col-6"></div>
         <div class="col-6 mb-2">
-          <button mat-button class="float-right" color="primary"><mat-icon>add</mat-icon>add link group</button>
+          <button mat-button class="float-right" color="primary" (click)="openDialog()"><mat-icon>add</mat-icon>add link group</button>
         </div>
         <div class="col-12">
 
@@ -176,7 +176,13 @@
               <!-- Symbol Column -->
               <ng-container matColumnDef="group">
                 <th mat-header-cell *matHeaderCellDef>Group </th>
-                <td mat-cell *matCellDef="let element"> {{element.group}} </td>
+                <td mat-cell *matCellDef="let element; let index = index" [formGroupName]="index">
+                  <mat-form-field>
+                    <mat-select formControlName="linkedProductGroup" multiple>
+                      <mat-option *ngFor="let group of groups$ | async; index as i" [value]="group">{{group.label}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

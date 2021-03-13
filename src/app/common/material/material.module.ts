@@ -7,8 +7,10 @@ import {
   MatNativeDateModule,
   MatSelectModule,
   MatStepperModule,
-  MatTableModule, NativeDateAdapter, MatPaginatorModule, MatCheckboxModule
+  MatTableModule, NativeDateAdapter, MatPaginatorModule, MatCheckboxModule, MatDialogModule
 } from "@angular/material";
+
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [],
@@ -27,7 +29,8 @@ import {
     MatAutocompleteModule,
     MatPaginatorModule,
     MatCheckboxModule,
-    MatSortModule
+    MatSortModule,
+    MatDialogModule
   ],
   exports: [
     MatStepperModule,
@@ -43,8 +46,11 @@ import {
     MatAutocompleteModule,
     MatPaginatorModule,
     MatCheckboxModule,
-    MatSortModule
-  ]
+    MatSortModule,
+    MatDialogModule
+  ],
+  providers: [{ provide: MatDialogRef, useValue: {} },
+    { provide: MAT_DIALOG_DATA, useValue: [] }],
 })
 export class MaterialModule { }
 
