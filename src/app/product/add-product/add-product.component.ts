@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, Inject} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
 import {ProductService} from "../product.service";
 import {ActivatedRoute} from "@angular/router";
@@ -32,7 +32,7 @@ export class AddProductComponent implements OnInit {
   public uoms: Array<UnitOfMeasurement> = [];
   public allowedUomSet: Array<UnitOfMeasurement> = [];
   public filteredUoms$: Observable<UnitOfMeasurement[]>;
-  public linkOtherProduct: boolean;
+  public linkOtherProduct: boolean = true;
   public productToFindForm: FormGroup;
   private foundProducts$: Observable<Product[]>;
   selectedProductList: MatTableDataSource<any> = new MatTableDataSource();
@@ -54,7 +54,8 @@ export class AddProductComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private uomService: GlobalUomService,
               private referenceDataService: ReferenceDataService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              @Inject(MAT_DIALOG_DATA) public dialogData: any) {
 
     this.activatedRoute.params.subscribe(routeParams => {
       const productId = routeParams['productId'];
@@ -92,7 +93,7 @@ export class AddProductComponent implements OnInit {
 
   }
 
-  openDialog(): void {
+  openGroupDialog(): void {
     const dialogRef = this.dialog.open(GroupComponent, {
       width: '50%',
       data: {showList: false}
@@ -102,6 +103,13 @@ export class AddProductComponent implements OnInit {
       if(result) {
         this.groups$ = this.referenceDataService.findAllGroup();
       }
+    });
+  }
+
+  openProductDialog(): void {
+    const dialogRef = this.dialog.open(AddProductComponent, {
+      width: '50%',
+      data: {modalMode: true}
     });
   }
 
@@ -139,13 +147,13 @@ export class AddProductComponent implements OnInit {
   }
 
   saveProduct() {
-    /*let product = this.productForm.value;
+    let product = this.productForm.value;
+    product.linkedProductsWithConfig = this.productSetupForm.value.linkedProducts;
     product.uomSet = this.allowedUomSet;
     if (this.isEditMode) product.id = this.editedProduct.id;
     this.productService
       .saveProduct(product)
-      .subscribe(result=> alert('product added'));*/
-     console.log(this.productSetupForm.value);
+      .subscribe(result=> alert('product added'));
   }
 
   findProductByName() {

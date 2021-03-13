@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-5">
+  <div [ngClass]="(dialogData?.length === 0)? 'col-5': 'col-12' " class="col-5">
     <h2 *ngIf="!isEditMode">Add Product</h2>
     <h2 *ngIf="isEditMode">Edit Product</h2>
 
@@ -97,25 +97,28 @@
       </div>
     </form>
   </div>
-  <div class="col-7" *ngIf = "selectedProductList !== undefined">
+  <div class="col-7" *ngIf = "dialogData?.length === 0 && selectedProductList !== undefined">
     <div class="col-12">
-      <div class="row">
+      <div class="row d-flex h-100 align-items-center">
         <div class="col-12">
           <p>Link other products to create a meal? <mat-checkbox [checked]="linkOtherProduct" (change)="linkOtherProduct = !linkOtherProduct; onLinkOtherProduct($event.checked)"></mat-checkbox>
           </p>
+        </div>
+
+        <div class="col-12 mb-2 mt-2">
+          <button mat-button color="primary" (click)="openProductDialog()"><mat-icon>add</mat-icon>fast add a new product</button>
         </div>
         <div *ngIf="linkOtherProduct" class="col-12">
           <form class="form-horizontal" [formGroup]="productToFindForm">
             <div class="row d-flex h-100 align-items-center">
               <div class="col-6">
                 <mat-form-field>
-                  <input matInput formControlName="productToFindName" placeholder="Find a product first" type="text"
+                  <input matInput formControlName="productToFindName" placeholder="Find a product to link"
                          class="form-control input-md" required="">
                 </mat-form-field>
               </div>
-
-              <div class="col-4">
-                <button mat-stroked-button color="primary" type="button" (click)="findProductByName()">search product</button>
+              <div class="col-2">
+                <button mat-stroked-button color="primary" type="button" (click)="findProductByName()"><mat-icon>search</mat-icon></button>
               </div>
             </div>
 
@@ -135,8 +138,8 @@
     <div class="col-12" *ngIf="linkOtherProduct && selectedProductList.data?.length >0">
       <div class="row">
         <div class="col-6"></div>
-        <div class="col-6 mb-2">
-          <button mat-button class="float-right" color="primary" (click)="openDialog()"><mat-icon>add</mat-icon>add link group</button>
+        <div class="col-3 mb-2 mt-2">
+          <button mat-stroked-button class="float-right" color="primary" (click)="openGroupDialog()"><mat-icon>add</mat-icon>add link group</button>
         </div>
         <div class="col-12">
 
