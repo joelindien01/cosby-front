@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Product} from "./product";
 import {Observable} from "rxjs/index";
-import {Router} from "@angular/router";
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -17,9 +16,9 @@ export class ProductService {
 
   }
 
-  saveProduct(product: Product) {
+  saveProduct(product: any) {
     console.log(product);
-    return this.httpClient.post(this.baseUrl, product);
+    return this.httpClient.post(this.baseUrl, {productDTO: product, linkedProductsWithConfig: product.linkedProductsWithConfig});
   }
 
   findProductByName(productToFound: string): Observable<Product[]> {
@@ -53,5 +52,14 @@ export class ProductService {
 
   getProductLoadUrl(): string {
     return this.baseUrl + "load";
+  }
+
+  findLinkedProductsSetup(productId: number) {
+    let params = new HttpParams({
+      fromObject: {
+        productId: productId.toString()
+      }
+    });
+    return this.httpClient.get<any>(this.baseUrl+"find-linked-products", {params: params});
   }
 }

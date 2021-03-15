@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild, Inject} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
+import {Component, OnInit, ViewChild, Inject, AfterViewInit, ElementRef} from '@angular/core';
+import {FormArray, FormBuilder, FormGroup, AbstractControl, FormControl} from "@angular/forms";
 import {ProductService} from "../product.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Price, Product} from "../product";
 import {GlobalUomService} from "../../uom/global-uom.service";
 import {Observable} from "rxjs/Rx";
+import {mergeMap} from "rxjs/operators";
 import {Category, LinkedProductGroup, UnitOfMeasurement} from "../../uom/UnitOfMeasurement";
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatChipInputEvent} from "@angular/material";
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
@@ -14,7 +15,23 @@ import {GroupComponent} from "../../reference-data/group/group.component";
 
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {ReferenceDataService} from "../../reference-data/reference-data.service";
-
+export class MealDTO {
+  id: number;
+  originProduct: ProductDTO;
+  linkedProduct: ProductDTO;
+  chargeAsExtra: boolean;
+  multiSelect: boolean;
+  maxQuantityForExtra: number;
+  linkedProductGroup: LinkedProductGroup[];
+}
+export class ProductDTO {
+  id: number;
+  name: string;
+  prices: Price[];
+  uomSet: UnitOfMeasurement[];
+  categories: Category[];
+  description: string;
+}
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
@@ -37,9 +54,13 @@ export class AddProductComponent implements OnInit {
   private foundProducts$: Observable<Product[]>;
   selectedProductList: MatTableDataSource<any> = new MatTableDataSource();
   displayedColumns: string[] = ['productName', 'chargeAsExtra', 'maxQuantityForExtra', 'group'];
-  linkedProductsFormArray: FormArray = this.fb.array([]);
-  productSetupForm: FormGroup = this.fb.group({ 'linkedProducts': this.linkedProductsFormArray });
   groups$: Observable<Array<LinkedProductGroup>>;
+  showLinkedProductsTable: boolean = false;
+  productSetupForm: FormGroup = this.fb.group({ linkedProducts: this.fb.array([]) });
+
+  showLinkedProductTable(value?: boolean) {
+    this.showLinkedProductsTable =  this.linkOtherProduct && this.selectedProductList != undefined && this.selectedProductList.data.length >0 || value;
+  }
 
 
   onLinkOtherProduct(checkedValue: boolean) {
@@ -55,25 +76,29 @@ export class AddProductComponent implements OnInit {
               private uomService: GlobalUomService,
               private referenceDataService: ReferenceDataService,
               public dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public dialogData: any) {
+              @Inject(MAT_DIALOG_DATA) public dialogData: any, private router: Router) {
+
 
     this.activatedRoute.params.subscribe(routeParams => {
+      this.groups$ = this.referenceDataService.findAllGroup();
       const productId = routeParams['productId'];
       if(productId) {
         this.isEditMode = true;
          this.editProductWithName(productId);
       }else {
         this.initForm();
+        this.initLinkedProductForm();
       }
     });
 
     this.uoms$ = uomService.findAllUOM();
     this.availableCategories$ = uomService.findAllCategoriesList();
+
     this.productForm = this.fb.group(
       {name: '',
         prices:this.fb.array([this.initPriceForm()]),
         uom: '',
-        categories: '',
+        categories: [[]],
         description: '',
         mealCompositionSetup: this.fb.array([this.initMealCompositionSetup()])
       });
@@ -88,8 +113,6 @@ export class AddProductComponent implements OnInit {
     this.productToFindForm = this.fb.group({
       productToFindName: [null]
     });
-
-    this.groups$ = this.referenceDataService.findAllGroup();
 
   }
 
@@ -131,7 +154,7 @@ export class AddProductComponent implements OnInit {
 
   private initPriceForm(prices?: Array<Price>) {
     let formModel;
-    if (prices) {
+    if (prices != undefined) {
       formModel = prices.map(price => this.fb.group({
         id: price.id,
         label: [price.label],
@@ -148,12 +171,25 @@ export class AddProductComponent implements OnInit {
 
   saveProduct() {
     let product = this.productForm.value;
+    /*let lpgFormValue = this.productSetupForm.value.linkedProducts;
+    if(lpgFormValue.linkedProductGroup != undefined) {
+      const groups = lpgFormValue.linkedProductGroup.map(idOfGroup=>{ return {id: idOfGroup}});
+      lpgFormValue.linkedProductGroup = groups;
+    }*/
+
+
     product.linkedProductsWithConfig = this.productSetupForm.value.linkedProducts;
+    if(product.categories != undefined && product.categories.length >0 && product.categories[0].id == undefined ) {
+      product.categories = product.categories.map(catId => {return {id: catId}});
+    }
+
     product.uomSet = this.allowedUomSet;
     if (this.isEditMode) product.id = this.editedProduct.id;
     this.productService
       .saveProduct(product)
       .subscribe(result=> alert('product added'));
+    console.log(this.productSetupForm.value);
+    //this.reset();
   }
 
   findProductByName() {
@@ -167,9 +203,23 @@ export class AddProductComponent implements OnInit {
      this.editedProduct = product;
      this.initForm(product);
    });
+    this.groups$.pipe(
+      mergeMap((groups) => this.productService.findLinkedProductsSetup(productId))).subscribe(meals => {
+      this.initLinkedProductForm(meals);
+      /*let control: FormArray = <FormArray>this.productSetupForm.controls['linkedProducts'];
+      control.push(this.initLinkedProductArray(meals));*/
+      this.showLinkedProductTable(true);
+    });
+
+   /*this.productService.findLinkedProductsSetup(productId).subscribe( meals => {
+     this.initLinkedProductForm(meals);
+     /*let control: FormArray = <FormArray>this.productSetupForm.controls['linkedProducts'];
+     control.push(this.initLinkedProductArray(meals));
+     this.showLinkedProductTable(true);
+   });*/
   }
 
-  private initForm(product?: Product) {
+  private initForm(product?: any) {
 
     this.priceModel = product ? this.initPriceForm(product.prices): this.initPriceForm();
     //TODO to be properly refactored
@@ -177,16 +227,19 @@ export class AddProductComponent implements OnInit {
       this.productForm = this.fb.group({
         name: [product.name],
         prices: this.fb.array(this.priceModel),
-        uom: ''
+        uom: '',
+        categories: [product.categories != undefined? product.categories.map(cat => cat.id) : []]
       });
       this.allowedUomSet = product.uomSet;
     } else {
       this.productForm = this.fb.group({
         name: [''],
         prices: this.fb.array([this.priceModel]),
-        uom: ''
+        uom: '',
+        categories: [[]]
       });
     }
+    console.log(this.productForm.value);
   }
 
   add(event: MatChipInputEvent): void {
@@ -251,6 +304,10 @@ export class AddProductComponent implements OnInit {
     })
   }
 
+  ngAfterViewInit() {
+    console.log(this.productSetupForm.value);
+  }
+
   addToSelectedProductsList(product: Product) {
     console.log(product);
     const datasource = this.selectedProductList.data;
@@ -261,18 +318,79 @@ export class AddProductComponent implements OnInit {
       linkedProduct : product,
       chargeAsExtra: false,
       maxQuantityForExtra: 0,
-      linkedProductGroup: ''
+      linkedProductGroup: null
     });
     this.selectedProductList.data = datasource;
-    this.linkedProductsFormArray.push(this.initLinkedProduct(product.id));
+
+    let control: FormArray = <FormArray>this.productSetupForm.controls['linkedProducts'];
+    control.push(this.initLinkedProduct(product.id));
+    this.showLinkedProductTable();
+    console.log(this.productSetupForm.value);
+    console.log(this.productForm.value);
   }
 
   private initLinkedProduct(linkedProductId?: number) {
     return this.fb.group({
       linkedProduct: {id: linkedProductId},
       chargeAsExtra: false,
-      maxQuantityForExtra: 2,
-      linkedProductGroup: ''
+      maxQuantityForExtra: 0,
+      linkedProductGroup: []
     });
+  }
+
+  private initLinkedProductArray(mealDTOs: Array<MealDTO>) {
+    const datasource = this.selectedProductList.data;
+    //const controls: FormArray = this.fb.array([]);
+
+
+    let control: FormArray = <FormArray>this.productSetupForm.controls['linkedProducts'];
+    mealDTOs.forEach(meal => {
+      /*let lpgIds;
+      if(meal.linkedProductGroup != undefined) {
+        lpgIds = meal.linkedProductGroup.map(g => {
+          //return {id:g.id, label:g.label}
+          return g.id;
+        });
+      } else {
+        lpgIds = [];
+      }*/
+
+      const data = {
+        id: meal.id,
+        linkedProduct: {id: meal.linkedProduct.id, name: meal.linkedProduct.name},
+        chargeAsExtra: meal.chargeAsExtra,
+        maxQuantityForExtra: meal.maxQuantityForExtra,
+        linkedProductGroup: []
+      };
+      datasource.push(data);
+      //control.push(this.initLinkedProduct(meal.linkedProduct.id));
+      let groupControl = this.fb.group(data);
+      groupControl.controls['linkedProductGroup'].setValue(meal.linkedProductGroup);
+
+      control.push(groupControl);
+
+    });
+
+    this.selectedProductList.data = datasource;
+  }
+
+  private initLinkedProductForm(meals?: Array<MealDTO>) {
+
+    if(meals == undefined) {
+      //this.productSetupForm = this.fb.group({ linkedProducts: this.fb.array([this.initLinkedProduct()]) });
+
+    }else {
+      //this.productSetupForm = this.fb.group({ linkedProducts: this.fb.array([this.initLinkedProductArray()]) });
+      this.productSetupForm = this.fb.group({ linkedProducts: this.fb.array([]) });
+
+      this.initLinkedProductArray(meals);
+      console.log(this.productSetupForm);
+    }
+
+  }
+
+
+  private reset() {
+    this.router.navigateByUrl("/products").then();
   }
 }
