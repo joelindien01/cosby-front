@@ -21,6 +21,7 @@ export class DeliveryInformation {
   imo: string;
   flag: string;
   master: string;
+  port: string;
   customer: Customer;
 }
 

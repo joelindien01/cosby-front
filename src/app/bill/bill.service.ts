@@ -1,9 +1,32 @@
 import {Inject, Injectable} from '@angular/core';
-import {Bill, BillDTO} from "./bill";
+import {Account, Bill, BillDTO} from "./bill";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs/index";
 import {DocGeneratorService, FileGeneratorHelper} from "../common/doc-generator.service";
 import { environment } from '../../environments/environment';
+import {Item} from "../purchase-order/PurchaseOrder";
+
+export class BillData {
+  vessel: string;
+  contactPersonName: string;
+  yourRef: string;
+  billTo: string;
+  creationDate: Date;
+  port: string;
+  deadLine: Date;
+  deliveryNoteId: string;
+  billId: string;
+  deliveryFee: string;
+  transportationFee: string;
+  subTotal: number;
+  discount: string;
+  netTotal: string;
+  el: Item[];
+  impactedAccount: Account;
+  ourSignatoryFunction: string;
+  ourSignatory: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -39,9 +62,13 @@ export class BillService {
       .get<Bill>(this.baseUrl+"generate", {params: params})
       .subscribe(billData => {
         let docGeneratorHelper = new FileGeneratorHelper();
-        docGeneratorHelper.outputName = "invoice";
+        docGeneratorHelper.outputName = "invoice"+
+          "_"+billData.id+ "_" +
+          billData.deliveryNote.purchaseOrder.customer.name+
+          "_"+
+          new Date().toISOString();
         docGeneratorHelper.templateName = "invoice_2";
-        docGeneratorHelper.data = billData;
+        docGeneratorHelper.data = this.mapBillData(billData);
         this.docGenerator.generateFile(docGeneratorHelper);
     });
   }
@@ -61,4 +88,31 @@ export class BillService {
   findbills(searchForm: any) {
     return this.httpClient.post<Array<Bill>>(this.baseUrl+"search", searchForm);
   }
+
+  private mapBillData(bill: Bill) {
+    let billData: BillData = new BillData();
+    billData.vessel = bill.deliveryNote.purchaseOrder.deliveryInformation.vessel;
+    billData.contactPersonName = bill.deliveryNote.purchaseOrder.customer.contacts[0].name;
+    billData.yourRef = bill.deliveryNote.purchaseOrder.poNumber;
+    billData.billTo = bill.deliveryNote.purchaseOrder.customer.name;
+    billData.creationDate = bill.creationDate;
+    billData.port = bill.deliveryNote.purchaseOrder.deliveryInformation.port;
+    billData.deadLine = bill.deadLine;
+    billData.deliveryNoteId = bill.deliveryNote.id.toString();
+    billData.el = bill.deliveryNote.purchaseOrder.itemList;
+    billData.deliveryFee = bill.deliveryFee.toString();
+    billData.transportationFee = bill.transportationFee.toString();
+    billData.subTotal = bill.deliveryNote.purchaseOrder.totalAmount;
+    billData.netTotal = bill.netTotal.toString();
+    billData.discount = bill.discount.toString();
+    billData.impactedAccount = bill.impactedAccount;
+    billData.ourSignatory = bill.ourSignatory;
+    billData.ourSignatoryFunction = bill.ourSignatoryFunction;
+    billData.billId = bill.id.toString();
+
+    return billData;
+  }
+
+
 }
+

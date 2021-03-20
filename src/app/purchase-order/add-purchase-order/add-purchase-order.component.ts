@@ -11,10 +11,14 @@ import {ActivatedRoute} from "@angular/router";
 import {switchMap} from "rxjs/internal/operators";
 import {Currency} from "../../uom/UnitOfMeasurement";
 import {GlobalUomService} from "../../uom/global-uom.service";
+import {moveItemInArray} from "@angular/cdk/drag-drop";
+
 
 export class ReferenceItem {
 label: string;
 value: string;
+
+
 }
 
 @Component({
@@ -35,12 +39,13 @@ export class AddPurchaseOrderComponent implements OnInit {
   public showAddAnotherProductButton: boolean;
   public showSelectDeliveryAddress: boolean;
   public selectedProduct: Product;
-  public selectedProducts: any = [];
+  public selectedProducts: Array<any> = [];
   public currentCustomer$: Observable<Customer>;
   public paymentInfoForm: FormGroup;
   public poSetupForm: FormGroup;
   public paymentMeans: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
+  productAlreadySelected: boolean;
 
   constructor(private customerService: CustomerService,
               private fb: FormBuilder,
@@ -98,8 +103,15 @@ export class AddPurchaseOrderComponent implements OnInit {
   }
 
   addProductToItems() {
-    this.showItemConfig = true;
-    this.selectedProduct = this.selectedProductForm.get('product').value;
+     const selectedProduct: any = this.selectedProductForm.get('product').value;
+    if(this.selectedProducts.findIndex( p => p.name == selectedProduct.name) >= 0) {
+      this.productAlreadySelected = true;
+      alert("product already selected");
+      this.selectDeliveryAddress();
+    } else {
+      this.showItemConfig = true;
+      this.selectedProduct = selectedProduct;
+    }
   }
 
   saveItem() {
@@ -108,6 +120,7 @@ export class AddPurchaseOrderComponent implements OnInit {
     this.purchaseOrder.itemList.push(item);
     console.log(this.purchaseOrder);
     alert("item saved");
+
     this.selectedProducts.push({name: this.selectedProduct.name,
       description: this.selectedProductForm.get('description').value,
       quantity: this.selectedProductForm.get('quantity').value,
@@ -126,6 +139,7 @@ export class AddPurchaseOrderComponent implements OnInit {
 
   addAnotherProduct() {
     this.showAddAnotherProductButton = !this.showAddAnotherProductButton;
+    this.productAlreadySelected = false;
     //TODO restart process
   }
 
@@ -142,6 +156,10 @@ export class AddPurchaseOrderComponent implements OnInit {
 
   selectDeliveryAddress() {
     this.showSelectDeliveryAddress = true;
+  }
+
+  onListDrop(event: any) {
+    moveItemInArray(this.selectedProducts, event.previousIndex, event.currentIndex);
   }
 
   addSetupToProduct() {

@@ -3,10 +3,11 @@
   <p>You are going to generate a purchase order for customer: <b>{{(currentCustomer$ |async)?.name }}</b></p>
 </div>
 
-<div class="col-12" *ngIf="selectedProducts != undefined">
+<!--<div class="col-12" *ngIf="selectedProducts != undefined">-->
+<div class="col-12">
   <h3>Added products list</h3>
   <div class="align-self-center col-6">
-    <table class="table table-bordered">
+    <table class="table table-bordered" cdkDropList (cdkDropListDropped)="onListDrop($event)">
       <thead>
       <tr>
         <th>Name</th>
@@ -16,12 +17,13 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let prdct of selectedProducts">
+     <tr *ngFor="let prdct of selectedProducts" cdkDrag>
         <td>{{prdct.name}}</td>
         <td>{{prdct.description}}</td>
-        <td>{{prdct.quantity}} {{prdct.unitOfMeasurement.symbol}}</td>
+        <td>{{prdct.quantity}} {{prdct?.unitOfMeasurement?.symbol}}</td>
         <td>{{prdct.unit}}</td>
       </tr>
+
       </tbody>
     </table>
   </div>
@@ -74,6 +76,9 @@
           <button mat-stroked-button color="primary" *ngIf="selectedProductForm.get('product').value" type="button"
                   (click)="addProductToItems()">
             set product items
+          </button>
+          <button *ngIf="productAlreadySelected" mat-stroked-button color="primary" type="button" matStepperNext (click)="selectDeliveryAddress()">
+            select delivery address
           </button>
 
           <div *ngIf="selectedProduct">

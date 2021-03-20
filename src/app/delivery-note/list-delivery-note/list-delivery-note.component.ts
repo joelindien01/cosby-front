@@ -73,9 +73,7 @@ export class ListDeliveryNoteComponent implements OnInit {
   }
 
   generateDeliveryNote(deliveryNoteId: number) {
-    this.deliveryNoteService.generateDeliveryNote(deliveryNoteId).subscribe(result => {
-      alert("note generated");
-    });
+    this.deliveryNoteService.generateDeliveryNote(deliveryNoteId);
   }
 
   sendBillByEmail(deliveryNoteId: number) {

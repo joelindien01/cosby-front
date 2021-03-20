@@ -37,6 +37,12 @@
           </div>
         </div>
       </div>
+      <div class="col-8 text-right" *ngIf="deliveryNote$ != undefined">
+        <input  #noteId [value]="(deliveryNote$ |async)?.id" type="hidden" />
+        <button  mat-flat-button color="primary" (click)="createBill(noteId.value)">Create
+          bill
+        </button>
+      </div>
     </div>
   </div>
 
@@ -50,7 +56,9 @@
       </div>
       <div class="col-9 text-right" *ngIf="!title">
         <button mat-flat-button color="primary" (click)="createDeliveryNote()" class="mr-3 mb-1">Create delivery note</button>
+
       </div>
+
     </div>
   </div>
   <div class="col-12 align-elmts">

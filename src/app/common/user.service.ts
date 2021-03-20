@@ -51,11 +51,12 @@ export class UserService {
   checkLogin(username, password) {
     (this.authenticate(username, password).subscribe(
         data => {
-          this.router.navigate(['customers']);
+          this.router.navigate(['customers']).then();
           this.invalidLogin = false;
         },
         error => {
           this.invalidLogin = true;
+          this.router.navigate(['login']).then();
         }
       )
     );

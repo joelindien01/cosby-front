@@ -8,6 +8,7 @@ import {
   MatStepperModule,
   MatTableModule, NativeDateAdapter
 } from "@angular/material";
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 @NgModule({
   declarations: [],
@@ -23,7 +24,8 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatIconModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    DragDropModule
   ],
   exports: [
     MatStepperModule,
@@ -36,7 +38,8 @@ import {
     MatNativeDateModule,
     MatChipsModule,
     MatIconModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    DragDropModule
   ]
 })
 export class MaterialModule { }

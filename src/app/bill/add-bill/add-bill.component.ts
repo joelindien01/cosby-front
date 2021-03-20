@@ -16,7 +16,7 @@ export class AddBillComponent implements OnInit {
   public applyDiscount: boolean;
   public orderId: number;
   public customerId: number;
-  accounts$: Observable<Account>;
+  accounts$: Observable<Array<Account>>;
 
   constructor(private fb: FormBuilder, private billService: BillService, private accountService :AccountService , private route: ActivatedRoute) {
     this.accounts$ = this.accountService.findAllAccounts();

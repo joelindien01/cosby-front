@@ -15,7 +15,7 @@ export class BillDTO {
   ourSignatoryFunction: string;
   customerSignatory: string;
   customerSignatoryFunction: string;
-  impactedAccount: string;
+
 }
 
 export class Bill {
@@ -25,6 +25,13 @@ export class Bill {
   deadLine: Date;
   discount: number;
   creationDate: Date;
+  deliveryFee: number;
+  transportationFee: number;
+  impactedAccount: Account;
+  subTotal: number;
+  netTotal: number;
+  ourSignatoryFunction: string;
+  ourSignatory: string;
 
 }
 

@@ -41,6 +41,10 @@ export class ViewPurchaseOrderComponent implements OnInit {
     }
   }
 
+  createBill(deliveryNoteId: number) {
+    this.router.navigate(['/bills/add', {deliveryNoteId: deliveryNoteId}]).then();
+  }
+
   private loadPurchaseOrder(purchaseOrderId: number) {
     this.purchaseOrder$ = this.orderService.findById(purchaseOrderId);
     this.items$ = this.orderService.findItemsByOrderId(purchaseOrderId);
