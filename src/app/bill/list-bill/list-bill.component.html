@@ -154,7 +154,8 @@
           <td class="text-center">
             <button mat-stroked-button color="primary" (click)="viewBill(bill.billId)" class="mr-2 mb-2"><fa-icon icon="eye"></fa-icon></button>
             <button mat-stroked-button color="primary" (click)="generateBill(bill.billId)" class="mr-2 mb-2">Generate bill</button>
-            <button mat-stroked-button color="primary" (click)="sendBillByEmail(bill.billId)" class="mr-2 mb-2">Send by Email</button>
+            <button mat-stroked-button color="primary" (click)="createCreditNote(bill.billId)" class="mr-2 mb-2">Create credit note</button>
+            <button *ngIf="bill.initialBill.creditNotes?.length > 0" mat-stroked-button color="primary" (click)="viewCreditNotes(bill)" class="mr-2 mb-2">View credit notes</button>
           </td>
         </tr>
       </tbody>

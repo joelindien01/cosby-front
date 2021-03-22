@@ -8,6 +8,7 @@ import {CosbyCommonModule} from "../common/cosby-common.module";
 import { ViewDeliveryNoteComponent } from './view-delivery-note/view-delivery-note.component';
 import {ViewPurchaseOrderComponent} from "../purchase-order/view-purchase-order/view-purchase-order.component";
 import {PurchaseOrderModule} from "../purchase-order/purchase-order.module";
+import {CreditNoteModule} from "../credit-note/credit-note.module";
 
 @NgModule({
   declarations: [AddDeliveryNoteComponent, ListDeliveryNoteComponent, ViewDeliveryNoteComponent],

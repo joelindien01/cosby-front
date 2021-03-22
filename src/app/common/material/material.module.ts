@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   MatAutocomplete, MatAutocompleteModule,
-  MatButtonModule, MatChipsModule, MatDateFormats, MatDatepickerModule, MatIconModule, MatInputModule, MatMenuModule,
+  MatButtonModule, MatChipsModule, MatDateFormats, MatDatepickerModule, MatDialogModule, MatIconModule, MatInputModule,
+  MatMenuModule,
   MatNativeDateModule,
   MatSelectModule,
   MatStepperModule,
@@ -25,7 +26,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     MatChipsModule,
     MatIconModule,
     MatAutocompleteModule,
-    DragDropModule
+    DragDropModule,
+    MatDialogModule
   ],
   exports: [
     MatStepperModule,
@@ -39,7 +41,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     MatChipsModule,
     MatIconModule,
     MatAutocompleteModule,
-    DragDropModule
+    DragDropModule,
+    MatDialogModule
   ]
 })
 export class MaterialModule { }

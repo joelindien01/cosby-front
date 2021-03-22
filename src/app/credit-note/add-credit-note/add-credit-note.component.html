@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-12">
+    <form [formGroup]="creditNoteFormGroup">
+      <mat-form-field>
+        <input matInput placeholder="Credited Amount" formControlName="creditedAmount" type="number" name="creditedAmount"/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Net to be deducted" formControlName="netToBeDeducted" type="number" name="netToBeDeducted"/>
+      </mat-form-field>
+
+      <button mat-stroked-button color="primary" type="button" (click)="saveCreditNote()">Validate credit</button>
+    </form>
+  </div>
+</div>
+

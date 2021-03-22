@@ -7,6 +7,10 @@ import {map} from "rxjs/internal/operators";
 import {Customer} from "../../customer/customer";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ReferenceItem} from "../../purchase-order/add-purchase-order/add-purchase-order.component";
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {AddCreditNoteComponent} from "../../credit-note/add-credit-note/add-credit-note.component";
+import {ListCreditNoteComponent} from "../../credit-note/list-credit-note/list-credit-note.component";
+import {ListCreditNoteDialogComponent} from "../../credit-note/list-credit-note-dialog/list-credit-note-dialog.component";
 
 @Component({
   selector: 'app-list-bill',
@@ -26,7 +30,8 @@ export class ListBillComponent implements OnInit {
   constructor(private billService: BillService,
               private route: ActivatedRoute,
               private router: Router,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              public dialog: MatDialog) {
     this.route.params.subscribe(params => {
       if (params['customerId']) {
         const customerId = params['customerId'];
@@ -94,6 +99,7 @@ export class ListBillComponent implements OnInit {
           billTable.deadLine = bill.deadLine;
           billTable.discount = bill.discount;
           billTable.purchaseOrderId = bill.deliveryNote.purchaseOrder.id;
+          billTable.initialBill = bill;
 
           return billTable;
         })
@@ -113,6 +119,24 @@ export class ListBillComponent implements OnInit {
       console.log(s);
     })*/
   }
+
+  createCreditNote(currentBillId: any) {
+    const dialogRef = this.dialog.open(AddCreditNoteComponent, {
+      width: '250px',
+      data: {billId: currentBillId}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('Th');
+    });
+  }
+
+  viewCreditNotes(bill: BillTable) {
+    const dialogRef = this.dialog.open(ListCreditNoteDialogComponent, {
+      width: '50%',
+      data: bill.initialBill
+    });
+  }
 }
 
 export class BillTable {
@@ -122,4 +146,5 @@ export class BillTable {
   deadLine;
   discount;
   creationDate;
+  initialBill: BillDTO;
 }

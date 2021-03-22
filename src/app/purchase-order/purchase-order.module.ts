@@ -8,6 +8,7 @@ import { ListPurchaseOrdersComponent } from './list-purchase-orders/list-purchas
 import {MaterialModule} from "../common/material/material.module";
 import {CosbyCommonModule} from "../common/cosby-common.module";
 import { ViewPurchaseOrderComponent } from './view-purchase-order/view-purchase-order.component';
+import {CreditNoteModule} from "../credit-note/credit-note.module";
 
 @NgModule({
   declarations: [AddPurchaseOrderComponent, ListPurchaseOrdersComponent, ViewPurchaseOrderComponent],
@@ -18,7 +19,8 @@ import { ViewPurchaseOrderComponent } from './view-purchase-order/view-purchase-
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    CosbyCommonModule
+    CosbyCommonModule,
+    CreditNoteModule
   ]
 })
 export class PurchaseOrderModule { }

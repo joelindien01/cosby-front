@@ -1,0 +1,27 @@
+<div class="row">
+  <h4>Credit Notes</h4>
+  <div class="col-12">
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>Credit Note Id</th>
+        <th>Note creation date</th>
+        <th>Credited Amount</th>
+        <th>Net to be deducted</th>
+        <th class="text-center">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let note of bill.creditNotes">
+        <td>{{ note.id }}</td>
+        <td>{{ note.creationDate | date }}</td>
+        <td>{{ note.creditedAmount }}</td>
+        <td>{{ note.netToBeDeducted }}</td>
+        <td class="text-center">
+          <button mat-stroked-button color="primary" (click)="generateCreditNote(note)" class="mr-3 mb-1">Download credit notes</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

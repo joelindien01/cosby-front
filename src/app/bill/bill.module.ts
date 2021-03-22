@@ -8,6 +8,7 @@ import {CosbyCommonModule} from "../common/cosby-common.module";
 import { ViewBillComponent } from './view-bill/view-bill.component';
 import {PurchaseOrderModule} from "../purchase-order/purchase-order.module";
 import {DeliveryNoteModule} from "../delivery-note/delivery-note.module";
+import {CreditNoteModule} from "../credit-note/credit-note.module";
 
 @NgModule({
   declarations: [AddBillComponent, ListBillComponent, ViewBillComponent],
@@ -19,7 +20,8 @@ import {DeliveryNoteModule} from "../delivery-note/delivery-note.module";
     FormsModule,
     CosbyCommonModule,
     PurchaseOrderModule,
-    DeliveryNoteModule
+    DeliveryNoteModule,
+    CreditNoteModule
   ]
 })
 export class BillModule { }

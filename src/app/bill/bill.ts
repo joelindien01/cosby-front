@@ -15,7 +15,19 @@ export class BillDTO {
   ourSignatoryFunction: string;
   customerSignatory: string;
   customerSignatoryFunction: string;
+  creditNotes: CreditNoteReadDTO[];
+}
 
+export class CreditNoteReadDTO
+{
+
+  id: number;
+
+  creationDate: Date;
+
+  creditedAmount: number;
+
+  netToBeDeducted: number;
 }
 
 export class Bill {

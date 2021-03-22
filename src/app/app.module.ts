@@ -35,6 +35,7 @@ import {UserViewComponent} from "./user/user-view/user-view.component";
 import {LoadProductComponent} from "./product/load-product/load-product.component";
 import {UomModule} from "./uom/uom.module";
 import {AccountModule} from "./account/account.module";
+import {CreditNoteModule} from "./credit-note/credit-note.module";
 
 
 const appRoutes: Routes = [
@@ -81,6 +82,7 @@ const appRoutes: Routes = [
     UserModule,
     UomModule,
     AccountModule,
+    CreditNoteModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only

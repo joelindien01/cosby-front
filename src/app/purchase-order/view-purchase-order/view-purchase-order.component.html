@@ -28,7 +28,7 @@
         <h3 *ngIf="bill == undefined">Delivery Note</h3>
         <div class="card">
           <div class="card-header">
-            Note Details
+            Delivery Note Details
           </div>
           <div class="card-body">
             <p>Note n° {{ (deliveryNote$ |async)?.id }}</p>
@@ -37,14 +37,16 @@
           </div>
         </div>
       </div>
-      <div class="col-8 text-right" *ngIf="deliveryNote$ != undefined">
+      <div class="col-8 text-right" *ngIf="deliveryNote$ != undefined && bill == undefined">
         <input  #noteId [value]="(deliveryNote$ |async)?.id" type="hidden" />
-        <button  mat-flat-button color="primary" (click)="createBill(noteId.value)">Create
+        <button mat-flat-button color="primary" (click)="createBill(noteId.value)">Create
           bill
         </button>
       </div>
     </div>
   </div>
+
+
 
 
 
@@ -158,4 +160,8 @@
     </table>
   </div>
 
+  <div class="col-12" *ngIf="bill != undefined">
+    <input  #po [value]="(purchaseOrder$ |async)?.deliveryInformation.vessel" type="hidden" />
+    <app-list-credit-note [bill]="bill" [vessel]="po.value"></app-list-credit-note>
+  </div>
 </div>
