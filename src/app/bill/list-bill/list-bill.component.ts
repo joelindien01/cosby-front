@@ -146,5 +146,5 @@ export class BillTable {
   deadLine;
   discount;
   creationDate;
-  initialBill: BillDTO;
+  initialBill: any;
 }

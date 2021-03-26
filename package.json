@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build:dev": "ng build --prod --base-href http://cosby-demo.s3-website-eu-west-1.amazonaws.com/ --aot=false --build-optimizer=false",
-    "build:devionos": "ng build --prod --base-href http://b883bc9.online-server.cloud/ --aot=false --build-optimizer=false",
+    "build:dev": "ng build --prod --base-href http://cosby-avinato.s3-website.us-east-2.amazonaws.com/ --aot=false --build-optimizer=false",
+    "build:devionos": "ng build --prod --base-href http://82.165.107.216/ --aot=false --build-optimizer=false",
     "build:devbis": "ng build --prod --base-href /usr/share/nginx/html/dist/donation-explorer/donation-explorer/",
     "build": "ng build",
     "test": "ng test",

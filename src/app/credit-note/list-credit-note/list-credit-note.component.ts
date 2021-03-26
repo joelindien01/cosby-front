@@ -28,6 +28,5 @@ export class ListCreditNoteComponent implements OnInit {
     cn.creationDate = note.creationDate;
     cn.netToBeDeducted = note.netToBeDeducted;
     this.creditNoteService.generateCreditNote(cn);
-
   }
 }

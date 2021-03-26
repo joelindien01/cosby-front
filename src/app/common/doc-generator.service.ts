@@ -4,7 +4,7 @@ import {FileSaverService} from "ngx-filesaver";
 import * as angularExpressions from "angular-expressions";
 import { environment } from '../../environments/environment';
 
-//declare let JSZipUtils: any;
+declare let JSZipUtils: any;
 
 export interface Window {
   docxtemplater: any;
