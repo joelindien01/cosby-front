@@ -35,28 +35,12 @@
 
   <div class="col-12">
     <table mat-table [dataSource]="productTable" matSort class="table table-bordered">
-<!--      <thead>
-        <tr>
-          <th>Name</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>-->
-        <!--<tr *ngFor="let product of productTable$ |async" [shAttachMenu]="productMenu" [shMenuData]="product">
-          <td> {{product.name}}</td>
-          <td class="text-center">
-            <button mat-stroked-button color="primary" class="mr-3" data-toggle="modal" data-target="#productModal" (click)="viewSelectedProduct(product.id)"><fa-icon icon="eye"></fa-icon></button>
-            <button mat-stroked-button color="primary" (click)="editSelectedProduct(product.id)"><fa-icon icon="pen"></fa-icon></button>
-          </td>
-        </tr>-->
 
-        <!-- Position Column -->
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Name </th>
           <td mat-cell *matCellDef="let product"> {{product.name}} </td>
         </ng-container>
 
-        <!-- Name Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef> Actions </th>
           <td mat-cell *matCellDef="let product">
@@ -68,7 +52,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
     </table>
-    <mat-paginator [length]="100"
+    <mat-paginator [length]="500"
                    [pageSize]="10"
                    [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
 

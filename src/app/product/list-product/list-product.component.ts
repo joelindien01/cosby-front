@@ -18,14 +18,18 @@ export class ListProductComponent implements OnInit {
   public selectedProduct: Product;
   public products: Array<Product>;
   public productSearchForm: FormGroup;
-  public productTable: MatTableDataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  public productTable: MatTableDataSource<ProductTable> = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['name', 'actions'];
 
 
   constructor(private productService: ProductService, private router: Router, private fb: FormBuilder) {
-    this.products$ = this.productService.findAll();
+
+  }
+
+  ngOnInit() {
+    this.products$ = this.productService.findAll().shareReplay();
     this.productTable$ = this.products$.pipe(
       map(products => products.map(product => {
         return new ProductTable(product.id, product.name);
@@ -36,13 +40,9 @@ export class ListProductComponent implements OnInit {
 
     this.productTable$.subscribe(p => {
       this.productTable.data = p;
-    this.productTable.paginator = this.paginator;
-
-    this.productTable.sort = this.sort;
-  })
-  }
-
-  ngOnInit() {
+      this.productTable.paginator = this.paginator;
+      this.productTable.sort = this.sort;
+    });
     this.products$.subscribe(products => this.products = products);
   }
 

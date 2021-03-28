@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ProductService} from "../product.service";
 import {ActivatedRoute} from "@angular/router";
 import {Price, Product} from "../product";
@@ -41,7 +41,7 @@ export class AddProductComponent implements OnInit {
     });
 
     this.uoms$ = uomService.findAllUOM();
-    this.productForm = this.fb.group({name: '', prices:this.fb.array([this.initPriceForm()]), uom: ''});
+    this.productForm = this.fb.group({name: ['', Validators.required], prices:this.fb.array([this.initPriceForm()]), uom: ''});
 
     this.uoms$.subscribe( result => {
       this.uoms = result;
@@ -73,25 +73,31 @@ export class AddProductComponent implements OnInit {
     if (prices) {
       formModel = prices.map(price => this.fb.group({
         id: price.id,
-        label: [price.label],
-        value: [price.value]
+        label: [price.label, Validators.required],
+        value: [price.value, Validators.required]
       }));
     } else {
       formModel = this.fb.group({
-        label: [''],
-        value: ['']
+        label: ['', Validators.required],
+        value: ['', Validators.required]
       });
     }
     return formModel;
   }
 
   saveProduct() {
+
+    if (this.productForm.invalid) {
+      return;
+    }
     let product = this.productForm.value;
     product.uomSet = this.allowedUomSet;
     if (this.isEditMode) product.id = this.editedProduct.id;
     this.productService
       .saveProduct(product)
-      .subscribe(result=> alert('product added'));
+      .subscribe(result=> alert('product added'), error => {
+        alert(error.error.message);
+      });
   }
 
   private editProductWithName(productId: any) {
