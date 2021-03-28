@@ -4,8 +4,8 @@ import {
   MatAutocomplete, MatAutocompleteModule,
   MatButtonModule, MatChipsModule, MatDateFormats, MatDatepickerModule, MatDialogModule, MatIconModule, MatInputModule,
   MatMenuModule,
-  MatNativeDateModule,
-  MatSelectModule,
+  MatNativeDateModule, MatPaginatorModule,
+  MatSelectModule, MatSortModule,
   MatStepperModule,
   MatTableModule, NativeDateAdapter
 } from "@angular/material";
@@ -27,7 +27,9 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     MatIconModule,
     MatAutocompleteModule,
     DragDropModule,
-    MatDialogModule
+    MatDialogModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   exports: [
     MatStepperModule,
@@ -42,7 +44,9 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     MatIconModule,
     MatAutocompleteModule,
     DragDropModule,
-    MatDialogModule
+    MatDialogModule,
+    MatPaginatorModule,
+    MatSortModule
   ]
 })
 export class MaterialModule { }

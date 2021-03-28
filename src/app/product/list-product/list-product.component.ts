@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable} from "rxjs/Rx";
 import {ProductService} from "../product.service";
 import {Product} from "../product";
 import {map} from "rxjs/internal/operators";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 
 @Component({
   selector: 'app-list-product',
@@ -17,6 +18,11 @@ export class ListProductComponent implements OnInit {
   public selectedProduct: Product;
   public products: Array<Product>;
   public productSearchForm: FormGroup;
+  public productTable: MatTableDataSource = new MatTableDataSource();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  displayedColumns: string[] = ['name', 'actions'];
+
 
   constructor(private productService: ProductService, private router: Router, private fb: FormBuilder) {
     this.products$ = this.productService.findAll();
@@ -25,7 +31,15 @@ export class ListProductComponent implements OnInit {
         return new ProductTable(product.id, product.name);
       }))
     );
+
     this.productSearchForm = this.fb.group({productNameCSV: ''});
+
+    this.productTable$.subscribe(p => {
+      this.productTable.data = p;
+    this.productTable.paginator = this.paginator;
+
+    this.productTable.sort = this.sort;
+  })
   }
 
   ngOnInit() {
@@ -50,6 +64,9 @@ export class ListProductComponent implements OnInit {
         return new ProductTable(product.id, product.name);
       }))
     );
+    this.productTable$.subscribe(p => {
+      this.productTable.data = p;
+    });
     this.products$.subscribe(product => this.products = product);
   }
 }
