@@ -58,7 +58,7 @@ export class ListProductComponent implements OnInit {
   findProduct() {
     let productNameCSV: string  = this.productSearchForm.value.productNameCSV;
     let customerNameList: Array<string> = productNameCSV != undefined && productNameCSV.trim().length > 0 ? productNameCSV.split(';') : [];
-    this.products$ = this.productService.findProduct(customerNameList);
+    this.products$ = this.productService.findProduct(customerNameList).shareReplay();
     this.productTable$ = this.products$.pipe(
       map(products => products.map(product => {
         return new ProductTable(product.id, product.name);

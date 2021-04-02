@@ -23,13 +23,13 @@ export class ViewBillComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params['billId']) {
         const billId = params['billId'];
-        this.bill$ = this.billService.findBillById(billId);
+        this.bill$ = this.billService.findBillById(billId).shareReplay();
         this.bill$.subscribe(bill => {
           this.deliveryNoteId = bill.deliveryNoteId;
-          this.purchaseOrder$ = this.orderService.findById(bill.purchaseOrderId);
+          /*this.purchaseOrder$ = this.orderService.findById(bill.purchaseOrderId).shareReplay();
           this.purchaseOrder$.subscribe(order => {
             this.items$ = this.orderService.findItemsByOrderId(order.id);
-          })
+          })*/
         });
 
       }

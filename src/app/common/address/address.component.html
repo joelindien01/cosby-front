@@ -6,27 +6,43 @@
     <div class="row">
       <div class="col-12">
         <mat-form-field>
-          <input matInput placeholder="street" formControlName="street" name="textinput" type="text">
+          <input [errorStateMatcher]="matcher" matInput placeholder="street" formControlName="street" name="textinput" type="text">
+          <mat-error *ngIf="formGroup.controls[groupName].controls['street'].touched && formGroup.controls[groupName].controls['street'].errors?.required">
+            Street is <strong>required</strong>
+          </mat-error>
+
         </mat-form-field>
       </div>
       <div class="col-12">
         <mat-form-field>
-          <input matInput placeholder="city" formControlName="city" name="textinput" type="text">
+          <input [errorStateMatcher]="matcher" matInput placeholder="city" formControlName="city" name="textinput" type="text">
+          <mat-error *ngIf="formGroup.controls[groupName].controls['city'].touched && formGroup.controls[groupName].controls['city'].errors?.required">
+            City is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="col-12">
         <mat-form-field>
-          <input matInput placeholder="zipCode" formControlName="zipCode" name="textinput" type="text">
+          <input [errorStateMatcher]="matcher" matInput placeholder="zipCode" formControlName="zipCode" name="textinput" type="text">
+          <mat-error *ngIf="formGroup.controls[groupName].controls['zipCode'].touched && formGroup.controls[groupName].controls['zipCode'].errors?.required">
+            zip code is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="col-12">
         <mat-form-field>
-          <input matInput placeholder="state" formControlName="state" name="textinput" type="text">
+          <input [errorStateMatcher]="matcher" matInput placeholder="state" formControlName="state" name="textinput" type="text">
+          <mat-error *ngIf="formGroup.controls[groupName].controls['state'].touched && formGroup.controls[groupName].controls['state'].errors?.required">
+            state is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </div>
       <div class="col-12">
         <mat-form-field>
-          <input matInput placeholder="country" formControlName="country" name="textinput" type="text">
+          <input [errorStateMatcher]="matcher" matInput placeholder="country" formControlName="country" name="textinput" type="text">
+          <mat-error *ngIf="formGroup.controls[groupName].controls['country'].touched && formGroup.controls[groupName].controls['country'].errors?.required">
+            Country is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </div>
     </div>
@@ -44,7 +60,13 @@
         <div class="form-group">
           <label class="col-md-4 control-label">street</label>
           <div class="col-md-4">
-            <input formControlName="street" name="textinput" type="text"  class="form-control input-md">
+            <mat-form-field>
+              <input matInput formControlName="street" name="textinput" type="text"  class="form-control input-md">
+              <mat-error *ngIf="address.controls['street'].touched && address.controls['street'].errors?.required">
+                Contact {{ i +1}} Name is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+
           </div>
         </div>
 

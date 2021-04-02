@@ -35,16 +35,22 @@ export class AddCustomerComponent implements OnInit {
       deliveryInformations: this.fb.array([this.shipService.initShip()]),
       addAnotherCustomer: [true]
     });
-    this.onUseLocationAddressChanges();
+
   }
 
 
 
   ngOnInit() {
-
+    this.onUseLocationAddressChanges();
   }
 
   saveCustomer() {
+    if (this.customerForm.invalid) {
+      this.customerForm.markAsTouched({ onlySelf: true });
+      this.customerForm.updateValueAndValidity({ onlySelf: true, emitEvent: true }
+    );
+      return;
+    }
     let customer = this.customerForm.value;
     customer.contactEmailAddresses = [{email:this.customerForm.value.contactEmailAddresses}] ;
     const addAnotherCustomer = customer.addAnotherCustomer;

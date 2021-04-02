@@ -5,21 +5,24 @@
 </div>
 <div class="row">
   <div class="col-12">
-    <form [formGroup]="billForm">
+    <form [(formGroup)]="billForm">
       <div class="row">
 
         <div class="col-9 account">
           <mat-form-field>
-            <mat-select placeholder="Account to use for payment" formControlName="impactedAccount">
+            <mat-select [errorStateMatcher]="matcher" placeholder="Account to use for payment" formControlName="impactedAccount">
               <mat-option *ngFor="let account of (accounts$| async)" [value]="account">{{account.bankName}} ({{account.reference}})
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="billForm.controls['impactedAccount'].touched && billForm.controls['impactedAccount'].errors?.required">
+              The impacted account is <strong>required</strong>
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-6">
           <mat-form-field>
             <input matInput formControlName="deadlines" placeholder="DeadLines (in days)" type="number"
-                   class="form-control input-md" required="">
+                   class="form-control input-md">
           </mat-form-field>
 
           <button mat-icon-button color="primary" aria-label="Compute payment Deadline" (click)="computeDeadline()">
@@ -29,19 +32,28 @@
 
         <div class="col-6">
           <mat-form-field>
-            <input matInput placeholder="Payment DeadLine" [matDatepicker]="picker1" formControlName="deadLine">
+            <input [errorStateMatcher]="matcher" matInput placeholder="Payment DeadLine" [matDatepicker]="picker1" formControlName="deadLine">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
+            <mat-error *ngIf="billForm.controls['deadLine'].touched && billForm.controls['deadLine'].errors?.required">
+              Payment Deadline is <strong>required</strong>
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-6">
           <mat-form-field>
-            <input matInput placeholder="Delivery Fee" formControlName="deliveryFee" type="number"/>
+            <input [errorStateMatcher]="matcher" matInput placeholder="Delivery Fee" formControlName="deliveryFee" type="number"/>
+            <mat-error *ngIf="billForm.controls['deliveryFee'].touched && billForm.controls['deliveryFee'].errors?.required">
+              Delivery Fee is <strong>required</strong>
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-6">
           <mat-form-field>
-            <input matInput placeholder="Transportation Fee" formControlName="transportationFee" type="number"/>
+            <input [errorStateMatcher]="matcher" matInput placeholder="Transportation Fee" formControlName="transportationFee" type="number"/>
+            <mat-error *ngIf="billForm.controls['transportationFee'].touched && billForm.controls['transportationFee'].errors?.required">
+              Transportation Fee is <strong>required</strong>
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -49,12 +61,19 @@
           <div class="row">
             <div class="col-6">
               <mat-form-field>
-                <input matInput placeholder="Our Signatory" formControlName="ourSignatory" type="text"/>
+                <input [errorStateMatcher]="matcher" matInput placeholder="Our Signatory" formControlName="ourSignatory" type="text"/>
+                <mat-error *ngIf="billForm.controls['ourSignatory'].touched && billForm.controls['ourSignatory'].errors?.required">
+                  Our signatory is <strong>required</strong>
+                </mat-error>
+
               </mat-form-field>
             </div>
             <div class="col-6">
               <mat-form-field>
-                <input matInput placeholder="Our Signatory Function" formControlName="ourSignatoryFunction" type="text"/>
+                <input [errorStateMatcher]="matcher" matInput placeholder="Our Signatory Function" formControlName="ourSignatoryFunction" type="text"/>
+                <mat-error *ngIf="billForm.controls['ourSignatoryFunction'].touched && billForm.controls['ourSignatoryFunction'].errors?.required">
+                  Our Signatory Function is <strong>required</strong>
+                </mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -63,12 +82,18 @@
           <div class="row">
             <div class="col-6">
               <mat-form-field>
-                <input matInput placeholder="Customer Signatory" formControlName="customerSignatory" type="text"/>
+                <input [errorStateMatcher]="matcher" matInput placeholder="Customer Signatory" formControlName="customerSignatory" type="text"/>
+                <mat-error *ngIf="billForm.controls['customerSignatory'].touched && billForm.controls['customerSignatory'].errors?.required">
+                  Customer Signatory is <strong>required</strong>
+                </mat-error>
               </mat-form-field>
             </div>
             <div class="col-6">
               <mat-form-field>
-                <input matInput placeholder="Customer Signatory Function" formControlName="customerSignatoryFunction" type="text"/>
+                <input [errorStateMatcher]="matcher" matInput placeholder="Customer Signatory Function" formControlName="customerSignatoryFunction" type="text"/>
+                <mat-error *ngIf="billForm.controls['customerSignatoryFunction'].touched && billForm.controls['customerSignatoryFunction'].errors?.required">
+                  Customer Signatory Function is <strong>required</strong>
+                </mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -80,13 +105,16 @@
             </div>
             <div class="col-6">
               <mat-form-field *ngIf="billForm.get('applyDiscount').value">
-                <input matInput placeholder="discount (%)" formControlName="discount" type="number" name="discount"/>
+                <input matInput [errorStateMatcher]="matcher" placeholder="discount (%)" formControlName="discount" type="number" name="discount"/>
+                <mat-error *ngIf="billForm.controls['discount'].touched && billForm.controls['discount'].errors?.required">
+                  Discount is <strong>required</strong>
+                </mat-error>
               </mat-form-field>
             </div>
           </div>
         </div>
         <div class="col-12">
-          <button mat-flat-button color="primary" type="button" (click)="saveBill()">save bill</button>
+          <button mat-flat-button color="primary"  (click)="saveBill()">save bill</button>
         </div>
       </div>
     </form>

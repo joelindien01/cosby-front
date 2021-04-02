@@ -1,7 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {MultiAddableForm} from "../multi-addable-form";
 import {ContactService} from "../contact.service";
 import {Contact} from "../../customer/customer";
+import {AbstractControl, ControlContainer, FormArray, FormGroup, FormGroupDirective} from "@angular/forms";
 
 @Component({
   selector: 'app-contact',
@@ -14,6 +15,7 @@ export class ContactComponent extends MultiAddableForm implements OnInit {
   constructor(private contactService: ContactService) {
     super(contactService);
 
+
   }
 
   ngOnInit() {
@@ -21,6 +23,24 @@ export class ContactComponent extends MultiAddableForm implements OnInit {
       this.formGroup.get(this.groupName).setValue(this.contact);
     }
     super.ngOnInit();
+    this.onChanges();
+  }
+
+  onChanges(): void {
+    this.formGroup.valueChanges.subscribe(val => {
+
+      let elements:FormArray = <FormArray>this.formGroup.controls[this.arrayName];
+
+      elements.controls.forEach(el =>{
+        let elt = <FormGroup> el;
+        Object.keys(elt.controls).forEach(key => {
+          elt.controls[key].markAsTouched();
+        }) ;
+        el.setErrors(elt.errors);
+        //elt.controls.
+      });
+      // /this.formGroup.controls[this.arrayName].markAsTouched({onlySelf: true})
+    });
   }
 
 }

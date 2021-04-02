@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {FormBuilder, FormControl} from "@angular/forms";
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {Address} from "../customer/customer";
 
 @Injectable({
@@ -12,11 +12,11 @@ export class AddressService {
   initAddress() {
     // initialize our address
     return this.fb.group({
-      street: [''],
-      city: [''],
+      street: ['', Validators.required],
+      city: ['', Validators.required],
       state: [''],
-      zipCode: [''],
-      country: ['']
+      zipCode: ['', Validators.required],
+      country: ['', Validators.required]
 
     });
   }

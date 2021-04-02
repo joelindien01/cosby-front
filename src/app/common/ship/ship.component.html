@@ -50,30 +50,45 @@
               <div class="col-12" [formGroupName]="i">
                 <div>
                   <mat-form-field>
-                    <input matInput placeholder="Port" type="text" formControlName="port" name="port"/>
+                    <input [errorStateMatcher]="matcher" matInput placeholder="Port" type="text" formControlName="port" name="port"/>
+                    <mat-error *ngIf="ship.controls['port'].touched && ship.controls['port'].errors?.required">
+                      Ship {{ i +1}} Port is <strong>required</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
                 <div>
                   <mat-form-field>
-                    <input matInput placeholder="Vessel" type="text" formControlName="vessel" name="vessel"/>
-                  </mat-form-field>
-                </div>
-
-                <div>
-                  <mat-form-field>
-                    <input matInput placeholder="Imo" type="text" formControlName="imo" name="imo"/>
-                  </mat-form-field>
-                </div>
-
-                <div>
-                  <mat-form-field>
-                    <input matInput placeholder="Flag" type="text" formControlName="flag" name="flag"/>
+                    <input [errorStateMatcher]="matcher" matInput placeholder="Vessel" type="text" formControlName="vessel" name="vessel"/>
+                    <mat-error *ngIf="ship.controls['vessel'].touched && ship.controls['vessel'].errors?.required">
+                      Ship {{ i +1}} Vessel is <strong>required</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
 
                 <div>
                   <mat-form-field>
-                    <input matInput placeholder="Master" type="text" formControlName="master" name="master"/>
+                    <input [errorStateMatcher]="matcher"  matInput placeholder="Imo" type="text" formControlName="imo" name="imo"/>
+                    <mat-error *ngIf="ship.controls['imo'].touched && ship.controls['imo'].errors?.required">
+                      Ship {{ i +1}} Imo is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div>
+                  <mat-form-field>
+                    <input [errorStateMatcher]="matcher" matInput placeholder="Flag" type="text" formControlName="flag" name="flag"/>
+                    <mat-error *ngIf="ship.controls['flag'].touched && ship.controls['flag'].errors?.required">
+                      Ship {{ i +1}} Flag is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div>
+                  <mat-form-field>
+                    <input [errorStateMatcher]="matcher" matInput placeholder="Master" type="text" formControlName="master" name="master"/>
+                    <mat-error *ngIf="ship.controls['master'].touched && ship.controls['master'].errors?.required">
+                      Ship {{ i +1}} Master is <strong>required</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </div>

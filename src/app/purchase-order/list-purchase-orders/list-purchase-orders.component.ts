@@ -58,12 +58,12 @@ export class ListPurchaseOrdersComponent implements OnInit {
   }
 
   private loadOrdersByCustomerId(customerId: number) {
-    this.purchaseOrderList$ = this.orderService.getOrderByCustomerId(customerId);
+    this.purchaseOrderList$ = this.orderService.getOrderByCustomerId(customerId).shareReplay();
 
   }
 
   private loadAllOrders() {
-    this.purchaseOrderList$ = this.orderService.findAll();
+    this.purchaseOrderList$ = this.orderService.findAll().shareReplay();
   }
 
   private mapOrdersTable() {
@@ -89,8 +89,8 @@ export class ListPurchaseOrdersComponent implements OnInit {
   }
 
   findOrders() {
-    var searchForm = this.orderSearchForm.getRawValue();
-    this.purchaseOrderList$ = this.orderService.findOrders(searchForm);
+    let searchForm = this.orderSearchForm.getRawValue();
+    this.purchaseOrderList$ = this.orderService.findOrders(searchForm).shareReplay();
     this.mapOrdersTable();
 
     this.orderService.findOrders(searchForm).subscribe(s => {

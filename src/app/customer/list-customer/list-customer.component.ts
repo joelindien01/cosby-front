@@ -20,7 +20,7 @@ export class ListCustomerComponent implements OnInit {
 
 
   constructor(private customerService: CustomerService, private router: Router, private fb: FormBuilder) {
-    this.customerList$ = this.customerService.getCustomers();
+    this.customerList$ = this.customerService.getCustomers().shareReplay();
     this.customerTableData$ = this.customerList$.pipe(
       map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.location.country)))
     );

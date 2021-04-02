@@ -62,7 +62,7 @@ export class ListDeliveryNoteComponent implements OnInit {
   }
 
   private loadNotesByCustomerId(customerId: number) {
-    this.deliveryNotes$ = this.deliveryNoteService.getDeliveryNotesByCustomerId(customerId);
+    this.deliveryNotes$ = this.deliveryNoteService.getDeliveryNotesByCustomerId(customerId).shareReplay();
     this.customer$ = this.deliveryNotes$.pipe(
       map(deliveryNoteList => deliveryNoteList[0].purchaseOrder.customer)
     );
@@ -81,7 +81,7 @@ export class ListDeliveryNoteComponent implements OnInit {
   }
 
   private loadAllNotes() {
-    this.deliveryNotes$ = this.deliveryNoteService.findAll();
+    this.deliveryNotes$ = this.deliveryNoteService.findAll().shareReplay();
   }
 
   createBill(deliveryNoteId: number) {
@@ -109,8 +109,8 @@ export class ListDeliveryNoteComponent implements OnInit {
   }
 
   findNotes() {
-    var searchForm = this.delNotesSearchForm.getRawValue();
-    this.deliveryNotes$ = this.deliveryNoteService.findNotes(searchForm);
+    let searchForm = this.delNotesSearchForm.getRawValue();
+    this.deliveryNotes$ = this.deliveryNoteService.findNotes(searchForm).shareReplay();
     this.mapDeliveryNoteTable();
 /*    this.deliveryNoteService.findNotes(searchForm).subscribe(s => {
       console.log(s);

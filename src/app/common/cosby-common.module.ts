@@ -3,7 +3,7 @@ import {ConfigService} from "./config.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AddressComponent} from './address/address.component';
 import {CommonModule} from "@angular/common";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {AddressService} from "./address.service";
 import { ShipComponent } from './ship/ship.component';
 import {ShipService} from "./ship.service";
@@ -29,7 +29,7 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
 import {UserService} from "./user.service";
 import {BasicAuthHttpInterceptorService} from "./basic-auth-http-interceptor.service";
 import {faPowerOff} from "@fortawesome/free-solid-svg-icons/faPowerOff";
-import {MatDateFormats, NativeDateAdapter} from "@angular/material";
+import {ErrorStateMatcher, MatDateFormats, NativeDateAdapter} from "@angular/material";
 
 @NgModule({
   declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],

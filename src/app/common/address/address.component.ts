@@ -3,6 +3,7 @@ import {FormArray, FormGroup} from "@angular/forms";
 import {AddressService} from "../address.service";
 import {isDefined} from "@angular/compiler/src/util";
 import {Address} from "../../customer/customer";
+import {MyErrorStateMatcher} from "../multi-addable-form";
 
 @Component({
   selector: 'app-address',
@@ -20,8 +21,11 @@ export class AddressComponent implements OnInit {
   public isArrayForm: boolean;
   @Input() formTitle: string;
 
+  matcher;
+
 
   constructor(private addressService: AddressService) {
+    this.matcher = new MyErrorStateMatcher();
 
   }
 
@@ -30,6 +34,7 @@ export class AddressComponent implements OnInit {
   ngOnInit() {
     this.isArrayForm = isDefined(this.arrayName);
     console.log(this.isArrayForm);
+    this.onChanges();
   }
 
   addAddress() {
@@ -44,4 +49,22 @@ export class AddressComponent implements OnInit {
     control.removeAt(i);
   }
 
+  private onChanges() {
+    this.formGroup.valueChanges.subscribe(val => {
+
+      let elements:FormGroup = <FormGroup>this.formGroup.controls[this.groupName];
+      Object.keys(elements.controls).forEach(key => {
+        elements.controls[key].markAsTouched();
+      }) ;
+      /*elements.controls.forEach(el =>{
+        let elt = <FormGroup> el;
+        Object.keys(elt.controls).forEach(key => {
+          elt.controls[key].markAsTouched();
+        }) ;
+        el.setErrors(elt.errors);
+        //elt.controls.
+      });*/
+      // /this.formGroup.controls[this.arrayName].markAsTouched({onlySelf: true})
+    });
+  }
 }

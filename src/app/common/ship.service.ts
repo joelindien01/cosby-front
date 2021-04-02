@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,11 @@ export class ShipService {
   initShip() {
     // initialize our address
     return this.fb.group({
-      vessel: [''],
-      imo: [''],
-      flag: [''],
-      master: [''],
-      port: ['']
+      vessel: ['', Validators.required],
+      imo: ['', Validators.required],
+      flag: ['', Validators.required],
+      master: ['', Validators.required],
+      port: ['', Validators.required]
     });
   }
 }

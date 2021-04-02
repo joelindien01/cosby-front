@@ -25,9 +25,9 @@ export class ViewDeliveryNoteComponent implements OnInit {
   }
 
   loadData(deliveryNoteId) {
-    this.deliveryNote$ = this.deliveryNoteService.findById(deliveryNoteId);
+    this.deliveryNote$ = this.deliveryNoteService.findById(deliveryNoteId).shareReplay();
     this.deliveryNote$.subscribe(deliveryNote => {
-      this.purchaseOrder$ = this.orderService.findById(deliveryNote.purchaseOrderId);
+      this.purchaseOrder$ = this.orderService.findById(deliveryNote.purchaseOrderId).shareReplay();
       this.purchaseOrder$.subscribe(order => {
         this.items$ = this.orderService.findItemsByOrderId(order.id);
       })

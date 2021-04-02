@@ -46,8 +46,8 @@ export class ViewPurchaseOrderComponent implements OnInit {
   }
 
   private loadPurchaseOrder(purchaseOrderId: number) {
-    this.purchaseOrder$ = this.orderService.findById(purchaseOrderId);
-    this.items$ = this.orderService.findItemsByOrderId(purchaseOrderId);
+    this.purchaseOrder$ = this.orderService.findById(purchaseOrderId).shareReplay();
+    this.items$ = this.orderService.findItemsByOrderId(purchaseOrderId).shareReplay();
   }
 
   createDeliveryNote() {

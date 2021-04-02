@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormArray, FormGroup} from "@angular/forms";
 import {isDefined} from "@angular/compiler/src/util";
 import {ShipService} from "../ship.service";
+import {MyErrorStateMatcher} from "../multi-addable-form";
 
 @Component({
   selector: 'app-ship',
@@ -16,6 +17,7 @@ export class ShipComponent implements OnInit {
   @Input() formGroup: FormGroup;
   isArrayForm: boolean;
   @Input() formTitle: string;
+  matcher;
 
   constructor(private shipService: ShipService) {
 
@@ -23,6 +25,8 @@ export class ShipComponent implements OnInit {
 
   ngOnInit() {
     this.isArrayForm = isDefined(this.arrayName);
+    this.onChanges();
+    this.matcher = new MyErrorStateMatcher();
   }
 
   addShip() {
@@ -35,4 +39,20 @@ export class ShipComponent implements OnInit {
     control.removeAt(index);
   }
 
+  onChanges(): void {
+    this.formGroup.valueChanges.subscribe(val => {
+
+      let elements:FormArray = <FormArray>this.formGroup.controls[this.arrayName];
+
+      elements.controls.forEach(el =>{
+        let elt = <FormGroup> el;
+        Object.keys(elt.controls).forEach(key => {
+          elt.controls[key].markAsTouched();
+        }) ;
+        el.setErrors(elt.errors);
+        //elt.controls.
+      });
+      // /this.formGroup.controls[this.arrayName].markAsTouched({onlySelf: true})
+    });
+  }
 }
