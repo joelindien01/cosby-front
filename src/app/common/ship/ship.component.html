@@ -1,32 +1,40 @@
 <div class="row">
   <div class="col-12">
-    <h3>Delivery Information</h3>
+    <h6>Delivery Information</h6>
   </div>
   <div class="col-12">
     <div [formGroup]="formGroup" *ngIf="!isArrayForm">
-      <div [formGroupName]="groupName">
-        <div>
+      <div [formGroupName]="groupName" class="row">
+        <div class="col-3">
           <div>
-            <label>Port</label>
-            <input type="text" formControlName="port" name="port"/>
+            <mat-form-field>
+              <input matInput type="text" formControlName="port" placeholder="port" name="port"/>
+            </mat-form-field>
           </div>
-          <label>Vessel</label>
-          <input type="text" formControlName="vessel" name="vessel"/>
+
+          <mat-form-field>
+            <input matInput type="text" formControlName="vessel" placeholder="vessel" name="vessel"/>
+          </mat-form-field>
         </div>
 
-        <div>
-          <label>Imo</label>
-          <input type="text" formControlName="imo" name="imo"/>
+        <div class="col-3">
+          <div>
+            <mat-form-field>
+              <input matInput type="text" formControlName="flag" placeholder="flag" name="flag"/>
+            </mat-form-field>
+          </div>
         </div>
 
-        <div>
-          <label>Flag</label>
-          <input type="text" formControlName="flag" name="flag"/>
+        <div class="col-3">
+          <mat-form-field>
+            <input matInput type="text" formControlName="imo" placeholder="imo" name="imo"/>
+          </mat-form-field>
         </div>
 
-        <div>
-          <label>Master</label>
-          <input type="text" formControlName="master" name="master"/>
+        <div class="col-3">
+          <mat-form-field>
+            <input matInput type="text" formControlName="master" placeholder="Master" name="master"/>
+          </mat-form-field>
         </div>
 
       </div>

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CustomerService} from "../../customer/customer.service";
 import {Customer} from "../../customer/customer";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ProductService} from "../../product/product.service";
 import {Product} from "../../product/product";
 import {PurchaseOrder} from "../PurchaseOrder";
@@ -13,6 +13,7 @@ import {Currency} from "../../uom/UnitOfMeasurement";
 import {GlobalUomService} from "../../uom/global-uom.service";
 import {moveItemInArray} from "@angular/cdk/drag-drop";
 import {CartService} from "../../cart/cart.service";
+import {ShipService} from "../../common/ship.service";
 
 
 export class ReferenceItem {
@@ -27,7 +28,7 @@ value: string;
 })
 export class AddPurchaseOrderComponent implements OnInit {
 
-  panelOpenState: boolean;
+  public panelOpenState: boolean;
 
   currencyList$: Observable<Array<Currency>>;
   customer: Customer;
@@ -54,8 +55,8 @@ export class AddPurchaseOrderComponent implements OnInit {
               private productService: ProductService,
               private uomService: GlobalUomService,
               private route: ActivatedRoute,
-              public cartService: CartService) {
-
+              public cartService: CartService, public shipService: ShipService) {
+    this.panelOpenState = true;
     this.currencyList$ = this.uomService.findAllCurrencyList();
     const routeParams$ = this.route.params;
     this.currentCustomer$ = routeParams$.pipe(
@@ -67,28 +68,18 @@ export class AddPurchaseOrderComponent implements OnInit {
       }));
     this.currentCustomer$.subscribe(currentCustomer => this.customer = <Customer> currentCustomer);
 
-    this.productToFindForm = this.fb.group({
-      productToFindName: [null]
-    });
     this.poSetupForm = this.fb.group({
-      poNumber: '',
-      currency: ''
-    });
-    this.selectedProductForm = this.fb.group({
-      product: [],
-      overridePrice: false,
-      description: [''],
-      quantity: [0],
-      unit: [0],
-      unitOfMeasurement: ['']
-    });
-    this.deliveryAddressForm = this.fb.group({
-      address: []
-    });
-    this.paymentInfoForm = this.fb.group({
-      payMeans: "",
-      payStatus: "",
-      currency: ''
+      poNumber: ['', Validators.required],
+      currency: ['', Validators.required],
+      payMeans: ['', Validators.required],
+      payStatus: ['', Validators.required],
+      deliveryAddress: this.fb.group( {
+        vessel: ['', Validators.required],
+        imo: ['', Validators.required],
+        flag: ['', Validators.required],
+        master: ['', Validators.required],
+        port: ['', Validators.required]
+      })
     });
 
   }
@@ -108,34 +99,6 @@ export class AddPurchaseOrderComponent implements OnInit {
     return this.cartService.getItems().map(item => item.product);
   }
 
-  addProductToItems() {
-     const selectedProduct: any = this.selectedProductForm.get('product').value;
-    if(this.selectedProducts.findIndex( p => p.name == selectedProduct.name) >= 0) {
-      this.productAlreadySelected = true;
-      alert("product already selected");
-      this.selectDeliveryAddress();
-    } else {
-      this.showItemConfig = true;
-      this.selectedProduct = selectedProduct;
-    }
-  }
-
-  saveItem() {
-    const item = this.selectedProductForm.value;
-    delete item.overridePrice;
-    this.purchaseOrder.itemList.push(item);
-    console.log(this.purchaseOrder);
-    alert("item saved");
-
-    this.selectedProducts.push({name: this.selectedProduct.name,
-      description: this.selectedProductForm.get('description').value,
-      quantity: this.selectedProductForm.get('quantity').value,
-      unit: this.selectedProductForm.get('unit').value,
-      unitOfMeasurement: this.selectedProductForm.get('unitOfMeasurement').value});
-    this.resetForms();
-    this.showAddAnotherProductButton = true;
-  }
-
   private resetForms() {
     this.productToFindForm.reset();
     this.foundProducts$ = null;
@@ -150,6 +113,9 @@ export class AddPurchaseOrderComponent implements OnInit {
   }
 
   createOrder() {
+    if(this.poSetupForm.invalid) {
+      return;
+    }
     this.purchaseOrder.deliveryInformation = this.deliveryAddressForm.get('address').value;
     this.purchaseOrder.customer = this.customer;
     console.log("order to create vvvv");
@@ -160,16 +126,4 @@ export class AddPurchaseOrderComponent implements OnInit {
 
   }
 
-  selectDeliveryAddress() {
-    this.showSelectDeliveryAddress = true;
-  }
-
-  onListDrop(event: any) {
-    moveItemInArray(this.selectedProducts, event.previousIndex, event.currentIndex);
-  }
-
-  addSetupToProduct() {
-    this.paymentInfoForm.get('currency').setValue(this.poSetupForm.get('currency').value);
-    this.purchaseOrder.poNumber = this.poSetupForm.get('poNumber').value;
-  }
 }

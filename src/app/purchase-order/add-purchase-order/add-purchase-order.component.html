@@ -5,18 +5,54 @@
 <div class="row">
   <div class="col-12">
     <mat-accordion>
-      <mat-expansion-panel (opened)="panelOpenState = true" *ngIf="false">
+      <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <h6>Other info</h6>
           </mat-panel-title>
-          <mat-panel-description>
-            Enter other mandatory Infos
-          </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="row">
           <div class="col-12">
             <form [formGroup]="poSetupForm">
+              <div class="row">
+                <div class="col-3">
+                  <mat-form-field>
+                    <label>Po Number</label>
+                    <input matInput placeholder="Po Number" formControlName="poNumber" type="text">
+                  </mat-form-field>
+                </div>
+                <div class="col-3">
+                  <label>select currency</label>
+                  <mat-form-field>
+                    <mat-select formControlName="currency">
+                      <mat-option *ngFor="let currency of (currencyList$| async)" [value]="currency">{{currency.label}} ({{currency.symbol}})</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <label>select payment method</label>
+                    <mat-form-field>
+                      <mat-select formControlName="payMeans">
+                        <mat-option *ngFor="let payMean of paymentMeans" [value]="payMean.value">{{payMean.label}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <label>select payment status</label>
+                    <mat-form-field>
+                      <mat-select formControlName="payStatus">
+                        <mat-option *ngFor="let payStatus of paymentStatus" [value]="payStatus.value">{{payStatus.label}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12">
+                  <app-ship formTitle="Delivery Information" [formGroup]="poSetupForm" [groupName]="'deliveryAddress'"></app-ship>
+                </div>
+              </div>
+            </form>
+
+            <!--<form [formGroup]="poSetupForm">
               <div class="row">
                 <div class="col-6">
                   <mat-form-field>
@@ -43,24 +79,7 @@
                 <p> {{information |json}}</p>
               </div>
             </form>
-            <form [formGroup]="paymentInfoForm">
-              <div>
-                <label>select payment method</label>
-                <mat-form-field>
-                  <mat-select formControlName="payMeans">
-                    <mat-option *ngFor="let payMean of paymentMeans" [value]="payMean.value">{{payMean.label}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div>
-                <label>select payment status</label>
-                <mat-form-field>
-                  <mat-select formControlName="payStatus">
-                    <mat-option *ngFor="let payStatus of paymentStatus" [value]="payStatus.value">{{payStatus.label}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </form>
+            <form [formGroup]="paymentInfoForm">-->
           </div>
         </div>
       </mat-expansion-panel>
@@ -70,7 +89,7 @@
             <h6>Products</h6>
           </mat-panel-title>
           <mat-panel-description>
-            Select or Configure products here (cart contains {{cartService.items.length}} product<span *ngIf="cartService.items.length >1">s </span> )
+            Select or Configure products here
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="row">
@@ -82,7 +101,7 @@
 
     </mat-accordion>
   </div>
-  <div class="col-12">
+  <div class="col-12 order-button">
     <button mat-flat-button color="primary" type="button" (click)="createOrder()">
       create purchase order
     </button>
