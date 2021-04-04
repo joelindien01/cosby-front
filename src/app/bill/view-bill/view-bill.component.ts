@@ -5,6 +5,8 @@ import {Observable} from "rxjs/Rx";
 import {Bill, BillDTO} from "../bill";
 import {ItemDto, PurchaseOrder} from "../../purchase-order/PurchaseOrder";
 import {PurchaseOrderService} from "../../purchase-order/purchase-order.service";
+import {NgxSpinner} from "ngx-spinner/lib/ngx-spinner.enum";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-view-bill',
@@ -16,10 +18,13 @@ export class ViewBillComponent implements OnInit {
   public purchaseOrder$: Observable<PurchaseOrder>;
   public items$: Observable<Array<ItemDto>>;
   public deliveryNoteId: number;
+  private show: boolean;
 
   constructor(private route: ActivatedRoute,
               private billService: BillService,
-              private orderService: PurchaseOrderService) {
+              private orderService: PurchaseOrderService, private spinner: NgxSpinnerService) {
+    this.spinner.show();
+    this.show = false;
     this.route.params.subscribe(params => {
       if (params['billId']) {
         const billId = params['billId'];
@@ -30,6 +35,10 @@ export class ViewBillComponent implements OnInit {
           this.purchaseOrder$.subscribe(order => {
             this.items$ = this.orderService.findItemsByOrderId(order.id);
           })*/
+          setTimeout(() => {
+            this.show = true;
+            this.spinner.hide();
+          }, 1000);
         });
 
       }

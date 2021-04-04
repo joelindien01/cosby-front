@@ -2,175 +2,89 @@
 <div>
   <p>You are going to generate a purchase order for customer: <b>{{(currentCustomer$ |async)?.name }}</b></p>
 </div>
+<div class="row">
+  <div class="col-12">
+    <mat-accordion>
+      <mat-expansion-panel (opened)="panelOpenState = true" *ngIf="false">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h6>Other info</h6>
+          </mat-panel-title>
+          <mat-panel-description>
+            Enter other mandatory Infos
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="row">
+          <div class="col-12">
+            <form [formGroup]="poSetupForm">
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field>
+                    <input matInput formControlName="poNumber" placeholder="PO Number" type="text"
+                           class="form-control input-md" required="">
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field>
+                    <mat-select placeholder="Select the currency for this PO" formControlName="currency">
+                      <mat-option *ngFor="let currency of (currencyList$| async)" [value]="currency">{{currency.label}} ({{currency.symbol}})</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <button *ngIf="poSetupForm.get('poNumber').value && poSetupForm.get('currency').value" (click)="addSetupToProduct()" mat-flat-button color="primary" type="button" matStepperNext>
+                Next
+              </button>
+            </form>
+            <form [formGroup]="deliveryAddressForm">
+              <label> select delivery address</label>
+              <div *ngFor="let information of customer.deliveryInformations">
+                <input name="address" type="radio" [value]="information" formControlName="address">
+                <p> {{information |json}}</p>
+              </div>
+            </form>
+            <form [formGroup]="paymentInfoForm">
+              <div>
+                <label>select payment method</label>
+                <mat-form-field>
+                  <mat-select formControlName="payMeans">
+                    <mat-option *ngFor="let payMean of paymentMeans" [value]="payMean.value">{{payMean.label}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div>
+                <label>select payment status</label>
+                <mat-form-field>
+                  <mat-select formControlName="payStatus">
+                    <mat-option *ngFor="let payStatus of paymentStatus" [value]="payStatus.value">{{payStatus.label}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </form>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h6>Products</h6>
+          </mat-panel-title>
+          <mat-panel-description>
+            Select or Configure products here (cart contains {{cartService.items.length}} product<span *ngIf="cartService.items.length >1">s </span> )
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="row">
+          <div class="col-12">
+            <app-list-product [isOrderView]="true" [bindProducts]="getProducts()"></app-list-product>
+          </div>
+        </div>
+      </mat-expansion-panel>
 
-<!--<div class="col-12" *ngIf="selectedProducts != undefined">-->
-<div class="col-12">
-  <h3>Added products list</h3>
-  <div class="align-self-center col-6">
-    <table class="table table-bordered" cdkDropList (cdkDropListDropped)="onListDrop($event)">
-      <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Quantity</th>
-        <th>Unit Price</th>
-      </tr>
-      </thead>
-      <tbody>
-     <tr *ngFor="let prdct of selectedProducts" cdkDrag>
-        <td>{{prdct.name}}</td>
-        <td>{{prdct.description}}</td>
-        <td>{{prdct.quantity}} {{prdct?.unitOfMeasurement?.symbol}}</td>
-        <td>{{prdct.unit}}</td>
-      </tr>
-
-      </tbody>
-    </table>
+    </mat-accordion>
   </div>
-</div>
-
-<mat-horizontal-stepper>
-  <mat-step label="PO Setup">
-    <form [formGroup]="poSetupForm">
-      <div class="row">
-        <div class="col-6">
-          <mat-form-field>
-            <input matInput formControlName="poNumber" placeholder="PO Number" type="text"
-                   class="form-control input-md" required="">
-          </mat-form-field>
-        </div>
-        <div class="col-6">
-          <mat-form-field>
-            <mat-select placeholder="Select the currency for this PO" formControlName="currency">
-              <mat-option *ngFor="let currency of (currencyList$| async)" [value]="currency">{{currency.label}} ({{currency.symbol}})</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-      <button *ngIf="poSetupForm.get('poNumber').value && poSetupForm.get('currency').value" (click)="addSetupToProduct()" mat-flat-button color="primary" type="button" matStepperNext>
-        Next
-      </button>
-    </form>
-  </mat-step>
-  <mat-step label="Select product">
-    <div *ngIf="!showAddAnotherProductButton">
-      <form class="form-horizontal" [formGroup]="productToFindForm">
-        <mat-form-field>
-          <input matInput formControlName="productToFindName" placeholder="Find a product first" type="text"
-                 class="form-control input-md" required="">
-        </mat-form-field>
-        <div>
-          <button mat-stroked-button color="primary" type="button" (click)="findProductByName()">search product</button>
-        </div>
-      </form>
-    </div>
-
-    <div>
-      <form [formGroup]="selectedProductForm">
-        <div *ngIf="(foundProducts$ | async) != null">
-          <div *ngFor="let product of foundProducts$ | async">
-            <input name="product" type="radio" [value]="product" formControlName="product">
-            <p>product: {{ product.name }} with prices <span *ngFor="let price of product.prices">({{price.label}} -> {{price.value}})</span>
-            </p>
-          </div>
-          <button mat-stroked-button color="primary" *ngIf="selectedProductForm.get('product').value" type="button"
-                  (click)="addProductToItems()">
-            set product items
-          </button>
-          <button *ngIf="productAlreadySelected" mat-stroked-button color="primary" type="button" matStepperNext (click)="selectDeliveryAddress()">
-            select delivery address
-          </button>
-
-          <div *ngIf="selectedProduct">
-
-            <mat-form-field>
-              <textarea matInput formControlName="description" placeholder="Description" type="text"
-                        class="form-control input-md" required="">{{ selectedProduct.name }}</textarea>
-            </mat-form-field>
-
-            <mat-form-field>
-              <input matInput formControlName="quantity" placeholder="Quantity" type="number"
-                     class="form-control input-md" required="">
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-select placeholder="Select the price you want to apply" formControlName="unit">
-                <mat-option *ngFor="let price of selectedProduct.prices" [value]="price.value">{{price.label}} ->
-                  {{price.value}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-select placeholder="Unit of Measurement" formControlName="unitOfMeasurement">
-                <mat-option *ngFor="let uom of selectedProduct.uomSet" [value]="uom">{{uom.label}} (
-                  {{uom.symbol}})
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <div>
-              <label>Override the price?</label>
-              <input type="checkbox" name="overridePrice" formControlName="overridePrice">
-            </div>
-            <div *ngIf="selectedProductForm.get('overridePrice').value">
-              <mat-form-field>
-                <input placeholder="Unit price" matInput formControlName="unit" type="number" class="form-control input-md" required="">
-              </mat-form-field>
-            </div>
-            <button mat-stroked-button color="primary" type="button" (click)="saveItem()">
-              save item
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="showAddAnotherProductButton">
-          <button mat-flat-button color="primary" type="button" (click)="addAnotherProduct()">
-            add another product
-          </button>
-          <button mat-stroked-button color="primary" type="button" matStepperNext (click)="selectDeliveryAddress()">
-            select delivery address
-          </button>
-        </div>
-      </form>
-    </div>
-  </mat-step>
-  <mat-step label="Select delivery info">
-    <div *ngIf="showSelectDeliveryAddress">
-      <form [formGroup]="deliveryAddressForm">
-        <label> select delivery address</label>
-        <div *ngFor="let information of customer.deliveryInformations">
-          <input name="address" type="radio" [value]="information" formControlName="address">
-          <p> {{information |json}}</p>
-        </div>
-      </form>
-      <button *ngIf="deliveryAddressForm.get('address').value" mat-flat-button color="primary" type="button" matStepperNext>
-        Next
-      </button>
-    </div>
-  </mat-step>
-  <mat-step label="Payment info">
-    <form [formGroup]="paymentInfoForm">
-      <div>
-        <label>select payment method</label>
-        <mat-form-field>
-          <mat-select formControlName="payMeans">
-            <mat-option *ngFor="let payMean of paymentMeans" [value]="payMean.value">{{payMean.label}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div>
-        <label>select payment status</label>
-        <mat-form-field>
-          <mat-select formControlName="payStatus">
-            <mat-option *ngFor="let payStatus of paymentStatus" [value]="payStatus.value">{{payStatus.label}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </form>
-
+  <div class="col-12">
     <button mat-flat-button color="primary" type="button" (click)="createOrder()">
       create purchase order
     </button>
-  </mat-step>
-</mat-horizontal-stepper>
+  </div>
+</div>

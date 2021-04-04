@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -9,6 +9,7 @@ import { ViewBillComponent } from './view-bill/view-bill.component';
 import {PurchaseOrderModule} from "../purchase-order/purchase-order.module";
 import {DeliveryNoteModule} from "../delivery-note/delivery-note.module";
 import {CreditNoteModule} from "../credit-note/credit-note.module";
+import {NgxSpinnerModule} from "ngx-spinner";
 
 @NgModule({
   declarations: [AddBillComponent, ListBillComponent, ViewBillComponent],
@@ -21,7 +22,8 @@ import {CreditNoteModule} from "../credit-note/credit-note.module";
     CosbyCommonModule,
     PurchaseOrderModule,
     DeliveryNoteModule,
-    CreditNoteModule
-  ]
+    CreditNoteModule,    NgxSpinnerModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class BillModule { }

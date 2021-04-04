@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ErrorStateMatcher,
-  MatAutocomplete, MatAutocompleteModule,
-  MatButtonModule, MatChipsModule, MatDateFormats, MatDatepickerModule, MatDialogModule, MatIconModule, MatInputModule,
+  MatAutocomplete, MatAutocompleteModule, MatBadgeModule,
+  MatButtonModule, MatCardModule, MatChipsModule, MatDateFormats, MatDatepickerModule, MatDialogModule,
+  MatExpansionModule, MatIconModule,
+  MatInputModule,
   MatMenuModule,
   MatNativeDateModule, MatPaginatorModule, MatProgressSpinner, MatProgressSpinnerModule,
   MatSelectModule, MatSortModule,
@@ -31,7 +33,10 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     MatDialogModule,
     MatPaginatorModule,
     MatSortModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatBadgeModule,
+    MatCardModule,
+    MatExpansionModule
 
   ],
   exports: [
@@ -50,7 +55,10 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     MatDialogModule,
     MatPaginatorModule,
     MatSortModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatBadgeModule,
+    MatCardModule,
+    MatExpansionModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

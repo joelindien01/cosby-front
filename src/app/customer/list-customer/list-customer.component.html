@@ -1,8 +1,8 @@
 <div class="row page-header">
   <div class="col-2">
-    <h2>Customers </h2>
+    <h2 *ngIf="!dialogData.dialogMode">Customers </h2>
   </div>
-  <div class="col-10 text-right">
+  <div class="col-10 text-right" *ngIf="!dialogData.dialogMode">
     <button type="button" routerLink="/customers/add" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add customer</button>
   </div>
 </div>
@@ -38,12 +38,16 @@
       <tr *ngFor='let customer of customerTableData$ | async' [shAttachMenu]="customerListMenu" [shMenuData]="customer">
         <td>{{customer.name}}</td>
         <td>{{customer.locationCountry}}</td>
-        <td class="text-center">
+        <td class="text-center" *ngIf="!dialogData.dialogMode">
           <button mat-stroked-button color="primary" class="mr-1" (click)="goToCustomerViewInfo(customer.id)"><fa-icon icon="eye"></fa-icon></button>
           <button mat-stroked-button color="primary" class="mr-1" (click)="createPurchaseOrder(customer.id)">create purchase order</button>
           <button mat-stroked-button color="primary" class="mr-1" (click)="goToPurchaseOrdersPage(customer.id)">purchase orders</button>
           <button mat-stroked-button color="primary" class="mr-1" (click)="goToBillsPage(customer.id)">bills</button>
           <button mat-stroked-button color="primary" (click)="goToDeliveryNotePage(customer.id)">delivery notes</button>
+        </td>
+        <td *ngIf="dialogData.dialogMode">
+          <button mat-stroked-button *ngIf="cartService.selectedCustomer == undefined" color="primary" (click)="cartService.selectedCustomer = customer">select customer</button>
+          <button mat-stroked-button *ngIf="cartService.selectedCustomer != undefined && cartService.selectedCustomer.id == customer.id" color="warn" (click)="cartService.selectedCustomer = undefined">remove customer</button>
         </td>
       </tr>
       </tbody>

@@ -1,0 +1,17 @@
+<div class="row elements-align">
+  <h4>This Cart contains {{cartService.items.length}} product<span *ngIf="cartService.items.length >1">s </span> <p *ngIf="cartService.items.length <=0">(you can't place order)</p></h4>
+
+  <p *ngIf="cartService.selectedCustomer == undefined">Find customer on which you want to place an order</p>
+  <p *ngIf="cartService.selectedCustomer != undefined">You will place order for customer: <strong>{{cartService.selectedCustomer.name}}</strong></p>
+  <div class="col-12">
+    <div class="row">
+      <app-list-customer *ngIf="cartService.selectedCustomer == undefined"></app-list-customer>
+    </div>
+  </div>
+  <div class="col-12 modal-footer">
+    <button mat-flat-button color="warn" (click)="dialogRef.close()">Go Back To product</button>
+    <button mat-flat-button *ngIf="cartService.selectedCustomer != undefined" color="warn" (click)="cartService.selectedCustomer = undefined">Select another customer</button>
+    <button mat-flat-button *ngIf="cartService.selectedCustomer != undefined && cartService.items.length >0" color="primary" (click)="goToPurchaseOrderPage()">Place Order</button>
+
+  </div>
+</div>

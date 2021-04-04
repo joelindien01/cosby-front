@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddPurchaseOrderComponent } from './add-purchase-order/add-purchase-order.component';
 import {HttpClientModule} from "@angular/common/http";
@@ -9,6 +9,8 @@ import {MaterialModule} from "../common/material/material.module";
 import {CosbyCommonModule} from "../common/cosby-common.module";
 import { ViewPurchaseOrderComponent } from './view-purchase-order/view-purchase-order.component';
 import {CreditNoteModule} from "../credit-note/credit-note.module";
+import {NgxSpinnerModule} from "ngx-spinner";
+import {ProductModule} from "../product/product.module";
 
 @NgModule({
   declarations: [AddPurchaseOrderComponent, ListPurchaseOrdersComponent, ViewPurchaseOrderComponent],
@@ -20,7 +22,8 @@ import {CreditNoteModule} from "../credit-note/credit-note.module";
     FormsModule,
     HttpClientModule,
     CosbyCommonModule,
-    CreditNoteModule
-  ]
+    CreditNoteModule,    NgxSpinnerModule, ProductModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PurchaseOrderModule { }

@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {CustomerService} from '../customer.service';
 import {Customer} from '../customer';
 import {Router} from "@angular/router";
 import {Observable} from 'rxjs';
 import {map} from "rxjs/internal/operators";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {MAT_DIALOG_DATA} from "@angular/material";
+import {CartService} from "../../cart/cart.service";
 
 @Component({
   selector: 'app-list-customer',
@@ -19,7 +21,9 @@ export class ListCustomerComponent implements OnInit {
   customerSearchForm: FormGroup;
 
 
-  constructor(private customerService: CustomerService, private router: Router, private fb: FormBuilder) {
+  constructor(private customerService: CustomerService, private router: Router, private fb: FormBuilder,
+              @Inject(MAT_DIALOG_DATA) public dialogData: any,
+              public cartService: CartService) {
     this.customerList$ = this.customerService.getCustomers().shareReplay();
     this.customerTableData$ = this.customerList$.pipe(
       map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.location.country)))

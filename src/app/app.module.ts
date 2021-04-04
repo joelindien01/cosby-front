@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,6 +36,7 @@ import {LoadProductComponent} from "./product/load-product/load-product.componen
 import {UomModule} from "./uom/uom.module";
 import {AccountModule} from "./account/account.module";
 import {CreditNoteModule} from "./credit-note/credit-note.module";
+import {NgxSpinnerModule} from "ngx-spinner";
 
 
 const appRoutes: Routes = [
@@ -83,12 +84,14 @@ const appRoutes: Routes = [
     UomModule,
     AccountModule,
     CreditNoteModule,
+    NgxSpinnerModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
   providers: [],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

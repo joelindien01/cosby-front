@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {ConfigService} from "./config.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AddressComponent} from './address/address.component';
@@ -22,7 +22,7 @@ import { ViewAddressComponent } from './view-address/view-address.component';
 import { ViewContactComponent } from './view-contact/view-contact.component';
 import { ViewShipComponent } from './view-ship/view-ship.component';
 import {faPen} from "@fortawesome/free-solid-svg-icons/faPen";
-import {faDownload, faEye, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
+import {faCartArrowDown, faDownload, faEye, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import {DocGeneratorService} from "./doc-generator.service";
 import { ModalComponent } from './modal/modal.component';
 import {faSearch} from "@fortawesome/free-solid-svg-icons/faSearch";
@@ -30,6 +30,9 @@ import {UserService} from "./user.service";
 import {BasicAuthHttpInterceptorService} from "./basic-auth-http-interceptor.service";
 import {faPowerOff} from "@fortawesome/free-solid-svg-icons/faPowerOff";
 import {ErrorStateMatcher, MatDateFormats, NativeDateAdapter} from "@angular/material";
+import {NgxSpinnerModule} from "ngx-spinner";
+import {faCartPlus} from "@fortawesome/free-solid-svg-icons/faCartPlus";
+import {faShoppingCart} from "@fortawesome/free-solid-svg-icons/faShoppingCart";
 
 @NgModule({
   declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
@@ -42,7 +45,9 @@ import {ErrorStateMatcher, MatDateFormats, NativeDateAdapter} from "@angular/mat
     Ng2SmartTableModule,
     MaterialModule,
     ShContextMenuModule,
+    NgxSpinnerModule
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule, ShContextMenuModule, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
   providers: [ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService, {provide:HTTP_INTERCEPTORS, useClass: BasicAuthHttpInterceptorService, multi:true}]
 })
@@ -57,6 +62,9 @@ export class CosbyCommonModule {
     library.add(faSearch);
     library.add(faPowerOff);
     library.add(faDownload);
+    library.add(faCartPlus);
+    library.add(faShoppingCart);
+    library.add(faCartArrowDown);
 
   }
 }

@@ -12,7 +12,8 @@ export class ContactService implements FormInitiator {
       id: "",
       name: ["", Validators.required],
       phoneNumber: ["", Validators.required],
-      email: ["", [Validators.required, Validators.email]]
+      email: ["", [Validators.required, Validators.email]],
+      contactFunction: ["", Validators.required]
     });
   }
 

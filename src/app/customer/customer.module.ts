@@ -9,6 +9,7 @@ import { ListCustomerComponent } from './list-customer/list-customer.component';
 import {MaterialModule} from '../common/material/material.module';
 import {RouterModule} from '@angular/router';
 import { ViewCustomerComponent } from './view-customer/view-customer.component';
+import {NgxSpinnerModule} from "ngx-spinner";
 
 @NgModule({
   declarations: [AddCustomerComponent, ListCustomerComponent, ViewCustomerComponent],
@@ -19,9 +20,10 @@ import { ViewCustomerComponent } from './view-customer/view-customer.component';
     HttpClientModule,
     CosbyCommonModule,
     MaterialModule,
-    RouterModule
+    RouterModule,
+    NgxSpinnerModule
   ],
-  exports: [AddCustomerComponent],
+  exports: [AddCustomerComponent, ListCustomerComponent],
   providers: [CustomerService]
 })
 export class CustomerModule { }

@@ -12,6 +12,7 @@ export class Contact {
   name: string;
   phoneNumber: string;
   emailAddresses: string;
+  contactFunction: string;
   customer: Customer;
 }
 

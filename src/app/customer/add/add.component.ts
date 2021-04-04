@@ -32,7 +32,6 @@ export class AddCustomerComponent implements OnInit {
       contacts: this.fb.array([this.contactService.initForm()]),
       billingAddress: this.addressService.initAddress(),
       location: this.addressService.initAddress(),
-      deliveryInformations: this.fb.array([this.shipService.initShip()]),
       addAnotherCustomer: [true]
     });
 

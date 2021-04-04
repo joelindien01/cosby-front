@@ -1,12 +1,13 @@
 <div class="row">
   <div class="col-12">
-    <div class="row">
-      <div class="col-6">
-        <h2>Products</h2>
+    <div class="row view-header">
+      <div class="col-3">
+        <h2 *ngIf="!isOrderView">Products</h2>
       </div>
-      <div class="col-6 text-right product-button">
-        <button type="button" routerLink="/load-products" mat-flat-button color="primary"><fa-icon icon="download"></fa-icon> Mass Load</button>
-        <button type="button" routerLink="/product" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add </button>
+      <div class="col-9 text-right product-button">
+        <button type="button" (click)="openCart()" mat-icon-button [matBadge]="cartService.items.length" matBadgePosition="before" matBadgeColor="warn" color="primary"><fa-icon icon="shopping-cart"></fa-icon></button>
+        <button *ngIf="!isOrderView" type="button" routerLink="/load-products" mat-flat-button color="primary"><fa-icon icon="download"></fa-icon> Mass Load</button>
+        <button *ngIf="!isOrderView" type="button" routerLink="/product" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add </button>
 
 
       </div>
@@ -32,9 +33,90 @@
     </div>
   </div>
 
+  <ngx-spinner bdColor = "rgba(0, 0, 0, 0)" size = "medium" color = "#5E5FFF" type = "square-jelly-box" [fullScreen] = "false"><p style="color: #5e5fff" > Loading... </p></ngx-spinner>
 
   <div class="col-12">
-    <table mat-table [dataSource]="productTable" matSort class="table table-bordered">
+    <form [formGroup]="itemsSetupForm" *ngIf="productTable">
+    <div class="row">
+
+      <div class="col-4" formArrayName="items" *ngFor="let p of productTable.connect() |async; index as i">
+
+          <mat-card class="example-card" >
+          <mat-card-header>
+            <mat-card-title>{{p?.product?.name}}</mat-card-title>
+            <!--<mat-card-subtitle>{{product.name}}</mat-card-subtitle>-->
+          </mat-card-header>
+          <mat-card-content [formGroupName]="p.index">
+
+
+              <mat-form-field>
+                <input [errorStateMatcher]="matcher" matInput formControlName="quantity" placeholder="Quantity" type="number"
+                       class="form-control input-md" required="">
+                <mat-error *ngIf="itemsSetupForm?.controls['items']?.controls[p.index].get('quantity')?.touched && itemsSetupForm?.controls['items'].controls[p.index].get('quantity')?.errors?.required">
+                  Quantity is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+
+            <mat-form-field>
+              <mat-select [errorStateMatcher]="matcher" [compareWith]="comparePriceFunction" placeholder="Select the price you want to apply" formControlName="unit">
+                <mat-option *ngFor="let price of itemsSetupForm?.controls['items'].controls[p.index].get('product')?.value.prices" [value]="price.value">{{price.label}} ->
+                  {{price.value}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="itemsSetupForm?.controls['items']?.controls[p.index].get('unit')?.touched && itemsSetupForm?.controls['items'].controls[p.index].get('unit')?.errors?.required">
+                Unit price is <strong>required</strong>
+              </mat-error>
+            </mat-form-field>
+
+              <mat-form-field>
+                <mat-select [errorStateMatcher]="matcher" [compareWith]="compareFunction" placeholder="Unit of Measurement" formControlName="unitOfMeasurement">
+                  <mat-option *ngFor="let uom of itemsSetupForm?.controls['items'].controls[p.index].get('product')?.value.uomSet" [value]="uom">{{uom.label}} (
+                    {{uom.symbol}})
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="itemsSetupForm?.controls['items']?.controls[p.index].get('unitOfMeasurement')?.touched && itemsSetupForm?.controls['items'].controls[p.index].get('unitOfMeasurement')?.errors?.required">
+                  Unit of measurement is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+
+              <div>
+                <label>Override the price?</label>
+                <input  type="checkbox" name="overridePrice" formControlName="overridePrice">
+              </div>
+              <div *ngIf="itemsSetupForm?.controls['items'].controls[p.index].get('overridePrice')?.value">
+                <mat-form-field>
+                  <input [errorStateMatcher]="matcher" placeholder="Unit price" matInput formControlName="unit" type="number" class="form-control input-md" required="">
+                  <mat-error *ngIf="itemsSetupForm?.controls['items']?.controls[p.index].get('unit')?.touched && itemsSetupForm?.controls['items'].controls[p.index].get('unit')?.errors?.required">
+                    Unit price is <strong>required</strong>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-stroked-button color="primary" class="mr-3" data-toggle="modal" data-target="#productModal" (click)="viewSelectedProduct(itemsSetupForm.controls['items'].controls[p.index].value.product.id)"><fa-icon icon="eye"></fa-icon></button>
+            <button mat-stroked-button color="primary" (click)="editSelectedProduct(itemsSetupForm.controls['items'].controls[p.index].value.product.id)"><fa-icon icon="pen"></fa-icon></button>
+            <button *ngIf="p.showAddCart" mat-flat-button color="primary" (click)="addToCart(itemsSetupForm.controls['items'].controls[p.index].value, p.index); itemsSetupForm.controls['items'].controls[p.index].valid ? p.showAddCart = !p.showAddCart : null"><fa-icon icon="cart-plus"></fa-icon> add to cart</button>
+            <button *ngIf="itemsSetupForm.controls['items'].controls[p.index].valid && !p.showAddCart" mat-flat-button color="warn" (click)="removeFromCart(itemsSetupForm.controls['items'].controls[p.index].value); p.showAddCart = !p.showAddCart"><fa-icon icon="cart-arrow-down"></fa-icon> remove from cart</button>
+
+          </mat-card-actions>
+        </mat-card>
+
+      </div>
+
+
+    </div>
+
+    </form>
+
+    <mat-paginator
+      (page)="pageEvent = onPageChange($event)"
+      [length]="(productTable)?.data?.length"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+
+    <!--<table mat-table [dataSource]="productTable" matSort class="table table-bordered" *ngIf="show">
 
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -46,15 +128,15 @@
           <td mat-cell *matCellDef="let product">
             <button mat-stroked-button color="primary" class="mr-3" data-toggle="modal" data-target="#productModal" (click)="viewSelectedProduct(product.id)"><fa-icon icon="eye"></fa-icon></button>
             <button mat-stroked-button color="primary" (click)="editSelectedProduct(product.id)"><fa-icon icon="pen"></fa-icon></button>
+            <button *ngIf="product.showAddCart" mat-stroked-button color="primary" (click)="addToCart(product); product.showAddCart = !product.showAddCart"><fa-icon icon="cart-plus"></fa-icon> add to cart</button>
+            <button *ngIf="!product.showAddCart" mat-stroked-button color="primary" (click)="removeFromCart(product); product.showAddCart = !product.showAddCart"><fa-icon icon="cart-arrow-down"></fa-icon> remove from cart</button>
           </td>
         </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-    </table>
-    <mat-paginator [length]="500"
-                   [pageSize]="10"
-                   [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+    </table>-->
+
 
   </div>
 

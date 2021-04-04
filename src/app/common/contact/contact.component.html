@@ -17,6 +17,10 @@
           <label>email</label>
           <input type="text" name="email" formControlName="email">
         </div>
+        <div>
+          <label>function</label>
+          <input type="text" name="contactFunction" formControlName="contactFunction">
+        </div>
       </div>
     </div>
 
@@ -51,7 +55,7 @@
                     <div class="col-12">
                       <mat-form-field>
                         <input matInput [errorStateMatcher]="matcher" placeholder="Phone Number" type="text" name="phoneNumber" formControlName="phoneNumber">
-                        <mat-error *ngIf="contact.controls['name'].touched && contact.controls['phoneNumber'].hasError('required')">
+                        <mat-error *ngIf="contact.controls['phoneNumber'].touched && contact.controls['phoneNumber'].hasError('required')">
                           Contact {{ i +1}} Phone number is <strong>required</strong>
                         </mat-error>
                       </mat-form-field>
@@ -60,8 +64,16 @@
                     <div class="col-12">
                       <mat-form-field>
                         <input matInput [errorStateMatcher]="matcher" placeholder="Email" type="text" name="email" formControlName="email">
-                        <mat-error *ngIf="contact.controls['name'].touched && contact.controls['email'].hasError('required')">
+                        <mat-error *ngIf="contact.controls['email'].touched && contact.controls['email'].hasError('required')">
                           Contact {{ i +1}} Email is <strong>required</strong>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-12">
+                      <mat-form-field>
+                        <input matInput [errorStateMatcher]="matcher" placeholder="Function" type="text" name="contactFunction" formControlName="contactFunction">
+                        <mat-error *ngIf="contact.controls['contactFunction'].touched && contact.controls['contactFunction'].hasError('required')">
+                          Contact {{ i +1}} Function is <strong>required</strong>
                         </mat-error>
                       </mat-form-field>
                     </div>

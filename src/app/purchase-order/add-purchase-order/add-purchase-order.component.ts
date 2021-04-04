@@ -12,13 +12,12 @@ import {switchMap} from "rxjs/internal/operators";
 import {Currency} from "../../uom/UnitOfMeasurement";
 import {GlobalUomService} from "../../uom/global-uom.service";
 import {moveItemInArray} from "@angular/cdk/drag-drop";
+import {CartService} from "../../cart/cart.service";
 
 
 export class ReferenceItem {
 label: string;
 value: string;
-
-
 }
 
 @Component({
@@ -27,6 +26,8 @@ value: string;
   styleUrls: ['./add-purchase-order.component.scss']
 })
 export class AddPurchaseOrderComponent implements OnInit {
+
+  panelOpenState: boolean;
 
   currencyList$: Observable<Array<Currency>>;
   customer: Customer;
@@ -52,7 +53,8 @@ export class AddPurchaseOrderComponent implements OnInit {
               private purchaseOrderService: PurchaseOrderService,
               private productService: ProductService,
               private uomService: GlobalUomService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              public cartService: CartService) {
 
     this.currencyList$ = this.uomService.findAllCurrencyList();
     const routeParams$ = this.route.params;
@@ -100,6 +102,10 @@ export class AddPurchaseOrderComponent implements OnInit {
     console.log("product to find: "+ this.productToFindForm.get('productToFindName').value);
     const productToFound = this.productToFindForm.get('productToFindName').value;
     this.foundProducts$ = this.productService.findProductByName(productToFound);
+  }
+
+  getProducts() {
+    return this.cartService.getItems().map(item => item.product);
   }
 
   addProductToItems() {

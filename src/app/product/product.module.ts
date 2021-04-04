@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddProductComponent } from './add-product/add-product.component';
 import {HttpClientModule} from "@angular/common/http";
@@ -10,11 +10,14 @@ import { ViewProductComponent } from './view-product/view-product.component';
 import {RouterModule} from "@angular/router";
 import { LoadProductComponent } from './load-product/load-product.component';
 import { AngularFileUploaderModule } from "angular-file-uploader";
+import {NgxSpinnerModule} from "ngx-spinner";
+import {ViewCartComponent} from "../cart/view-cart/view-cart.component";
+import {CartModule} from "../cart/cart.module";
 
 
 @NgModule({
   declarations: [AddProductComponent, ListProductComponent, ViewProductComponent, LoadProductComponent],
-  exports:[AddProductComponent, LoadProductComponent],
+  exports:[AddProductComponent, LoadProductComponent, ListProductComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -22,8 +25,12 @@ import { AngularFileUploaderModule } from "angular-file-uploader";
     HttpClientModule,
     CosbyCommonModule,
     RouterModule,
-    AngularFileUploaderModule
+    AngularFileUploaderModule,
+    NgxSpinnerModule,
+    CartModule
   ],
-  providers: [ProductService]
+  providers: [ProductService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  entryComponents: [ViewCartComponent]
 })
 export class ProductModule { }

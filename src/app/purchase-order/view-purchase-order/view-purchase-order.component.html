@@ -1,4 +1,6 @@
-<div class="row">
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0)" size = "medium" color = "#5E5FFF" type = "square-jelly-box" [fullScreen] = "true"><p style="color: #5e5fff" > Loading... </p></ngx-spinner>
+
+<div class="row" *ngIf="show">
 
   <div class="col-12">
     <h5 *ngIf="bill != undefined">Bill</h5>
