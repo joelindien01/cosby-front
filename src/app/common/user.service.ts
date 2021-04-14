@@ -87,4 +87,12 @@ export class UserService {
   addUser(user: any): Observable<any> {
     return this.httpClient.post<any>(this.baseUrl+'/add', user);
   }
+
+  findAllRoles():Observable<Array<any>> {
+    return this.httpClient.get<Array<any>>(this.baseUrl+'role/');
+  }
+
+  findAllProfiles():Observable<Array<any>> {
+    return this.httpClient.get<Array<any>>(this.baseUrl+'profile/');
+  }
 }

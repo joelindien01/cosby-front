@@ -27,17 +27,24 @@
             </div>
             <div class="col-4">
               <mat-form-field *ngIf="!profileBasedPermissions">
-                <mat-select placeholder="Roles" formControlName="roles">
-                  <mat-option *ngFor="let role of availableRoles" [value]="role"> {{role?.name}} : {{role?.description}}
+                <mat-select placeholder="Roles" formControlName="roles" multiple>
+                  <mat-option *ngFor="let role of availableRoles" [value]="role"> {{role?.name}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
+
               <mat-form-field *ngIf="profileBasedPermissions">
                 <mat-select placeholder="Profile" formControlName="profile">
-                  <mat-option *ngFor="let profile of availableProfiles" [value]="profile"> {{profile?.name}} : {{profile?.description}}
+                  <mat-option *ngFor="let profile of availableProfiles" [value]="profile"> {{profile?.name}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
+            </div>
+            <div class="col-12" *ngIf="!profileBasedPermissions && addUserForm?.controls['roles']?.value?.length > 0">
+              <p>Selected roles:</p>
+              <mat-chip-list>
+                <mat-chip *ngFor="let role of addUserForm.controls['roles'].value">{{role.name}} </mat-chip>
+              </mat-chip-list>
             </div>
           </div>
         </div>

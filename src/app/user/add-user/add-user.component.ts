@@ -15,6 +15,9 @@ export class AddUserComponent implements OnInit {
   profileBasedPermissions: boolean = true;
 
   constructor(private fb: FormBuilder, private userService: UserService, public dialogRef: MatDialogRef<AddUserComponent>, @Inject(MAT_DIALOG_DATA) public data: {userData: any}) {
+    this.userService.findAllRoles().subscribe(roles => this.availableRoles = roles);
+    this.userService.findAllProfiles().subscribe(profiles => this.availableProfiles = profiles);
+
     this.addUserForm = this.fb.group({
       username: [, Validators.required],
       email: [, Validators.required],

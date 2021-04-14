@@ -15,9 +15,11 @@ import {CreateUomComponent} from "../uom/create-uom/create-uom.component";
 import {AddAccountComponent} from "../account/add-account/add-account.component";
 import { ListUserComponent } from './list-user/list-user.component';
 import { AddUserComponent } from './add-user/add-user.component';
+import { AddProfileComponent } from './add-profile/add-profile.component';
+import { ListProfileComponent } from './list-profile/list-profile.component';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, UserViewComponent, ListUserComponent, AddUserComponent],
+  declarations: [LoginComponent, RegisterComponent, UserViewComponent, ListUserComponent, AddUserComponent, AddProfileComponent, ListProfileComponent],
   exports: [LoginComponent, RegisterComponent, UserViewComponent],
   providers: [UserService],
   imports: [
