@@ -19,3 +19,18 @@ margin-right: 5px !important;
 mat-card {
   margin-top: 10px;
 }
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+:host ::ng-deep .mat-card-header-text {
+
+  margin: unset;
+}

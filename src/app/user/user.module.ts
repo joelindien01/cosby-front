@@ -9,6 +9,10 @@ import { RegisterComponent } from './register/register.component';
 import { UserViewComponent } from './user-view/user-view.component';
 import {CommonModule} from "@angular/common";
 import {RouterModule} from "@angular/router";
+import {AccountModule} from "../account/account.module";
+import {UomModule} from "../uom/uom.module";
+import {CreateUomComponent} from "../uom/create-uom/create-uom.component";
+import {AddAccountComponent} from "../account/add-account/add-account.component";
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent, UserViewComponent],
@@ -20,7 +24,10 @@ import {RouterModule} from "@angular/router";
     FormsModule,
     HttpClientModule,
     CosbyCommonModule,
-    RouterModule
-  ]
+    RouterModule,
+    AccountModule,
+    UomModule
+  ],
+  entryComponents: [CreateUomComponent, AddAccountComponent]
 })
 export class UserModule { }

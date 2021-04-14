@@ -11,7 +11,7 @@ export class AddressEditForm extends CustomerAbstractForm {
   constructor(private fb: FormBuilder,
               private customerService: CustomerService,
               private addressService: AddressService,
-              private address: Address) {
+              private address: Address, private customerId: number) {
     super();
     this.form = this.fb.group({
       address: this.addressService.initAddress()
@@ -19,8 +19,8 @@ export class AddressEditForm extends CustomerAbstractForm {
     });
   }
 
-  edit(formFieldName: string): void {
-    //this.customerService.editContact(this.customerId, [this.form.get(formFieldName).value]).subscribe();
+  edit(formFieldName: string) {
+    return this.customerService.editAddress(this.customerId, [this.form.get(formFieldName).value]);
   }
 
 }

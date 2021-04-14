@@ -24,4 +24,13 @@ export class ViewContactComponent implements OnInit {
     this.contactEditForm = new ContactEditForm(this.fb, this.customerService, this.contactService, this.customerId);
   }
 
+  updateContact() {
+    if(this.contactEditForm.form.invalid) {
+      return;
+    }
+    this.contactEditForm.edit('contacts').subscribe(contact => {
+      this.contact = this.contactEditForm.form.value.contacts;
+    })
+  }
+
 }

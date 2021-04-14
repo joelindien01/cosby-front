@@ -21,7 +21,7 @@
     <p>{{ address?.country }}</p>
 
   </div>
-  <app-modal  [contentId]="'editAddressModal_'+address.id" [withFooter]="true" (modalSaved)="addressEditForm.edit('address')">
+  <app-modal  [contentId]="'editAddressModal_'+address.id" [withFooter]="true" (modalSaved)="updateAddress()">
     <form class="form-horizontal" [formGroup]="addressEditForm.form">
       <app-address [address]="address" [formGroup]="addressEditForm.form" [groupName]="'address'" ></app-address>
     </form>

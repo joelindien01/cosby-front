@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-12">
+
+
+      <form [formGroup]="accountFormGroup">
+        <div class="row">
+
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput name="bankName" placeholder="Bank Name" formControlName="bankName">
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput name="holder" placeholder="Holder" formControlName="holder">
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput name="iban" placeholder="IBAN" formControlName="iban">
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput name="reference" placeholder="reference" formControlName="reference">
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput name="rib" placeholder="rib" formControlName="rib">
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput name="swift" placeholder="Swift Code" formControlName="swiftCode">
+          </mat-form-field>
+        </div>
+        </div>
+
+
+
+      </form>
+
+  </div>
+  <div class="col-12">
+    <button mat-stroked-button color="primary"
+            (click)="save()">Save
+    </button>
+  </div>
+</div>

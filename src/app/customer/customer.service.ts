@@ -36,7 +36,7 @@ export class CustomerService {
     return this.http.post(this.baseUrl+"update-name", {id: customerId, name: customerName});
   }
 
-  editContact(customerId: number, contacts: Array<Contact>) {
+  editContact(customerId: number, contacts: Array<Contact>): Observable<any> {
 
     return this.http.post(this.baseUrl+"edit-contact", {id: customerId, contacts: contacts});
   }
@@ -48,5 +48,9 @@ export class CustomerService {
       }
     });
     return this.http.get<Array<Customer>>(this.baseUrl+"find", {params: params});
+  }
+
+  editAddress(customerId: number, addresses: [any]) {
+    return this.http.post(this.baseUrl+"update-address", {id: customerId, address: addresses[0]});
   }
 }

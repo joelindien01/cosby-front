@@ -14,6 +14,7 @@ import {GlobalUomService} from "../../uom/global-uom.service";
 import {moveItemInArray} from "@angular/cdk/drag-drop";
 import {CartService} from "../../cart/cart.service";
 import {ShipService} from "../../common/ship.service";
+import {MyErrorStateMatcher} from "../../common/multi-addable-form";
 
 
 export class ReferenceItem {
@@ -48,6 +49,7 @@ export class AddPurchaseOrderComponent implements OnInit {
   public paymentMeans: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
   productAlreadySelected: boolean;
+  public matcher;
 
   constructor(private customerService: CustomerService,
               private fb: FormBuilder,
@@ -56,6 +58,7 @@ export class AddPurchaseOrderComponent implements OnInit {
               private uomService: GlobalUomService,
               private route: ActivatedRoute,
               public cartService: CartService, public shipService: ShipService) {
+    this.matcher = new MyErrorStateMatcher();
     this.panelOpenState = true;
     this.currencyList$ = this.uomService.findAllCurrencyList();
     const routeParams$ = this.route.params;
@@ -71,6 +74,7 @@ export class AddPurchaseOrderComponent implements OnInit {
     this.poSetupForm = this.fb.group({
       poNumber: ['', Validators.required],
       currency: ['', Validators.required],
+      contact: ['', Validators.required],
       payMeans: ['', Validators.required],
       payStatus: ['', Validators.required],
       deliveryAddress: this.fb.group( {
@@ -106,21 +110,18 @@ export class AddPurchaseOrderComponent implements OnInit {
     this.selectedProduct = null;
   }
 
-  addAnotherProduct() {
-    this.showAddAnotherProductButton = !this.showAddAnotherProductButton;
-    this.productAlreadySelected = false;
-    //TODO restart process
-  }
-
   createOrder() {
     if(this.poSetupForm.invalid) {
+      Object.keys(this.poSetupForm.controls).forEach(key => {
+        this.poSetupForm.controls[key].markAsTouched();
+      });
       return;
     }
-    this.purchaseOrder.deliveryInformation = this.deliveryAddressForm.get('address').value;
-    this.purchaseOrder.customer = this.customer;
-    console.log("order to create vvvv");
+    let po = this.poSetupForm.value;
+    po.customer = this.customer;
+    po.items = this.cartService.getItems();
     console.log(this.purchaseOrder);
-    this.purchaseOrderService.createOrder({order: this.purchaseOrder, informationDTO: this.paymentInfoForm.value}).subscribe(result =>{
+    this.purchaseOrderService.createOrder(po).subscribe(result =>{
       alert("order created");
     });
 

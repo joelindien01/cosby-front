@@ -2,6 +2,7 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {CustomerService} from "../../customer.service";
 import {ContactService} from "../../../common/contact.service";
 import {CustomerAbstractForm} from "./customer-abstract-form";
+import {Observable} from "rxjs/Rx";
 
 export class ContactEditForm extends CustomerAbstractForm {
 
@@ -17,8 +18,8 @@ export class ContactEditForm extends CustomerAbstractForm {
     });
   }
 
-  edit(formFieldName: string): void {
-    this.customerService.editContact(this.customerId, [this.form.get(formFieldName).value]).subscribe();
+  edit(formFieldName: string): Observable<any> {
+    return this.customerService.editContact(this.customerId, [this.form.get(formFieldName).value]);
   }
 
 }

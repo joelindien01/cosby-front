@@ -18,31 +18,54 @@
                 <div class="col-3">
                   <mat-form-field>
                     <label>Po Number</label>
-                    <input matInput placeholder="Po Number" formControlName="poNumber" type="text">
+                    <input [errorStateMatcher]="matcher" matInput placeholder="Po Number" formControlName="poNumber" type="text">
+                    <mat-error *ngIf="poSetupForm.controls['poNumber'].touched && poSetupForm.controls['poNumber'].errors?.required">
+                      PO number is <strong>required</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
                 <div class="col-3">
                   <label>select currency</label>
                   <mat-form-field>
-                    <mat-select formControlName="currency">
+                    <mat-select [errorStateMatcher]="matcher" formControlName="currency">
                       <mat-option *ngFor="let currency of (currencyList$| async)" [value]="currency">{{currency.label}} ({{currency.symbol}})</mat-option>
                     </mat-select>
+                    <mat-error *ngIf="poSetupForm.controls['currency'].touched && poSetupForm.controls['currency'].errors?.required">
+                      Currency is <strong>required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-3">
+                  <label>select contact</label>
+                  <mat-form-field>
+                    <mat-select [errorStateMatcher]="matcher" formControlName="contact">
+                      <mat-option *ngFor="let contact of (currentCustomer$| async)?.contacts" [value]="contact">{{contact.name}} ({{contact.contactFunction}})</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="poSetupForm.controls['contact'].touched && poSetupForm.controls['contact'].errors?.required">
+                      Contact is <strong>required</strong>
+                    </mat-error>
                   </mat-form-field>
                 </div>
                 <div class="col-3">
                     <label>select payment method</label>
                     <mat-form-field>
-                      <mat-select formControlName="payMeans">
+                      <mat-select [errorStateMatcher]="matcher" formControlName="payMeans">
                         <mat-option *ngFor="let payMean of paymentMeans" [value]="payMean.value">{{payMean.label}}</mat-option>
                       </mat-select>
+                      <mat-error *ngIf="poSetupForm.controls['payMeans'].touched && poSetupForm.controls['payMeans'].errors?.required">
+                        Payment Method is <strong>required</strong>
+                      </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <label>select payment status</label>
                     <mat-form-field>
-                      <mat-select formControlName="payStatus">
+                      <mat-select [errorStateMatcher]="matcher" formControlName="payStatus">
                         <mat-option *ngFor="let payStatus of paymentStatus" [value]="payStatus.value">{{payStatus.label}}</mat-option>
                       </mat-select>
+                      <mat-error *ngIf="poSetupForm.controls['payStatus'].touched && poSetupForm.controls['payStatus'].errors?.required">
+                        Payment status is <strong>required</strong>
+                      </mat-error>
                     </mat-form-field>
                 </div>
 

@@ -4,6 +4,9 @@ import {CustomerService} from "../customer.service";
 import {Observable} from "rxjs/Rx";
 import {Customer} from "../customer";
 import {NgxSpinnerService} from "ngx-spinner";
+import {ContactEditForm} from "./forms/contact-edit-form";
+import {FormBuilder} from "@angular/forms";
+import {ContactService} from "../../common/contact.service";
 
 @Component({
   selector: 'app-view-customer',
@@ -15,8 +18,9 @@ export class ViewCustomerComponent implements OnInit {
   public currentCustomer: Customer;
   public fieldEdit: CustomerEditActivationHandler;
   show;
+  public contactEditForm: ContactEditForm;
 
-  constructor(private route: ActivatedRoute, private customerService: CustomerService, private router: Router, private spinner: NgxSpinnerService) {
+  constructor(private route: ActivatedRoute, private customerService: CustomerService, private contactService: ContactService, private router: Router, private spinner: NgxSpinnerService, private fb: FormBuilder) {
     this.fieldEdit = new CustomerEditActivationHandler();
     this.spinner.show();
     this.show = false;
@@ -26,6 +30,7 @@ export class ViewCustomerComponent implements OnInit {
         this.customer$ = this.customerService.findCustomerById(customerId);
         this.customer$.subscribe(customer => {
           this.currentCustomer = customer;
+          this.contactEditForm = new ContactEditForm(this.fb, this.customerService, this.contactService, this.currentCustomer.id);
           setTimeout(() => {
             this.spinner.hide();
             this.show = true;
@@ -33,6 +38,15 @@ export class ViewCustomerComponent implements OnInit {
           });
 
       }
+    })
+  }
+
+  updateContact() {
+    if(this.contactEditForm.form.invalid) {
+      return;
+    }
+    this.contactEditForm.edit('contacts').subscribe(contact => {
+      this.currentCustomer.contacts.push(contact);
     })
   }
 
@@ -63,6 +77,10 @@ export class ViewCustomerComponent implements OnInit {
     this.router.navigate(['/delivery-notes', {customerId: this.currentCustomer.id}]).then();
   }
   addShip() {
+
+  }
+
+  addContact() {
 
   }
 }

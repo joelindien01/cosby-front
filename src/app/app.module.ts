@@ -37,12 +37,16 @@ import {UomModule} from "./uom/uom.module";
 import {AccountModule} from "./account/account.module";
 import {CreditNoteModule} from "./credit-note/credit-note.module";
 import {NgxSpinnerModule} from "ngx-spinner";
+import {CreateUomComponent} from "./uom/create-uom/create-uom.component";
+import {ListUomComponent} from "./uom/list-uom/list-uom.component";
+import {AddAccountComponent} from "./account/add-account/add-account.component";
+import {ListAccountComponent} from "./account/list-account/list-account.component";
 
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'user', component: UserViewComponent },
+  { path: 'settings', component: UserViewComponent, canActivate: [AuthGuard]},
   { path: 'customers/add', component: AddCustomerComponent, canActivate: [AuthGuard]},
   { path: 'delivery-notes/add', component: AddDeliveryNoteComponent, canActivate: [AuthGuard] },
   { path: 'delivery-notes', component: ListDeliveryNoteComponent, canActivate: [AuthGuard] },

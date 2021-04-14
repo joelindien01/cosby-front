@@ -27,20 +27,24 @@ export class ContactComponent extends MultiAddableForm implements OnInit {
   }
 
   onChanges(): void {
-    this.formGroup.valueChanges.subscribe(val => {
+    if(this.arrayName != undefined) {
+      this.formGroup.valueChanges.subscribe(val => {
 
-      let elements:FormArray = <FormArray>this.formGroup.controls[this.arrayName];
+        let elements:FormArray = <FormArray>this.formGroup.controls[this.arrayName];
 
-      elements.controls.forEach(el =>{
-        let elt = <FormGroup> el;
-        Object.keys(elt.controls).forEach(key => {
-          elt.controls[key].markAsTouched();
-        }) ;
-        el.setErrors(elt.errors);
-        //elt.controls.
+        elements.controls.forEach(el =>{
+          let elt = <FormGroup> el;
+          Object.keys(elt.controls).forEach(key => {
+            elt.controls[key].markAsTouched();
+          }) ;
+          el.setErrors(elt.errors);
+          //elt.controls.
+        });
+        // /this.formGroup.controls[this.arrayName].markAsTouched({onlySelf: true})
       });
-      // /this.formGroup.controls[this.arrayName].markAsTouched({onlySelf: true})
-    });
+    } else {
+
+    }
   }
 
 }

@@ -4,22 +4,30 @@
   </div>
   <div class="col-12">
     <div class="row" [formGroup]="formGroup" *ngIf="!isArrayForm">
-      <div [formGroupName]="groupName">
-        <div>
-          <label>name</label>
-          <input type="text" name="name" formControlName="name">
+      <div [formGroupName]="groupName" class="single-contact-form col-12">
+        <div class="col-12">
+          <mat-form-field>
+            <label>name</label>
+            <input matInput name="name" formControlName="name">
+          </mat-form-field>
         </div>
-        <div>
-          <label>phoneNumber</label>
-          <input type="text" name="phoneNumber" formControlName="phoneNumber">
+        <div class="col-12">
+          <mat-form-field>
+            <label>phoneNumber</label>
+            <input matInput type="text" name="phoneNumber" formControlName="phoneNumber">
+          </mat-form-field>
         </div>
-        <div>
-          <label>email</label>
-          <input type="text" name="email" formControlName="email">
+        <div class="col-12">
+          <mat-form-field>
+            <label>email</label>
+            <input matInput type="text" name="email" formControlName="email">
+          </mat-form-field>
         </div>
-        <div>
+        <div class="col-12">
+          <mat-form-field>
           <label>function</label>
-          <input type="text" name="contactFunction" formControlName="contactFunction">
+          <input matInput type="text" name="contactFunction" formControlName="contactFunction">
+            </mat-form-field>
         </div>
       </div>
     </div>

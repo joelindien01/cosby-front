@@ -4,7 +4,7 @@ export abstract class CustomerAbstractForm implements EditAction {
 
   public form: FormGroup;
 
-  abstract edit(formField: string): void;
+  abstract edit(formField: string);
 
 }
 

@@ -1,7 +1,61 @@
-<form [formGroup]="passwordResetForm">
+<!--<form [formGroup]="passwordResetForm">
   <div class="form-group">
     <label>User Name</label>
     <input matInput type="password" formControlName="password" class="form-control" placeholder="">
   </div>
   <button mat-stroked-button color="primary" (click)="resetPassword()">change password</button>
-</form>
+</form>-->
+<div class="row">
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h6>My account</h6>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-12">
+
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h6>Accounts</h6>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-12">
+          <app-list-account></app-list-account>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h6>Reference data</h6>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-12">
+          <app-list-uom></app-list-uom>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h6>Users</h6>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-12">
+
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+</div>

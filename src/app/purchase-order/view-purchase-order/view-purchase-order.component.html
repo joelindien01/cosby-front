@@ -102,7 +102,6 @@
       <thead>
 
       <th>Product Name</th>
-      <th class="text-right">Description</th>
       <th class="text-right">Quantity</th>
       <th class="text-right">Price</th>
       <th class="text-right">Amount</th>
@@ -111,48 +110,47 @@
       <tbody>
       <tr *ngFor="let item of (items$ |async)">
         <td>{{ item.productName }}</td>
-        <td class="text-right">{{ item.description }}</td>
         <td class="text-right">{{ item.quantity }}</td>
         <td class="text-right">{{ item.unit }} {{item.unitOfMeasurement?.symbol}}</td>
         <td class="text-right">{{ item.amount }}</td>
       </tr>
       <tr>
-        <td></td>
+
         <td></td>
         <td></td>
         <td>SUB TOTAL</td>
         <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount}} <span *ngIf="bill == undefined">{{(purchaseOrder$|async)?.paymentInformation.currency.symbol}}</span></td>
       </tr>
       <tr *ngIf="bill != undefined && bill.discount != 0">
-        <td></td>
+
         <td></td>
         <td></td>
         <td>DISCOUNT {{bill?.discount}} %</td>
         <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount * this.bill.discount /100}}</td>
       </tr>
       <tr *ngIf="bill != undefined">
-        <td></td>
+
         <td></td>
         <td></td>
         <td>TOTAL AMOUNT</td>
         <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount * (100 - this.bill.discount)/100 }}</td>
       </tr>
       <tr *ngIf="bill != undefined && bill.deliveryFee != 0 ">
-        <td></td>
+
         <td></td>
         <td></td>
         <td>DELIVERY FEE</td>
         <td colspan="4" class="text-right">{{bill?.deliveryFee}}</td>
       </tr>
       <tr *ngIf="bill != undefined && bill.transportationFee != 0">
-        <td></td>
+
         <td></td>
         <td></td>
         <td>TRANSPORTATION FEE</td>
         <td colspan="4" class="text-right">{{bill?.transportationFee}}</td>
       </tr>
       <tr *ngIf="bill != undefined">
-        <td></td>
+
         <td></td>
         <td></td>
         <td>NET TOTAL</td>
@@ -162,8 +160,8 @@
     </table>
   </div>
 
-  <div class="col-12" *ngIf="bill != undefined">
-    <input  #po [value]="(purchaseOrder$ |async)?.deliveryInformation.vessel" type="hidden" />
-    <app-list-credit-note [bill]="bill" [vessel]="po.value"></app-list-credit-note>
+  <div class="col-12" *ngIf="bill != undefined && purchaseOrder$ != undefined">
+    <input  #po [value]="(purchaseOrder$ |async)?.deliveryInformation?.vessel" type="hidden" />
+    <app-list-credit-note [bill]="bill" [(vessel)]="po.value"></app-list-credit-note>
   </div>
 </div>

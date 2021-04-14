@@ -32,6 +32,9 @@ export class AddressComponent implements OnInit {
 
 
   ngOnInit() {
+    if(this.address != undefined) {
+      this.formGroup.get(this.groupName).setValue(this.address);
+    }
     this.isArrayForm = isDefined(this.arrayName);
     console.log(this.isArrayForm);
     this.onChanges();

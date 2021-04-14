@@ -8,32 +8,47 @@
         <div class="col-3">
           <div>
             <mat-form-field>
-              <input matInput type="text" formControlName="port" placeholder="port" name="port"/>
+              <input [errorStateMatcher]="matcher" matInput type="text" formControlName="port" placeholder="port" name="port"/>
+              <mat-error *ngIf="formGroup.controls[groupName].touched && formGroup.controls[groupName].controls['port'].errors?.required">
+                Port is <strong>required</strong>
+              </mat-error>
             </mat-form-field>
           </div>
 
           <mat-form-field>
-            <input matInput type="text" formControlName="vessel" placeholder="vessel" name="vessel"/>
+            <input [errorStateMatcher]="matcher" matInput type="text" formControlName="vessel" placeholder="vessel" name="vessel"/>
+            <mat-error *ngIf="formGroup.controls[groupName].touched && formGroup.controls[groupName].controls['vessel'].errors?.required">
+              Vessel is <strong>required</strong>
+            </mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-3">
           <div>
             <mat-form-field>
-              <input matInput type="text" formControlName="flag" placeholder="flag" name="flag"/>
+              <input [errorStateMatcher]="matcher" matInput type="text" formControlName="flag" placeholder="flag" name="flag"/>
+              <mat-error *ngIf="formGroup.controls[groupName].touched && formGroup.controls[groupName].controls['flag'].errors?.required">
+                Flag is <strong>required</strong>
+              </mat-error>
             </mat-form-field>
           </div>
         </div>
 
         <div class="col-3">
           <mat-form-field>
-            <input matInput type="text" formControlName="imo" placeholder="imo" name="imo"/>
+            <input [errorStateMatcher]="matcher" matInput type="text" formControlName="imo" placeholder="imo" name="imo"/>
+            <mat-error *ngIf="formGroup.controls[groupName].touched && formGroup.controls[groupName].controls['imo'].errors?.required">
+              Imo is <strong>required</strong>
+            </mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-3">
           <mat-form-field>
-            <input matInput type="text" formControlName="master" placeholder="Master" name="master"/>
+            <input [errorStateMatcher]="matcher" matInput type="text" formControlName="master" placeholder="Master" name="master"/>
+            <mat-error *ngIf="formGroup.controls[groupName].touched && formGroup.controls[groupName].controls['master'].errors?.required">
+              Master is <strong>required</strong>
+            </mat-error>
           </mat-form-field>
         </div>
 

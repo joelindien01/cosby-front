@@ -1,0 +1,15 @@
+td.mat-cell {
+  /* row padding */
+  padding: 16px 0;
+}
+
+table {
+  /* row spacing / margin */
+  border-spacing: 0 8px !important;
+
+}
+
+::ng-deep th.mat-header-cell{
+  width: 140px;
+  min-width: 140px;
+}

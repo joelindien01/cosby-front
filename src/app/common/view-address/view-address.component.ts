@@ -14,12 +14,16 @@ export class ViewAddressComponent implements OnInit {
 
   @Input() title: string;
   @Input() address: Address;
+  @Input() customerId: number;
   addressEditForm: AddressEditForm;
 
   constructor(private fb :FormBuilder, private customerService: CustomerService, private addressService: AddressService) { }
 
   ngOnInit() {
-    this.addressEditForm = new AddressEditForm(this.fb, this.customerService, this.addressService, this.address);
+    this.addressEditForm = new AddressEditForm(this.fb, this.customerService, this.addressService, this.address, this.customerId);
   }
 
+  updateAddress() {
+    this.addressEditForm.edit('address').subscribe(ad => this.address = this.addressEditForm.form.value.address);
+  }
 }

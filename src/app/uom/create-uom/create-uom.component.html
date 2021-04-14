@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-12">
+    <h3>Add Reference Data</h3>
+  </div>
+  <div class="col-12">
+
+      <form [formGroup]="referenceDataFormGroup">
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field>
+              <mat-select [errorStateMatcher]="matcher" placeholder="Reference data type" formControlName="type">
+                <mat-option *ngFor="let type of types" [value]="type"> {{type}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field>
+              <input matInput name="label" placeholder="label" formControlName="label">
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field>
+              <input matInput name="symbol" placeholder="symbol" formControlName="symbol">
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+
+  </div>
+  <div class="col-12">
+    <button mat-stroked-button color="primary"
+            (click)="save()">Save
+    </button>
+  </div>
+
+</div>

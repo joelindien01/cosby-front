@@ -20,10 +20,10 @@
     <h4>Contacts</h4>
     <div class="row">
       <div class="col-3 mr-3" *ngFor="let contact of currentCustomer?.contacts">
-        <app-view-contact [contact]="contact"></app-view-contact>
+        <app-view-contact [(contact)]="contact" [customerId]="currentCustomer.id"></app-view-contact>
       </div>
       <div class="col-3">
-        <div (click)="addAddress()" class="card add-card-button add-contact" style="width: 18rem;">
+        <div data-toggle="modal" [attr.data-target]="'#editContactModal_'+currentCustomer?.id+currentCustomer?.contacts?.length" (click)="addContact()" class="card add-card-button add-contact" style="width: 18rem;">
           <div class="card-body text-center vertical-align">
             <fa-icon icon="plus"></fa-icon>
             <p>Add contact</p>
@@ -32,36 +32,28 @@
       </div>
     </div>
   </div>
-  <!--<div class="col-12 mb-3">
-    <h4>Delivery Informations</h4>
-    <div class="row">
-      <div class="col-3 mr-3" *ngFor="let ship of currentCustomer?.deliveryInformations, let i=index">
-        <app-view-ship [title]="'Ship '+ i +1" [ship]="ship"></app-view-ship>
-      </div>
-      <div class="col-3">
-        <div (click)="addShip()" class="card add-card-button add-ship" style="width: 18rem;">
-          <div class="card-body text-center vertical-align">
-            <fa-icon icon="plus"></fa-icon>
-            <p>Add ship</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>-->
   <div class="col-12 mb-3">
     <h4>Addresses</h4>
     <div class="row">
       <div class="col-3 mr-3">
-        <app-view-address title="Billing Address" [address]="currentCustomer?.billingAddress"></app-view-address>
+        <app-view-address title="Billing Address" [(address)]="currentCustomer.billingAddress" [customerId]="currentCustomer.id"></app-view-address>
       </div>
       <div class="col-3 mr-3">
-        <app-view-address title="Location Address" [address]="currentCustomer?.location"></app-view-address>
+        <app-view-address title="Location Address" [(address)]="currentCustomer.location" [customerId]="currentCustomer.id"></app-view-address>
       </div>
     </div>
   </div>
 
 </div>
+
+<app-modal  [contentId]="'editContactModal_'+currentCustomer?.id+currentCustomer?.contacts?.length" [withFooter]="true" (modalSaved)="updateContact()">
+<!--  <form class="form-horizontal" [formGroup]="addressEditForm.form">
+    <app-contact [contact]="" [formGroup]="addressEditForm.form" [groupName]="'contact'" ></app-contact>
+  </form>-->
+  <form class="form-horizontal" [formGroup]="contactEditForm.form">
+    <app-contact [formGroup]="contactEditForm.form" [groupName]="'contacts'" ></app-contact>
+  </form>
+</app-modal>
 
 <div class="modal fade"
      id="generic-modal"

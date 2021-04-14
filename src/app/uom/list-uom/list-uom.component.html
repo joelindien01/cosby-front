@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-9 text-right product-button">
+        <button type="button" mat-flat-button color="primary" (click)="addReferenceData()"><fa-icon icon="plus"></fa-icon> add data</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <table mat-table [dataSource]="referenceDataTable" matSort>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef> Type </th>
+          <td mat-cell *matCellDef="let refData"> {{refData.type}} </td>
+        </ng-container>
+
+      <ng-container matColumnDef="label">
+        <th mat-header-cell *matHeaderCellDef> Label </th>
+        <td mat-cell *matCellDef="let refData"> {{refData.label}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef> Symbol </th>
+        <td mat-cell *matCellDef="let refData"> {{refData.symbol}} </td>
+      </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let refData">
+            <button mat-stroked-button color="primary" class="mr-3" data-toggle="modal" data-target="#productModal" (click)="editRefData(refData)"><fa-icon icon="edit"></fa-icon></button>
+          </td>
+        </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+    <mat-paginator
+      [length]="500"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

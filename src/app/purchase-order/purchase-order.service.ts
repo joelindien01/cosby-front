@@ -16,8 +16,8 @@ export class PurchaseOrderService {
   constructor(private httpClient: HttpClient) {
   }
 
-  createOrder(purchaseOrderDTO: PurchaseOrderDTO) {
-    return this.httpClient.post(this.baseUrl, purchaseOrderDTO);
+  createOrder(purchaseOrder) {
+    return this.httpClient.post(this.baseUrl, purchaseOrder);
   }
 
   getOrderByCustomerId(customerId: number): Observable<Array<PurchaseOrder>> {

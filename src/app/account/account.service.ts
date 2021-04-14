@@ -18,4 +18,7 @@ export class AccountService {
   }
 
 
+  save(value: any) {
+    return this.httpClient.post(this.baseUrl, value);
+  }
 }

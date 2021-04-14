@@ -10,6 +10,7 @@ import {MaterialModule} from '../common/material/material.module';
 import {RouterModule} from '@angular/router';
 import { ViewCustomerComponent } from './view-customer/view-customer.component';
 import {NgxSpinnerModule} from "ngx-spinner";
+import {MAT_DIALOG_DATA} from "@angular/material";
 
 @NgModule({
   declarations: [AddCustomerComponent, ListCustomerComponent, ViewCustomerComponent],
@@ -24,6 +25,6 @@ import {NgxSpinnerModule} from "ngx-spinner";
     NgxSpinnerModule
   ],
   exports: [AddCustomerComponent, ListCustomerComponent],
-  providers: [CustomerService]
+  providers: [CustomerService, { provide: MAT_DIALOG_DATA, useValue: [] }]
 })
 export class CustomerModule { }
