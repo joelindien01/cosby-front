@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-12">
+    <h3>Add User</h3>
+  </div>
+  <div class="col-12">
+    <form [formGroup]="addUserForm">
+      <div class="row">
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput formControlName="username" placeholder="Username">
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput formControlName="email" type="email" placeholder="email">
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput formControlName="phoneNumber" type="number" placeholder="Phone number">
+          </mat-form-field>
+        </div>
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12">
+              <mat-slide-toggle formControlName="profileBasedPermissions">Give Permissions based on profile ?</mat-slide-toggle>
+            </div>
+            <div class="col-4">
+              <mat-form-field *ngIf="!profileBasedPermissions">
+                <mat-select placeholder="Roles" formControlName="roles">
+                  <mat-option *ngFor="let role of availableRoles" [value]="role"> {{role?.name}} : {{role?.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field *ngIf="profileBasedPermissions">
+                <mat-select placeholder="Profile" formControlName="profile">
+                  <mat-option *ngFor="let profile of availableProfiles" [value]="profile"> {{profile?.name}} : {{profile?.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-12">
+    <button mat-flat-button color="primary" (click)="addUser()">Register</button>
+  </div>
+</div>

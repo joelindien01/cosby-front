@@ -13,9 +13,11 @@ import {AccountModule} from "../account/account.module";
 import {UomModule} from "../uom/uom.module";
 import {CreateUomComponent} from "../uom/create-uom/create-uom.component";
 import {AddAccountComponent} from "../account/add-account/add-account.component";
+import { ListUserComponent } from './list-user/list-user.component';
+import { AddUserComponent } from './add-user/add-user.component';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, UserViewComponent],
+  declarations: [LoginComponent, RegisterComponent, UserViewComponent, ListUserComponent, AddUserComponent],
   exports: [LoginComponent, RegisterComponent, UserViewComponent],
   providers: [UserService],
   imports: [
@@ -28,6 +30,6 @@ import {AddAccountComponent} from "../account/add-account/add-account.component"
     AccountModule,
     UomModule
   ],
-  entryComponents: [CreateUomComponent, AddAccountComponent]
+  entryComponents: [CreateUomComponent, AddAccountComponent, AddUserComponent]
 })
 export class UserModule { }

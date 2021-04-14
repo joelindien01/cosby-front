@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {map} from "rxjs/internal/operators";
 import {Router} from "@angular/router";
 import {environment} from "../../environments/environment";
+import {Observable} from "rxjs/Rx";
 
 class User {
   username: string
@@ -77,5 +78,13 @@ export class UserService {
     this.httpClient.post(this.baseUrl+'/reset-password', value).subscribe(s=> {
 
     });
+  }
+
+  findAllUsers():Observable<Array<any>> {
+    return this.httpClient.get<Array<any>>(this.baseUrl+'users');
+  }
+
+  addUser(user: any): Observable<any> {
+    return this.httpClient.post<any>(this.baseUrl+'/add', user);
   }
 }

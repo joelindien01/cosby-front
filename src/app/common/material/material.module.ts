@@ -8,7 +8,7 @@ import {
   MatInputModule,
   MatMenuModule,
   MatNativeDateModule, MatPaginatorModule, MatProgressSpinner, MatProgressSpinnerModule,
-  MatSelectModule, MatSortModule,
+  MatSelectModule, MatSlideToggleModule, MatSortModule,
   MatStepperModule,
   MatTableModule, NativeDateAdapter, ShowOnDirtyErrorStateMatcher
 } from "@angular/material";
@@ -36,7 +36,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     MatProgressSpinnerModule,
     MatBadgeModule,
     MatCardModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSlideToggleModule
 
   ],
   exports: [
@@ -58,7 +59,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     MatProgressSpinnerModule,
     MatBadgeModule,
     MatCardModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSlideToggleModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

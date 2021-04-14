@@ -22,3 +22,10 @@
 .edit-name {
   font-size: 10px;
 }
+
+:host ::ng-deep {
+  .contacts .card {
+    height: 300px !important;
+    margin-top: 10px;
+  }
+}

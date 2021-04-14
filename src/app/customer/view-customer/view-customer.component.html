@@ -18,7 +18,7 @@
   </div>
   <div class="col-12 mb-3">
     <h4>Contacts</h4>
-    <div class="row">
+    <div class="row contacts">
       <div class="col-3 mr-3" *ngFor="let contact of currentCustomer?.contacts">
         <app-view-contact [(contact)]="contact" [customerId]="currentCustomer.id"></app-view-contact>
       </div>
