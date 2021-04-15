@@ -95,4 +95,8 @@ export class UserService {
   findAllProfiles():Observable<Array<any>> {
     return this.httpClient.get<Array<any>>(this.baseUrl+'profile/');
   }
+
+  saveProfile(profile: any): Observable<any> {
+    return this.httpClient.post<any>(this.baseUrl+'profile/', profile);
+  }
 }

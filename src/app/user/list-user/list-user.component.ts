@@ -3,6 +3,7 @@ import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/mat
 import {UserService} from "../../common/user.service";
 import {RegisterComponent} from "../register/register.component";
 import {AddUserComponent} from "../add-user/add-user.component";
+import {AddProfileComponent} from "../add-profile/add-profile.component";
 
 @Component({
   selector: 'app-list-user',
@@ -34,6 +35,16 @@ export class ListUserComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(value => {
       this.loadUsers();
+    });
+  }
+
+  addProfile() {
+    const dialogRef = this.dialog.open(AddProfileComponent, {
+      width: "50%",
+      data: {}
+    });
+    dialogRef.afterClosed().subscribe(value => {
+
     });
   }
 

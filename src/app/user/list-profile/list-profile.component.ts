@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
+import {UserService} from "../../common/user.service";
+import {AddProfileComponent} from "../add-profile/add-profile.component";
 
 @Component({
   selector: 'app-list-profile',
@@ -7,9 +10,40 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ListProfileComponent implements OnInit {
 
-  constructor() { }
+  profileDataTable: MatTableDataSource<any>;
+  displayedColumns = ["name", "description", "roles", "actions"];
+  @ViewChild(MatPaginator)  paginator: MatPaginator;
+  @ViewChild(MatSort)  sort: MatSort;
+
+  constructor(private userService: UserService, private dialog: MatDialog) {
+    this.profileDataTable = new MatTableDataSource();
+    this.profileDataTable.sort = this.sort;
+    this.profileDataTable.paginator = this.paginator;
+    this.loadProfiles();
+  }
 
   ngOnInit() {
   }
 
+  editProfile(profile?) {
+    let config = new MatDialogConfig();
+    config.data = {profile: profile};
+    config.width = "50%";
+    const dialogRef = this.dialog.open(AddProfileComponent, config);
+    dialogRef.afterClosed().subscribe(value => {
+      this.loadProfiles();
+    });
+  }
+
+  private loadProfiles() {
+    this.userService.findAllProfiles().subscribe(profiles => {
+      this.profileDataTable.data = profiles;
+
+      this.profileDataTable.paginator = this.paginator;
+    });
+  }
+
+  addProfile() {
+    this.editProfile();
+  }
 }

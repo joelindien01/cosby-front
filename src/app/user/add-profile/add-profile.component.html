@@ -1,3 +1,38 @@
-<p>
-  add-profile works!
-</p>
+<div class="row">
+  <div class="col-12">
+    <h3>Add Profile</h3>
+  </div>
+  <div class="col-12">
+
+    <form [formGroup]="profileFormGroup">
+      <div class="row">
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput name="name" placeholder="name" formControlName="name">
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field>
+            <input matInput name="description" placeholder="description" formControlName="description">
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field>
+            <mat-select [compareWith]="compareId" [errorStateMatcher]="matcher" placeholder="Roles" formControlName="roles" multiple>
+              <mat-option *ngFor="let role of (roles$ | async)" [value]="role" (click)="togglelePerOne(allSelected.viewValue)"> {{role.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+  <div class="col-12">
+    <button mat-stroked-button color="primary"
+            (click)="save()">Save
+    </button>
+  </div>
+
+</div>

@@ -32,6 +32,6 @@ import { ListProfileComponent } from './list-profile/list-profile.component';
     AccountModule,
     UomModule
   ],
-  entryComponents: [CreateUomComponent, AddAccountComponent, AddUserComponent]
+  entryComponents: [CreateUomComponent, AddAccountComponent, AddUserComponent, AddProfileComponent]
 })
 export class UserModule { }
