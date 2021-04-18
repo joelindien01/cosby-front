@@ -4,7 +4,7 @@
       <div class="col-3"></div>
       <div class="col-9 text-right users-button">
         <button type="button" class="mr-3" mat-flat-button color="primary" (click)="addUser()"><fa-icon icon="plus"></fa-icon> add user</button>
-        <button type="button" mat-flat-button color="primary" (click)="addProfile()"><fa-icon icon="plus"></fa-icon> add profile</button>
+        <button type="button" mat-flat-button color="primary" (click)="addProfile()"><fa-icon icon="plus"></fa-icon> add function</button>
       </div>
     </div>
   </div>
@@ -13,7 +13,7 @@
 
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let user"> {{user.name}} </td>
+        <td mat-cell *matCellDef="let user"> {{user.username}} </td>
       </ng-container>
 
       <ng-container matColumnDef="email">
@@ -21,14 +21,21 @@
         <td mat-cell *matCellDef="let user"> {{user.email}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="roles">
-        <th mat-header-cell *matHeaderCellDef> Roles </th>
-        <td mat-cell *matCellDef="let user"> {{user.roles}} </td>
+      <ng-container matColumnDef="profile">
+        <th mat-header-cell *matHeaderCellDef> Function </th>
+        <td mat-cell *matCellDef="let user"> {{user.profile?.name}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef> Creation Date </th>
-        <td mat-cell *matCellDef="let user"> {{user.creationDate}} </td>
+      <ng-container matColumnDef="roles">
+        <th mat-header-cell *matHeaderCellDef> Roles </th>
+        <td mat-cell *matCellDef="let user">
+          <a *ngIf="user.roles && user.roles.length >0" (click)="$event.preventDefault();viewRoles(user)" href>view</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="phoneNumber">
+        <th mat-header-cell *matHeaderCellDef> Phone Number </th>
+        <td mat-cell *matCellDef="let user"> {{user.phoneNumber}} </td>
       </ng-container>
 
       <ng-container matColumnDef="active">

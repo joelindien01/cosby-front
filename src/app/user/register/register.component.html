@@ -8,17 +8,46 @@
 <div class="main">
   <div class="col-6 col-12">
     <div class="login-form">
-      <form [formGroup]="registrationForm">
-        <div class="form-group">
-          <label>User Name</label>
-          <input matInput type="text" formControlName="username" class="form-control" placeholder="">
+      <form *ngIf="!showRegistrationMessage" [formGroup]="registrationForm">
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field>
+              <input matInput formControlName="username" placeholder="Name">
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field>
+              <input matInput type="email" formControlName="email" placeholder="Email">
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field>
+              <input matInput type="password" formControlName="password" placeholder="Password">
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field>
+              <input matInput type="number" formControlName="phoneNumber" placeholder="Phone number">
+            </mat-form-field>
+          </div>
+
+          <div class="col-6">
+            <mat-form-field>
+              <input matInput type="password" formControlName="confirmPassword" placeholder="Confirm Password">
+            </mat-form-field>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input matInput type="password" formControlName="password" class="form-control" placeholder="">
-        </div>
+
+
         <button mat-flat-button color="primary" (click)="registerUser()">Register</button>
       </form>
+      <div *ngIf="showRegistrationMessage">
+        <div class="alert alert-primary" role="alert">
+          Your registration will be validated soon!
+          When done you will receive an email to validate your access to the application.
+        </div>
+      </div>
     </div>
+
   </div>
 </div>

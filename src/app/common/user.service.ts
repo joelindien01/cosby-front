@@ -29,8 +29,8 @@ export class UserService {
       map(
         userData => {
           this.connectedUser = userData.username;
-          sessionStorage.setItem('username', this.connectedUser);
-          sessionStorage.setItem('basicauth', basicauth);
+          localStorage.setItem('username', this.connectedUser);
+          localStorage.setItem('basicauth', basicauth);
           return userData;
         }
       )
@@ -38,12 +38,12 @@ export class UserService {
   }
 
   isUserLoggedIn() {
-    let user = sessionStorage.getItem('username');
+    let user = localStorage.getItem('username');
     return !(user === null);
   }
   logOut() {
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('basicauth');
+    localStorage.removeItem('username');
+    localStorage.removeItem('basicauth');
     this.connectedUser = undefined;
     this.router.navigate(['login']);
   }
@@ -62,16 +62,16 @@ export class UserService {
     );
   }
 
-  registerUser(username: any, password: any) {
-    const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(username + ':' + password), tag: "register"  });
-    this.httpClient.get<User>(this.baseUrl+'validate-login',{headers}).subscribe(s=> {
+  registerUser(user) {
+    //const headers = new HttpHeaders({ Authorization: 'Basic ' + btoa(username + ':' + password), tag: "register"  });
+    /*this.httpClient.get<User>(this.baseUrl+'validate-login',{headers}).subscribe(s=> {
       this.checkLogin(username, password);
-
-    })
+    })*/
+    return this.httpClient.post<any>(this.baseUrl+'register/', user);
   }
 
   getConnectedUser() {
-    return sessionStorage.getItem("username");
+    return localStorage.getItem("username");
   }
 
   resetPassword(value: string) {
@@ -84,8 +84,8 @@ export class UserService {
     return this.httpClient.get<Array<any>>(this.baseUrl+'users');
   }
 
-  addUser(user: any): Observable<any> {
-    return this.httpClient.post<any>(this.baseUrl+'/add', user);
+  backOfficeRegistration(user: any): Observable<any> {
+    return this.httpClient.post<any>(this.baseUrl+'bo-registration/', user);
   }
 
   findAllRoles():Observable<Array<any>> {

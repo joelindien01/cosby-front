@@ -4,6 +4,7 @@ import {UserService} from "../../common/user.service";
 import {RegisterComponent} from "../register/register.component";
 import {AddUserComponent} from "../add-user/add-user.component";
 import {AddProfileComponent} from "../add-profile/add-profile.component";
+import {ViewRolesComponent} from "../view-roles/view-roles.component";
 
 @Component({
   selector: 'app-list-user',
@@ -12,17 +13,14 @@ import {AddProfileComponent} from "../add-profile/add-profile.component";
 })
 export class ListUserComponent implements OnInit {
   userDataTable: MatTableDataSource<any>;
-  displayedColumns: string[] = ["name", "email", "roles", "creationDate", "active", "actions"];
+  displayedColumns: string[] = ["name", "email", "profile","roles", "phoneNumber", "active", "actions"];
   @ViewChild(MatPaginator)  paginator: MatPaginator;
   @ViewChild(MatSort)  sort: MatSort;
 
   constructor(private userService: UserService, private dialog: MatDialog) {
     this.userDataTable = new MatTableDataSource();
-    this.userService.findAllUsers().subscribe(users => {
-      this.userDataTable.data = users;
-      this.userDataTable.paginator = this.paginator;
-      this.userDataTable.sort = this.sort;
-    })
+    this.loadUsers();
+    this.userDataTable.sort = this.sort;
   }
 
   ngOnInit() {
@@ -59,6 +57,16 @@ export class ListUserComponent implements OnInit {
   }
 
   private loadUsers() {
+    this.userService.findAllUsers().subscribe(users => {
+      this.userDataTable.data = users;
+      this.userDataTable.paginator = this.paginator;
+    })
+  }
 
+  viewRoles(user) {
+    const dialogRef = this.dialog.open(ViewRolesComponent, {
+      width: "50%",
+      data: {user: user}
+    });
   }
 }

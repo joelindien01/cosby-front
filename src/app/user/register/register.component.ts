@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../common/user.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -9,17 +10,37 @@ import {UserService} from "../../common/user.service";
 })
 export class RegisterComponent implements OnInit {
   registrationForm: FormGroup;
+  private showRegistrationMessage: boolean = false;
 
-  constructor(private fb: FormBuilder, private userService: UserService) {
-    this.registrationForm = this.fb.group({username: '', password: ''});
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
+    if(this.userService.isUserLoggedIn()) {
+      this.router.navigate(['/customers']);
+    }
+    this.registrationForm = this.fb.group({
+      username: [,Validators.required],
+      email: [, Validators.required],
+      phoneNumber: [, Validators.required],
+      password: [, Validators.required],
+      confirmPassword: [, Validators.required]
+    }, { validators: this.checkPasswords });
   }
 
   ngOnInit() {
   }
 
+  checkPasswords(group: FormGroup) { // here we have the 'passwords' group
+    const password = group.get('password').value;
+    const confirmPassword = group.get('confirmPassword').value;
+
+    return password === confirmPassword ? null : { notSame: true };
+  }
+
   registerUser() {
-    const  username = this.registrationForm.get("username").value;
-    const  password = this.registrationForm.get("password").value;
-    this.userService.registerUser(username, password);
+    if(this.registrationForm.invalid) {
+      return;
+    }
+    this.userService.registerUser(this.registrationForm.value).subscribe(result => {
+      this.showRegistrationMessage = true;
+    });
   }
 }

@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 import {UserService} from "../../common/user.service";
 import {AddProfileComponent} from "../add-profile/add-profile.component";
+import {ViewRolesComponent} from "../view-roles/view-roles.component";
 
 @Component({
   selector: 'app-list-profile',
@@ -45,5 +46,12 @@ export class ListProfileComponent implements OnInit {
 
   addProfile() {
     this.editProfile();
+  }
+
+  viewRoles(profile) {
+    const dialogRef = this.dialog.open(ViewRolesComponent, {
+      width: "50%",
+      data: {profile: profile}
+    });
   }
 }

@@ -17,9 +17,10 @@ import { ListUserComponent } from './list-user/list-user.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { AddProfileComponent } from './add-profile/add-profile.component';
 import { ListProfileComponent } from './list-profile/list-profile.component';
+import { ViewRolesComponent } from './view-roles/view-roles.component';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, UserViewComponent, ListUserComponent, AddUserComponent, AddProfileComponent, ListProfileComponent],
+  declarations: [LoginComponent, RegisterComponent, UserViewComponent, ListUserComponent, AddUserComponent, AddProfileComponent, ListProfileComponent, ViewRolesComponent],
   exports: [LoginComponent, RegisterComponent, UserViewComponent],
   providers: [UserService],
   imports: [
@@ -32,6 +33,6 @@ import { ListProfileComponent } from './list-profile/list-profile.component';
     AccountModule,
     UomModule
   ],
-  entryComponents: [CreateUomComponent, AddAccountComponent, AddUserComponent, AddProfileComponent]
+  entryComponents: [CreateUomComponent, AddAccountComponent, AddUserComponent, AddProfileComponent, ViewRolesComponent]
 })
 export class UserModule { }

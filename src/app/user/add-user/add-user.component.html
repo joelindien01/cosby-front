@@ -3,7 +3,7 @@
     <h3>Add User</h3>
   </div>
   <div class="col-12">
-    <form [formGroup]="addUserForm">
+    <form [formGroup]="addUserForm" *ngIf="addUserForm">
       <div class="row">
         <div class="col-4">
           <mat-form-field>
@@ -23,24 +23,25 @@
         <div class="col-12">
           <div class="row">
             <div class="col-12">
-              <mat-slide-toggle formControlName="profileBasedPermissions">Give Permissions based on profile ?</mat-slide-toggle>
+              <mat-slide-toggle formControlName="active">Activate user</mat-slide-toggle>
             </div>
             <div class="col-4">
-              <mat-form-field *ngIf="!profileBasedPermissions">
-                <mat-select placeholder="Roles" formControlName="roles" multiple>
-                  <mat-option *ngFor="let role of availableRoles" [value]="role"> {{role?.name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field *ngIf="profileBasedPermissions">
-                <mat-select placeholder="Profile" formControlName="profile">
+              <mat-form-field>
+                <mat-select [compareWith]="compareId" matTooltip="User with the same function will have the same roles... you can add a specific role to a user without impacting the function" placeholder="Function" formControlName="profile">
                   <mat-option *ngFor="let profile of availableProfiles" [value]="profile"> {{profile?.name}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-12" *ngIf="!profileBasedPermissions && addUserForm?.controls['roles']?.value?.length > 0">
+            <div class="col-4">
+              <mat-form-field>
+                <mat-select [compareWith]="compareId" placeholder="Roles" formControlName="roles" multiple>
+                  <mat-option *ngFor="let role of availableRoles" [value]="role"> {{role?.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-12" *ngIf="addUserForm?.controls['roles']?.value?.length > 0">
               <p>Selected roles:</p>
               <mat-chip-list>
                 <mat-chip *ngFor="let role of addUserForm.controls['roles'].value">{{role.name}} </mat-chip>

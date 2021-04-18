@@ -7,10 +7,10 @@ import {Observable} from "rxjs/Rx";
 })
 export class BasicAuthHttpInterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (sessionStorage.getItem('username') && sessionStorage.getItem('basicauth')) {
+    if (localStorage.getItem('username') && localStorage.getItem('basicauth')) {
       req = req.clone({
         setHeaders: {
-          Authorization: sessionStorage.getItem('basicauth')
+          Authorization: localStorage.getItem('basicauth')
         }
       })
     }

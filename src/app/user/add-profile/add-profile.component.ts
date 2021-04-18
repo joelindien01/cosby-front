@@ -21,7 +21,7 @@ export class AddProfileComponent implements OnInit {
               private userService: UserService,
               public dialogRef: MatDialogRef<AddProfileComponent>,
               @Inject(MAT_DIALOG_DATA) public data: {profile: any}) {
-    this.matcher = MyErrorStateMatcher();
+    this.matcher = new MyErrorStateMatcher();
     this.roles$ = this.userService.findAllRoles();
     this.roles$.subscribe(roles => this.roles = roles);
     let profile = null;
