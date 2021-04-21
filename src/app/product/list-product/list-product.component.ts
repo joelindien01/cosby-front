@@ -10,12 +10,16 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {CartService} from "../../cart/cart.service";
 import {ViewCartComponent} from "../../cart/view-cart/view-cart.component";
 import {MyErrorStateMatcher} from "../../common/multi-addable-form";
+import {UserService} from "../../common/user.service";
+import {DecoEnumPoRoles, DecoEnumProductRoles, EnumProductRoles} from "../../user/roles.enum";
 
 @Component({
   selector: 'app-list-product',
   templateUrl: './list-product.component.html',
   styleUrls: ['./list-product.component.scss']
 })
+@DecoEnumProductRoles
+@DecoEnumPoRoles
 export class ListProductComponent implements OnInit {
   public productTable$: Observable<Array<ProductTable>>;
   public products$: Observable<Array<Product>>;
@@ -35,12 +39,13 @@ export class ListProductComponent implements OnInit {
   show: boolean;
   public itemsSetupForm: FormGroup;
   pageEvent: PageEvent;
+  productRoles: EnumProductRoles;
 
 
   constructor(public cartService: CartService,
               private productService: ProductService,
               private router: Router, private fb: FormBuilder,
-              private spinner: NgxSpinnerService, private dialog: MatDialog
+              private spinner: NgxSpinnerService, private dialog: MatDialog, private userService: UserService
   ) {
     this.show = false;
     this.spinner.show();

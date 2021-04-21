@@ -6,10 +6,8 @@
       </div>
       <div class="col-9 text-right product-button">
         <button type="button" (click)="!isOrderView ? openCart() : null" mat-icon-button [matBadge]="cartService.items.length" matBadgePosition="before" matBadgeColor="warn" color="primary"><fa-icon icon="shopping-cart"></fa-icon></button>
-        <button *ngIf="!isOrderView" type="button" routerLink="/load-products" mat-flat-button color="primary"><fa-icon icon="download"></fa-icon> Mass Load</button>
+        <button *ngIf="userService.userHasRole(EnumPoRoles.ADD_PO) && !isOrderView" type="button" routerLink="/load-products" mat-flat-button color="primary"><fa-icon icon="download"></fa-icon> Mass Load</button>
         <button *ngIf="!isOrderView" type="button" routerLink="/product" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add </button>
-
-
       </div>
     </div>
   </div>

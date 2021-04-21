@@ -4,6 +4,7 @@ import {map} from "rxjs/internal/operators";
 import {Router} from "@angular/router";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs/Rx";
+import {isUndefined} from "util";
 
 class User {
   username: string
@@ -28,8 +29,8 @@ export class UserService {
     return this.httpClient.get<User>(this.baseUrl+'validate-login',{headers}).pipe(
       map(
         userData => {
-          this.connectedUser = userData.username;
-          localStorage.setItem('username', this.connectedUser);
+          this.connectedUser = userData;
+          localStorage.setItem('username', JSON.stringify(this.connectedUser));
           localStorage.setItem('basicauth', basicauth);
           return userData;
         }
@@ -71,7 +72,7 @@ export class UserService {
   }
 
   getConnectedUser() {
-    return localStorage.getItem("username");
+    return JSON.parse(localStorage.getItem("username"));
   }
 
   resetPassword(value: string) {
@@ -98,5 +99,14 @@ export class UserService {
 
   saveProfile(profile: any): Observable<any> {
     return this.httpClient.post<any>(this.baseUrl+'profile/', profile);
+  }
+
+  userHasRole(roleName: string) {
+    const user: any = this.getConnectedUser();
+    if(isUndefined(user)) {
+      return false;
+    }
+    const userRoles = user.profile.roles.concat(user.roles);
+    return userRoles.findIndex(role => role.name === roleName) > -1;
   }
 }
