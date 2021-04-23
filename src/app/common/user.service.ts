@@ -5,6 +5,8 @@ import {Router} from "@angular/router";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs/Rx";
 import {isUndefined} from "util";
+import {UserAddForm} from "../user/add-user/add-user.component";
+import {isDefined} from "@angular/compiler/src/util";
 
 class User {
   username: string
@@ -76,7 +78,7 @@ export class UserService {
   }
 
   resetPassword(value: string) {
-    this.httpClient.post(this.baseUrl+'/reset-password', value).subscribe(s=> {
+    this.httpClient.post(this.baseUrl+'/reset-password', value).subscribe(s => {
 
     });
   }
@@ -102,11 +104,26 @@ export class UserService {
   }
 
   userHasRole(roleName: string) {
-    const user: any = this.getConnectedUser();
+    return true;
+    /*const user: any = this.getConnectedUser();
     if(isUndefined(user)) {
       return false;
     }
     const userRoles = user.profile.roles.concat(user.roles);
-    return userRoles.findIndex(role => role.name === roleName) > -1;
+    return userRoles.findIndex(role => role.name === roleName) > -1;*/
+  }
+
+  reloadCurrentUser(editedAccount: UserAddForm) {
+    let response = this.httpClient.get<User>(this.baseUrl+'/validate-login').pipe(
+      map(response => {
+        this.connectedUser = response;
+        localStorage.setItem('username', JSON.stringify(this.connectedUser));
+        if(isDefined(editedAccount.password)) {
+          const basicauth = "Basic "  + btoa(editedAccount.username + ':' + editedAccount.password);
+          localStorage.setItem('basicauth', basicauth);
+        }
+      })
+    );
+    return response;
   }
 }

@@ -6,6 +6,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs/Rx";
 import {AccountService} from "../../account/account.service";
 import {MyErrorStateMatcher} from "../../common/multi-addable-form";
+import {UserService} from "../../common/user.service";
 
 @Component({
   selector: 'app-add-bill',
@@ -19,9 +20,11 @@ export class AddBillComponent implements OnInit {
   public customerId: number;
   accounts$: Observable<Array<Account>>;
   matcher;
+  users$: Observable<Array<any>>;
 
-  constructor(private fb: FormBuilder, private billService: BillService, private accountService :AccountService , private route: ActivatedRoute) {
+  constructor(private userService: UserService, private fb: FormBuilder, private billService: BillService, private accountService :AccountService , private route: ActivatedRoute) {
 
+    this.users$ = this.userService.findAllUsers();
     this.accounts$ = this.accountService.findAllAccounts();
     this.billForm = this.fb.group({
       deadLine: new FormControl(new Date(), Validators.required),
@@ -30,10 +33,11 @@ export class AddBillComponent implements OnInit {
       deadlines: [],
       deliveryFee: [0, Validators.required],
       transportationFee: [0, Validators.required],
+      ourSignatoryObject: [null, Validators.required],
       ourSignatory: [null, Validators.required],
-      ourSignatoryFunction: [null,Validators.required],
+      ourSignatoryFunction: [{value:'', disabled: false },Validators.required],
       customerSignatory: [null],
-      customerSignatoryFunction: [null],
+      customerSignatoryFunction: [{value:'', disabled: false }],
       impactedAccount: [null,Validators.required]
     });
 
@@ -52,6 +56,15 @@ export class AddBillComponent implements OnInit {
     this.matcher = new MyErrorStateMatcher();
     /* TODO pour avoir les url en /bill;orderId=1 à utiliser depuis le component order-list
     this.router.navigate(['/bill/add', {orderId: term}]);*/
+
+    this.billForm.controls['ourSignatoryObject'].valueChanges.subscribe(user => {
+
+      this.billForm.controls['ourSignatoryFunction'].setValue(user.profile.name);
+      this.billForm.controls['ourSignatory'].setValue(user.username);
+    });
+    this.billForm.controls['deadlines'].valueChanges.subscribe(value => {
+      this.computeDeadline();
+    });
   }
 
   ngOnInit() {

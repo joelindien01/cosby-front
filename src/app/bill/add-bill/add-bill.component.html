@@ -24,10 +24,6 @@
             <input matInput formControlName="deadlines" placeholder="DeadLines (in days)" type="number"
                    class="form-control input-md">
           </mat-form-field>
-
-          <button mat-icon-button color="primary" aria-label="Compute payment Deadline" (click)="computeDeadline()">
-            <mat-icon>calculate</mat-icon>
-          </button>
         </div>
 
         <div class="col-6">
@@ -61,16 +57,15 @@
           <div class="row">
             <div class="col-6">
               <mat-form-field>
-                <input [errorStateMatcher]="matcher" matInput placeholder="Our Signatory" formControlName="ourSignatory" type="text"/>
-                <mat-error *ngIf="billForm.controls['ourSignatory'].touched && billForm.controls['ourSignatory'].errors?.required">
-                  Our signatory is <strong>required</strong>
-                </mat-error>
-
+                <mat-select [errorStateMatcher]="matcher" placeholder="Our registered Signatory" formControlName="ourSignatoryObject">
+                  <mat-option *ngFor="let user of (users$| async)" [value]="user">{{user.username}}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
             <div class="col-6">
               <mat-form-field>
-                <input [errorStateMatcher]="matcher" matInput placeholder="Our Signatory Function" formControlName="ourSignatoryFunction" type="text"/>
+                <input [errorStateMatcher]="matcher"  matInput placeholder="Our Signatory Function" formControlName="ourSignatoryFunction"/>
                 <mat-error *ngIf="billForm.controls['ourSignatoryFunction'].touched && billForm.controls['ourSignatoryFunction'].errors?.required">
                   Our Signatory Function is <strong>required</strong>
                 </mat-error>

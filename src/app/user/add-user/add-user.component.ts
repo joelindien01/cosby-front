@@ -4,6 +4,7 @@ import {UserService} from "../../common/user.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {isUndefined} from "util";
 import {isDefined} from "@angular/compiler/src/util";
+import {Profile, Role} from "../user-view/user-view.component";
 
 @Component({
   selector: 'app-add-user',
@@ -15,7 +16,7 @@ export class AddUserComponent implements OnInit {
   addUserForm: FormGroup;
   availableProfiles: Array<any>;
 
-  constructor(private fb: FormBuilder, private userService: UserService, public dialogRef: MatDialogRef<AddUserComponent>, @Inject(MAT_DIALOG_DATA) public data: {userData: any}) {
+  constructor(private fb: FormBuilder, private userService: UserService, public dialogRef: MatDialogRef<AddUserComponent>, @Inject(MAT_DIALOG_DATA) public data: {userData: any, selfAccountEdit: boolean}) {
     this.userService.findAllRoles().subscribe(roles => this.availableRoles = roles);
     this.userService.findAllProfiles().subscribe(profiles => this.availableProfiles = profiles);
     const user = this.data.userData;
@@ -27,6 +28,8 @@ export class AddUserComponent implements OnInit {
       active: [isUndefined(user) ? null :this.data.userData.active],
       roles: [isUndefined(user) ? null :this.data.userData.roles],
       profile: [isUndefined(user) ? null :this.data.userData.profile, Validators.required],
+      password: [""],
+      confirmPassword: [""],
     });
 
   }
@@ -36,12 +39,15 @@ export class AddUserComponent implements OnInit {
   }
 
   addUser() {
-    if(this.addUserForm.invalid) {
+
+    if(!this.formIsValid()) {
       return;
     }
-    this.userService.backOfficeRegistration(this.addUserForm.value).subscribe(result => {
+    let editedUser = this.addUserForm.value;
+    editedUser.selfAccountEdit = this.data.selfAccountEdit;
+    this.userService.backOfficeRegistration(editedUser).subscribe(result => {
       alert("User added");
-      this.dialogRef.close();
+      this.dialogRef.close(editedUser);
     });
   }
 
@@ -49,4 +55,30 @@ export class AddUserComponent implements OnInit {
     return (isDefined(o1) && isDefined(o2) && o1.id ==o2.id);
   }
 
+  private formIsValid() {
+    const form = this.addUserForm.value;
+    const passwordAreSame = form.password == form.confirmPassword;
+    if(this.data.selfAccountEdit) {
+      delete form.roles;
+      delete form.profile;
+      delete form.active;
+    }
+      delete form.password;
+      delete form.confirmPassword;
+
+    return passwordAreSame && Object.keys(form).findIndex(key => isUndefined(form[key])) == -1;
+  }
+}
+
+export interface UserAddForm {
+  id: number;
+  username: string;
+  email: string;
+  phoneNumber: number;
+  active: boolean;
+  roles: Array<any>;
+  profile: Profile;
+  password: string;
+  confirmPassword: string;
+  selfAccountEdit: boolean;
 }

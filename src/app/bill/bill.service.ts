@@ -158,11 +158,6 @@ export class BillService {
       color: '#333333',
       alignment: 'left',
     };
-    let contactPersonArea = {
-      //text: this.formatAddress(bill.deliveryNote.purchaseOrder.customer.billingAddress),
-      text: bill.deliveryNote.purchaseOrder.customer.contacts[0].name,
-      style: 'invoiceBillingAddress',
-    };
     let bankIbanAccountReferenceArea = [
       {text: 'Bank: '+ bill.impactedAccount.bankName},
       {text: 'Account N°: '+ bill.impactedAccount.reference},

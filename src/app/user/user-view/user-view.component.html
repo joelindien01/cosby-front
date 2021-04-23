@@ -15,7 +15,17 @@
       </mat-expansion-panel-header>
       <div class="row">
         <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <p>Username : {{user.username}}</p>
+              <p>PhoneNumber : {{user.phoneNumber}}</p>
+              <p>Email : {{user.email}}</p>
+              <p>Function : {{user.profile?.name}}</p>
 
+              <button type="button" mat-flat-button color="primary" (click)="editUser()"><fa-icon icon="edit"></fa-icon> Edit account</button>
+            </div>
+
+          </div>
         </div>
       </div>
     </mat-expansion-panel>

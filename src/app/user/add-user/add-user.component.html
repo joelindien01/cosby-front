@@ -20,7 +20,19 @@
             <input matInput formControlName="phoneNumber" type="number" placeholder="Phone number">
           </mat-form-field>
         </div>
-        <div class="col-12">
+        <div class="col-12" *ngIf="data.selfAccountEdit">
+          <div class="col-4">
+            <mat-form-field>
+              <input matInput formControlName="password" type="password" placeholder="Password">
+            </mat-form-field>
+          </div>
+          <div class="col-4" *ngIf="data.selfAccountEdit">
+            <mat-form-field>
+              <input matInput formControlName="confirmPassword" type="password" placeholder="Confirm Password">
+            </mat-form-field>
+          </div>
+        </div>
+        <div *ngIf="!data.selfAccountEdit" class="col-12">
           <div class="row">
             <div class="col-12">
               <mat-slide-toggle formControlName="active">Activate user</mat-slide-toggle>
