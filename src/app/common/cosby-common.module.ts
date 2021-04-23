@@ -2,7 +2,7 @@ import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {ConfigService} from "./config.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AddressComponent} from './address/address.component';
-import {CommonModule} from "@angular/common";
+import {CommonModule, DatePipe} from "@angular/common";
 import {FormControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {AddressService} from "./address.service";
 import { ShipComponent } from './ship/ship.component';
@@ -33,6 +33,7 @@ import {ErrorStateMatcher, MatDateFormats, NativeDateAdapter} from "@angular/mat
 import {NgxSpinnerModule} from "ngx-spinner";
 import {faCartPlus} from "@fortawesome/free-solid-svg-icons/faCartPlus";
 import {faShoppingCart} from "@fortawesome/free-solid-svg-icons/faShoppingCart";
+import {PdfService} from "./pdf.service";
 
 @NgModule({
   declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
@@ -49,7 +50,7 @@ import {faShoppingCart} from "@fortawesome/free-solid-svg-icons/faShoppingCart";
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule, ShContextMenuModule, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
-  providers: [ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService, {provide:HTTP_INTERCEPTORS, useClass: BasicAuthHttpInterceptorService, multi:true}]
+  providers: [DatePipe, ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService,PdfService, {provide:HTTP_INTERCEPTORS, useClass: BasicAuthHttpInterceptorService, multi:true}]
 })
 export class CosbyCommonModule {
 

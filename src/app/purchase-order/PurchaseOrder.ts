@@ -1,4 +1,4 @@
-import {Address, Customer, DeliveryInformation} from "../customer/customer";
+import {Address, Contact, Customer, DeliveryInformation} from "../customer/customer";
 import {Product} from "../product/product";
 import {Currency, UnitOfMeasurement} from "../uom/UnitOfMeasurement";
 
@@ -11,6 +11,7 @@ export class PurchaseOrder {
   totalAmount: number;
   paymentInformation: any;
   poNumber: string;
+  contactInfo: Contact;
 }
 
 export class Item {
@@ -20,8 +21,10 @@ export class Item {
   quantity: number;
   unit: number;
   amount: number;
+  unitOfMeasurement: UnitOfMeasurement;
 }
 export class ItemDto {
+  id: number;
   productName: string;
   description: string;
   quantity: number;

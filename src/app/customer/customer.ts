@@ -5,6 +5,8 @@ export class Customer {
   deliveryInformations: DeliveryInformation[];
   billingAddress: Address;
   location: Address;
+
+
 }
 
 export class Contact {
@@ -31,7 +33,7 @@ export interface EmailAddress {
   email: string;
 }
 
-export interface Address {
+export class Address {
   id: number;
   street: string;
   city: string;

@@ -15,7 +15,7 @@
               <div class="col-4">
                 <p>Bill n° {{ (bill)?.id }}</p>
                 <p>Deadline: {{ (bill)?.deadLine | date }}</p>
-                <p>Creation Date: {{ (bill)?.creationDate | date }}</p>
+                <p>Creation Date: {{ (bill)?.creationDate | date }} (by {{ bill?.emitter }})</p>
               </div>
               <div class="col-8">
                 <p>Our Signatory: {{ (bill)?.ourSignatory }} <span *ngIf="true">({{ (bill)?.ourSignatoryFunction }})</span></p>
@@ -34,7 +34,7 @@
           </div>
           <div class="card-body">
             <p>Note n° {{ (deliveryNote$ |async)?.id }}</p>
-            <p>Created on {{ (deliveryNote$ |async)?.creationDate |date }}</p>
+            <p>Created on {{ (deliveryNote$ |async)?.creationDate |date }} (by {{ (deliveryNote$|async)?.emitter }})</p>
             <p>Delivery date: {{ (deliveryNote$ |async)?.deliveryDate |date }}</p>
           </div>
         </div>
@@ -78,12 +78,13 @@
             <p>Imo: {{(purchaseOrder$|async)?.deliveryInformation.imo}}</p>
             <p>Flag: {{(purchaseOrder$|async)?.deliveryInformation.flag}}</p>
             <p>Master: {{(purchaseOrder$|async)?.deliveryInformation.master }}</p>
+            <p>Contact: {{(purchaseOrder$|async)?.contactInfo?.name }} ({{(purchaseOrder$|async)?.contactInfo?.contactFunction }}) <br> Num: {{(purchaseOrder$|async)?.contactInfo?.phoneNumber }} <br> Mail: {{(purchaseOrder$|async)?.contactInfo?.mail }} </p>
           </div>
           <div class="col-4">
             <h6>References</h6>
             <p>Our Ref° {{(purchaseOrder$|async)?.id}}</p>
             <p>Customer Ref° {{(purchaseOrder$|async)?.poNumber}}</p>
-            <p>Created on {{(purchaseOrder$|async)?.creationDate |date }}</p>
+            <p>Created on {{(purchaseOrder$|async)?.creationDate |date }} (by {{ (purchaseOrder$|async)?.emitter?.username }})</p>
             <p>Currency: {{(purchaseOrder$|async)?.paymentInformation.currency.label }} ({{(purchaseOrder$|async)?.paymentInformation.currency.symbol }})</p>
           </div>
           <div class="col-4">

@@ -1,4 +1,5 @@
 import {DeliveryNote, PurchaseOrder} from "../purchase-order/PurchaseOrder";
+import {Contact} from "../customer/customer";
 
 export class BillDTO {
   billId: number;
@@ -16,6 +17,7 @@ export class BillDTO {
   customerSignatory: string;
   customerSignatoryFunction: string;
   creditNotes: CreditNoteReadDTO[];
+  emitter: any;
 }
 
 export class CreditNoteReadDTO
@@ -44,7 +46,10 @@ export class Bill {
   netTotal: number;
   ourSignatoryFunction: string;
   ourSignatory: string;
-
+  clientSignatoryFunction: string;
+  clientSignatory: string;
+  emitter: any;
+  contactInfo: Contact;
 }
 
 export class Account {
