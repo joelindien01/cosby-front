@@ -28,7 +28,10 @@ export class UserViewComponent implements OnInit {
       data: {userData: this.user, selfAccountEdit: true}
     });
     dialogRef.afterClosed().subscribe(value => {
-      this.user =this.userService.reloadCurrentUser(value);
+      this.userService.reloadCurrentUser(value).subscribe(value => {
+        this.user = this.userService.getConnectedUser();
+      });
+
     });
 
   }

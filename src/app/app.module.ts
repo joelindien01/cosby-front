@@ -41,11 +41,15 @@ import {CreateUomComponent} from "./uom/create-uom/create-uom.component";
 import {ListUomComponent} from "./uom/list-uom/list-uom.component";
 import {AddAccountComponent} from "./account/add-account/add-account.component";
 import {ListAccountComponent} from "./account/list-account/list-account.component";
+import {ResetPasswordComponent} from "./user/reset-password/reset-password.component";
 
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'reset-password/:userId/:token', component: ResetPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'validation/:userId/:token', component: ResetPasswordComponent },
   { path: 'settings', component: UserViewComponent, canActivate: [AuthGuard]},
   { path: 'customers/add', component: AddCustomerComponent, canActivate: [AuthGuard]},
   { path: 'delivery-notes/add', component: AddDeliveryNoteComponent, canActivate: [AuthGuard] },

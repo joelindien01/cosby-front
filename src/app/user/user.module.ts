@@ -18,10 +18,11 @@ import { AddUserComponent } from './add-user/add-user.component';
 import { AddProfileComponent } from './add-profile/add-profile.component';
 import { ListProfileComponent } from './list-profile/list-profile.component';
 import { ViewRolesComponent } from './view-roles/view-roles.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, UserViewComponent, ListUserComponent, AddUserComponent, AddProfileComponent, ListProfileComponent, ViewRolesComponent],
-  exports: [LoginComponent, RegisterComponent, UserViewComponent],
+  declarations: [LoginComponent, RegisterComponent, UserViewComponent, ListUserComponent, AddUserComponent, AddProfileComponent, ListProfileComponent, ViewRolesComponent, ResetPasswordComponent],
+  exports: [LoginComponent, RegisterComponent, UserViewComponent, ResetPasswordComponent],
   providers: [UserService],
   imports: [
     CommonModule,

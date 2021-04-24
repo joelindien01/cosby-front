@@ -77,10 +77,8 @@ export class UserService {
     return JSON.parse(localStorage.getItem("username"));
   }
 
-  resetPassword(value: string) {
-    this.httpClient.post(this.baseUrl+'/reset-password', value).subscribe(s => {
-
-    });
+  resetPassword(value: any) {
+    return this.httpClient.post(this.baseUrl+'reset-password', value);
   }
 
   findAllUsers():Observable<Array<any>> {
@@ -114,16 +112,24 @@ export class UserService {
   }
 
   reloadCurrentUser(editedAccount: UserAddForm) {
-    let response = this.httpClient.get<User>(this.baseUrl+'/validate-login').pipe(
-      map(response => {
-        this.connectedUser = response;
-        localStorage.setItem('username', JSON.stringify(this.connectedUser));
-        if(isDefined(editedAccount.password)) {
-          const basicauth = "Basic "  + btoa(editedAccount.username + ':' + editedAccount.password);
-          localStorage.setItem('basicauth', basicauth);
-        }
+    let response = this.httpClient.get<User>(this.baseUrl+'validate-login').pipe(
+      map(user => {
+        this.saveToLocalStorage(editedAccount, user);
       })
     );
     return response;
+  }
+
+  private saveToLocalStorage(editedAccount: UserAddForm, resultUser?: any) {
+    this.connectedUser = resultUser;
+    localStorage.setItem('username', JSON.stringify(this.connectedUser));
+    if (isDefined(editedAccount.password)) {
+      const basicauth = "Basic " + btoa(editedAccount.username + ':' + editedAccount.password);
+      localStorage.setItem('basicauth', basicauth);
+    }
+  }
+
+  validateToken(userId: any, token: string) {
+    return this.httpClient.post<any>(this.baseUrl+'validate-token', {userId: userId, token: token, type: "PASSWORD_CHANGED"});
   }
 }

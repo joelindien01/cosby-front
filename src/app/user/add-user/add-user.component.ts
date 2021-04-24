@@ -56,7 +56,7 @@ export class AddUserComponent implements OnInit {
   }
 
   private formIsValid() {
-    const form = this.addUserForm.value;
+    let form: any = {...this.addUserForm.value};
     const passwordAreSame = form.password == form.confirmPassword;
     if(this.data.selfAccountEdit) {
       delete form.roles;
