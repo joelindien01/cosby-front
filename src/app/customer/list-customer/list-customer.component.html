@@ -26,8 +26,32 @@
 
 <div class="row">
   <div class="col-12">
-    <table class="table table-striped">
-      <thead>
+    <table *ngIf="customerMatTable?.data?.length >0" mat-table [dataSource]="customerMatTable" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="customerName">
+        <th mat-header-cell *matHeaderCellDef> Customer Name </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.name}} </td>
+      </ng-container>
+      <ng-container matColumnDef="locationCountry">
+        <th mat-header-cell *matHeaderCellDef> Location country </th>
+        <td mat-cell *matCellDef="let customer"> {{customer.locationCountry}}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let customer">
+          <mat-select>
+            <mat-option *ngIf="!dialogData.dialogMode" (click)="goToCustomerViewInfo(customer.id)">View</mat-option>
+            <mat-option *ngIf="!dialogData.dialogMode" (click)="createPurchaseOrder(customer.id)">Create purchase order</mat-option>
+            <mat-option *ngIf="!dialogData.dialogMode" (click)="goToPurchaseOrdersPage(customer.id)">Linked purchase orders</mat-option>
+            <mat-option *ngIf="!dialogData.dialogMode" (click)="goToBillsPage(customer.id)">Linked Bills</mat-option>
+            <mat-option *ngIf="!dialogData.dialogMode" (click)="goToDeliveryNotePage(customer.id)">Linked Delivery Notes</mat-option>
+            <mat-option *ngIf="dialogData.dialogMode && cartService.selectedCustomer == undefined" (click)="cartService.selectedCustomer = customer">Select customer</mat-option>
+            <mat-option *ngIf="dialogData.dialogMode && cartService.selectedCustomer != undefined && cartService.selectedCustomer.id == customer.id" (click)="cartService.selectedCustomer = undefined">Remove customer</mat-option>
+
+          </mat-select>
+        </td>
+      </ng-container>
+<!--      <thead>
       <tr>
         <th>Customer name</th>
         <th>Location country</th>
@@ -40,18 +64,24 @@
         <td>{{customer.locationCountry}}</td>
         <td class="text-center" *ngIf="!dialogData.dialogMode">
           <button mat-stroked-button color="primary" class="mr-1" (click)="goToCustomerViewInfo(customer.id)"><fa-icon icon="eye"></fa-icon></button>
-          <button mat-stroked-button color="primary" class="mr-1" (click)="createPurchaseOrder(customer.id)">create purchase order</button>
-          <button mat-stroked-button color="primary" class="mr-1" (click)="goToPurchaseOrdersPage(customer.id)">purchase orders</button>
+          <button mat-stroked-button color="primary" class="mr-1" (click)="createPurchaseOrder(customer.id)"></button>
+          <button mat-stroked-button color="primary" class="mr-1" (click)="goToPurchaseOrdersPage(customer.id)"></button>
           <button mat-stroked-button color="primary" class="mr-1" (click)="goToBillsPage(customer.id)">bills</button>
           <button mat-stroked-button color="primary" (click)="goToDeliveryNotePage(customer.id)">delivery notes</button>
         </td>
         <td *ngIf="dialogData.dialogMode">
-          <button mat-stroked-button *ngIf="cartService.selectedCustomer == undefined" color="primary" (click)="cartService.selectedCustomer = customer">select customer</button>
-          <button mat-stroked-button *ngIf="cartService.selectedCustomer != undefined && cartService.selectedCustomer.id == customer.id" color="warn" (click)="cartService.selectedCustomer = undefined">remove customer</button>
+          <button mat-stroked-button *ngIf="dialogData.dialogMode && cartService.selectedCustomer == undefined" color="primary" (click)="cartService.selectedCustomer = customer">select customer</button>
+          <button mat-stroked-button *ngIf="dialogData.dialogMode && cartService.selectedCustomer != undefined && cartService.selectedCustomer.id == customer.id" color="warn" (click)="cartService.selectedCustomer = undefined">remove customer</button>
         </td>
       </tr>
-      </tbody>
+      </tbody>-->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <mat-paginator
+      [length]="5000"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
 
   </div>
 </div>

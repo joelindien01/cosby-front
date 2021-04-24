@@ -46,8 +46,8 @@ export class Bill {
   netTotal: number;
   ourSignatoryFunction: string;
   ourSignatory: string;
-  clientSignatoryFunction: string;
-  clientSignatory: string;
+  customerSignatoryFunction: string;
+  customerSignatory: string;
   emitter: any;
   contactInfo: Contact;
 }

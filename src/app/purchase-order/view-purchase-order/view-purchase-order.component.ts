@@ -9,6 +9,8 @@ import {isDefined} from "@angular/compiler/src/util";
 import {NgxSpinnerService} from "ngx-spinner";
 import {concatMap} from "rxjs-compat/operator/concatMap";
 import {forkJoin} from "rxjs/index";
+import {BillService} from "../../bill/bill.service";
+import {DeliveryNoteService} from "../../delivery-note/delivery-note.service";
 
 
 @Component({
@@ -29,7 +31,7 @@ export class ViewPurchaseOrderComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private orderService: PurchaseOrderService,
               private router: Router,
-              private spinner: NgxSpinnerService) {
+              private spinner: NgxSpinnerService, private billService: BillService, private deliveryNoteService: DeliveryNoteService) {
     this.show = false;
     this.spinner.show();
     if(!this.purchaseOrder$) {
@@ -40,6 +42,18 @@ export class ViewPurchaseOrderComponent implements OnInit {
         }
       });
     }
+  }
+
+  generateDeliveryNote(deliveryNoteId: number) {
+    this.deliveryNoteService.generateDeliveryNote(deliveryNoteId);
+  }
+
+  createCreditNote(currentBillId: any) {
+    this.billService.createCreditNote(currentBillId);
+  }
+
+  generateBill(billId: number) {
+    this.billService.generateBill(billId);
   }
 
   ngOnInit() {
@@ -72,6 +86,7 @@ export class ViewPurchaseOrderComponent implements OnInit {
     forkJoin([this.purchaseOrder$, this.items$]).subscribe(allResults => {
       this.spinner.hide();
       this.show = true;
+      console.log(allResults);
     });
   }
 

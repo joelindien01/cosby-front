@@ -1,7 +1,7 @@
 <div class="row">
-  <h4>Credit Notes</h4>
+  <h4 *ngIf="bill?.creditNotes && bill.creditNotes.length >0">Credit Notes</h4>
   <div class="col-12">
-    <table class="table table-bordered">
+    <table *ngIf="bill?.creditNotes && bill.creditNotes.length >0" class="table table-bordered">
       <thead>
       <tr>
         <th>Credit Note Id</th>

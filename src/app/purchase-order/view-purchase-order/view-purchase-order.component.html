@@ -2,8 +2,21 @@
 
 <div class="row" *ngIf="show">
 
+  <div class="col-12 mb-3">
+    <div class="row">
+      <div class="col-3">
+        <h5 *ngIf="bill != undefined">Bill</h5>
+      </div>
+      <div class="col-9 text-right" *ngIf="bill != undefined">
+        <button mat-flat-button color="primary" class="mr-3 mb-1" (click)="generateBill(bill.id)">Generate Bill</button>
+        <button mat-flat-button color="primary"  (click)="createCreditNote(bill.id)">Create Credit Note</button>
+      </div>
+
+    </div>
+  </div>
   <div class="col-12">
-    <h5 *ngIf="bill != undefined">Bill</h5>
+
+
     <div class="row">
       <div class="col-8" *ngIf="bill != undefined">
         <div class="card">
@@ -41,6 +54,9 @@
       </div>
       <div class="col-8 text-right" *ngIf="deliveryNote$ != undefined && bill == undefined">
         <input  #noteId [value]="(deliveryNote$ |async)?.id" type="hidden" />
+        <button mat-flat-button color="primary" class="mr-3 mb-1" (click)="generateDeliveryNote(noteId.value)">Generate Delivery
+          Note
+        </button>
         <button mat-flat-button color="primary" (click)="createBill(noteId.value)">Create
           bill
         </button>
@@ -75,10 +91,11 @@
           <div class="col-4">
             <h6>Delivery Information</h6>
             <p>Vessel: {{ (purchaseOrder$|async)?.deliveryInformation.vessel }}</p>
+            <p>Port: {{ (purchaseOrder$|async)?.deliveryInformation.port }}</p>
             <p>Imo: {{(purchaseOrder$|async)?.deliveryInformation.imo}}</p>
             <p>Flag: {{(purchaseOrder$|async)?.deliveryInformation.flag}}</p>
             <p>Master: {{(purchaseOrder$|async)?.deliveryInformation.master }}</p>
-            <p>Contact: {{(purchaseOrder$|async)?.contactInfo?.name }} ({{(purchaseOrder$|async)?.contactInfo?.contactFunction }}) <br> Num: {{(purchaseOrder$|async)?.contactInfo?.phoneNumber }} <br> Mail: {{(purchaseOrder$|async)?.contactInfo?.mail }} </p>
+            <p>Contact: {{(purchaseOrder$|async)?.contactInfo?.name }} ({{(purchaseOrder$|async)?.contactInfo?.contactFunction }}) <br> Num: {{(purchaseOrder$|async)?.contactInfo?.phoneNumber }} <br> Mail: {{(purchaseOrder$|async)?.contactInfo?.email }} </p>
           </div>
           <div class="col-4">
             <h6>References</h6>
@@ -161,8 +178,7 @@
     </table>
   </div>
 
-  <div class="col-12" *ngIf="bill != undefined && purchaseOrder$ != undefined">
-    <input  #po [value]="(purchaseOrder$ |async)?.deliveryInformation?.vessel" type="hidden" />
-    <app-list-credit-note [bill]="bill" [(vessel)]="po.value"></app-list-credit-note>
+  <div class="col-12" *ngIf="bill != undefined && purchaseOrder$ != undefined && (purchaseOrder$ |async)?.deliveryInformation?.vessel">
+    <app-list-credit-note [bill]="bill" vessel="toto"></app-list-credit-note>
   </div>
 </div>

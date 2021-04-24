@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable} from "rxjs/index";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DeliveryNoteService} from "../delivery-note.service";
@@ -6,6 +6,7 @@ import {Customer} from "../../customer/customer";
 import {map} from "rxjs/internal/operators";
 import {DeliveryNote} from "../../purchase-order/PurchaseOrder";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 
 class ReferenceItem {
   label: string;
@@ -26,7 +27,10 @@ export class ListDeliveryNoteComponent implements OnInit {
   delNotesSearchForm: FormGroup;
   public paymentMethod: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
-
+  displayedColumns: string[] = ['note', 'po', 'deliveryDate', 'creationDate', 'actions'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  public delNoteMatTable: MatTableDataSource<DeliveryNoteTable> = new MatTableDataSource();
 
   constructor(private route: ActivatedRoute,
               private deliveryNoteService: DeliveryNoteService,
@@ -34,6 +38,7 @@ export class ListDeliveryNoteComponent implements OnInit {
               private fb: FormBuilder) {
 
 
+    this.delNoteMatTable.paginator = this.paginator;
     this.route.params.subscribe(params => {
       if (params['customerId']) {
         const customerId = params['customerId'];
@@ -102,6 +107,11 @@ export class ListDeliveryNoteComponent implements OnInit {
           })
         })
       );
+    this.deliveryNotesTable$.subscribe(delNote => {
+      this.delNoteMatTable.data = delNote;
+      this.delNoteMatTable.paginator = this.paginator;
+      this.delNoteMatTable.sort = this.sort;
+    });
   }
 
   viewDeliveryNote(deliveryNoteId: number) {

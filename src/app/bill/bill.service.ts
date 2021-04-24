@@ -9,6 +9,8 @@ import {PdfService} from "../common/pdf.service";
 import { DatePipe } from '@angular/common'
 import {Address} from "../customer/customer";
 import {isDefined} from "@angular/compiler/src/util";
+import {MatDialog} from "@angular/material";
+import {AddCreditNoteComponent} from "../credit-note/add-credit-note/add-credit-note.component";
 
 
 export class BillData {
@@ -41,11 +43,22 @@ export class BillService {
   apiUrl = environment.apiUrl;
   baseUrl= this.apiUrl+"bill/";
 
-  constructor(private httpClient: HttpClient,
+  constructor(public dialog: MatDialog, private httpClient: HttpClient,
               private docGenerator: DocGeneratorService, private pdfService: PdfService, public datepipe: DatePipe) {}
 
   saveBill(bill: BillDTO) {
     return this.httpClient.post(this.baseUrl, bill);
+  }
+
+  createCreditNote(currentBillId: any) {
+    const dialogRef = this.dialog.open(AddCreditNoteComponent, {
+      width: '250px',
+      data: {billId: currentBillId}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('Th');
+    });
   }
 
   getBillsByCustomerId(customerId: number): Observable<Array<Bill>> {
@@ -71,15 +84,6 @@ export class BillService {
           console.log(value);
           this.pdfService.generatePdf(value);
         });
-        /*let docGeneratorHelper = new FileGeneratorHelper();
-        docGeneratorHelper.outputName = "invoice"+
-          "_"+billData.id+ "_" +
-          billData.deliveryNote.purchaseOrder.customer.name+
-          "_"+
-          new Date().toISOString();
-        docGeneratorHelper.templateName = "invoice_2";
-        docGeneratorHelper.data = this.mapBillData(billData);
-        this.docGenerator.generateFile(docGeneratorHelper);*/
     });
   }
 
@@ -153,26 +157,40 @@ export class BillService {
 
 
     let clientNameArea = {
-      text: bill.deliveryNote.purchaseOrder.customer.name,
+
+      text: '',
       bold: true,
       color: '#333333',
       alignment: 'left',
+      stack: [
+        {text: bill.deliveryNote.purchaseOrder.customer.name, fontSize: 9},
+        {
+          text: 'Billing Address',
+          color: '#aaaaab',
+          bold: true,
+          fontSize: 10,
+          alignment: 'left',
+          margin: [0, 10, 0, 5],
+        },{
+          text: this.buildBillingAddress(bill.deliveryNote.purchaseOrder.customer.billingAddress),
+          fontSize: 9
+        }]
     };
     let bankIbanAccountReferenceArea = [
-      {text: 'Bank: '+ bill.impactedAccount.bankName},
-      {text: 'Account N°: '+ bill.impactedAccount.reference},
-      {text: 'IBAN: ' + bill.impactedAccount.iban}];
+      {text: 'Bank: '+ bill.impactedAccount.bankName, fontSize: 9},
+      {text: 'Account N°: '+ bill.impactedAccount.reference, fontSize: 9},
+      {text: 'IBAN: ' + bill.impactedAccount.iban, fontSize: 9}];
     let holderSwiftRibArea = [
-      {text: 'Holder: '+ bill.impactedAccount.holder},
-      {text: 'SWIFT Code: '+ bill.impactedAccount.swiftCode},
-      {text: 'RIB: '+ bill.impactedAccount.rib}
+      {text: 'Holder: '+ bill.impactedAccount.holder, fontSize: 9},
+      {text: 'SWIFT Code: '+ bill.impactedAccount.swiftCode, fontSize: 9},
+      {text: 'RIB: '+ bill.impactedAccount.rib, fontSize: 9}
     ];
     let clientSignatoryNameArea = {
-      text: bill.clientSignatory,
+      text: bill.customerSignatory,
       style:'signatureName'
     };
     let clientSignatoryJobTitleArea = {
-      text: bill.clientSignatoryFunction,
+      text: bill.customerSignatoryFunction,
       style:'signatureJobTitle'
 
     };
@@ -201,20 +219,11 @@ export class BillService {
       content: [
         {
           columns: [
-            {
+            /*{
               image: logoImagePath,
               width: 150,
-            },
+            },*/
             [
-              {
-                text: 'Invoice',
-                color: '#333333',
-                width: '*',
-                fontSize: 28,
-                bold: true,
-                alignment: 'right',
-                margin: [0, 0, 0, 15],
-              },
               {
                 stack: invoiceDateArea,
               },
@@ -227,7 +236,7 @@ export class BillService {
               text: 'To',
               color: '#aaaaab',
               bold: true,
-              fontSize: 14,
+              fontSize: 11,
               alignment: 'left',
               margin: [0, 10, 0, 5],
             },
@@ -235,7 +244,7 @@ export class BillService {
               text: 'Delivery Info',
               color: '#aaaaab',
               bold: true,
-              fontSize: 14,
+              fontSize: 11,
               alignment: 'left',
               margin: [0, 10, 0, 5],
             }
@@ -249,6 +258,7 @@ export class BillService {
               bold: true,
               color: '#333333',
               alignment: 'left',
+              fontSize: 9
             }
           ],
         },
@@ -342,7 +352,7 @@ export class BillService {
           table: {
             headerRows: 1,
             widths: ['*', 'auto'],
-            heights: 10,
+            heights: 8,
             body: buildTableAnnexe,
           },
         },
@@ -353,7 +363,7 @@ export class BillService {
           text: 'Payment Information',
           bold: true,
           margin: [0, 10, 0, 10],
-          fontSize: 15,
+          fontSize: 11,
         },
         '\n',
         {unbreakable: true,
@@ -406,7 +416,27 @@ export class BillService {
         },
 
       ],
-      pageMargins: [40, 30, 40, 60],
+      pageMargins: [40, 80, 40, 60],
+      header: {
+        columns: [
+          { image: logoImagePath,
+            alignment: 'left',
+            width: 150,
+            margin: [40,20,0,10],
+          },
+          [
+            {
+              text: 'Invoice '+bill.id.toString(),
+              color: '#333333',
+              width: '*',
+              fontSize: 20,
+              bold: true,
+              alignment: 'right',
+              margin: [0, 20, 40, 0],
+            }]
+        ]
+
+      },
       footer: {
         columns: [
           { image: footerImagePath,
@@ -453,7 +483,6 @@ export class BillService {
 
   private buildInvoiceDateArea(bill: Bill) {
     const invoiceDateAreaElementValues = [
-      {name: "Invoice N°", value: bill.id.toString()},
       {name: "Your Ref", value: bill.deliveryNote.purchaseOrder.poNumber},
       {name: "Issue Date", value: this.datepipe.transform(bill.creationDate, 'MMMM d, y')},
       {name: "Due Date", value: this.datepipe.transform(bill.deadLine, 'MMMM d, y')},
@@ -467,14 +496,14 @@ export class BillService {
             color: '#aaaaab',
             bold: true,
             width: '*',
-            fontSize: 12,
+            fontSize: 10,
             alignment: 'right',
           },
           {
             text: value.value,
             bold: true,
             color: '#333333',
-            fontSize: 12,
+            fontSize: 10,
             alignment: 'right',
             width: 100,
           },
@@ -504,14 +533,15 @@ export class BillService {
       {name: "Discount", value:bill.discount}
     ];
     let returnedAnnexe = tableAnnexe.filter(el => isDefined(el.value) && el.value != 0).map(el => {
-      return this.buildAnnexeRow(el.name, el.value.toString())
+      return this.buildAnnexeRow(el.name, el.value.toString(), 9)
     });
-    returnedAnnexe.push(this.buildAnnexeRow("Total Amount", bill.netTotal.toString(), 20));
+    returnedAnnexe.push(this.buildAnnexeRow("Total Amount", bill.netTotal.toString(), 9));
     return returnedAnnexe;
   }
 
   private buildProduct(item: Item) {
-    const product = [item.id, item.description, item.quantity, item.unitOfMeasurement.symbol, item.unit, item.amount];
+    const uom = isDefined(item.unitOfMeasurement) ? item.unitOfMeasurement.symbol : "";
+    const product = [item.id, item.description, item.quantity, uom, item.unit, item.amount];
     return product.map(p => {
       return {
         text: p,
@@ -542,7 +572,7 @@ export class BillService {
       text: areaName,
       border: [false, true, false, true],
       alignment: 'right',
-      margin: [0, 5, 0, 5],
+      margin: [0, 2, 0, 2],
     };
     if(isDefined(fontSize)) {
       areaNameEL.fontSize = fontSize;
@@ -555,9 +585,17 @@ export class BillService {
         text: text,
         alignment: 'right',
         fillColor: '#f5f5f5',
-        margin: [0, 5, 0, 5],
+        margin: [0, 2, 0, 2],
+        fontSize: fontSize
       },
     ]
+  }
+
+  public buildBillingAddress(address: Address) {
+    return address.street + "\n"
+      + address.zipCode +" "+ address.city + "\n"
+      + address.state + "\n"
+      + address.country;
   }
 }
 

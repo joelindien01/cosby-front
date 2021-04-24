@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {PurchaseOrder} from "../PurchaseOrder";
 import {PurchaseOrderService} from "../purchase-order.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -7,6 +7,7 @@ import {Observable} from "rxjs/Rx";
 import {map} from "rxjs/internal/operators";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ReferenceItem} from "../add-purchase-order/add-purchase-order.component";
+import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 
 @Component({
   selector: 'app-list-purchase-orders',
@@ -21,6 +22,10 @@ export class ListPurchaseOrdersComponent implements OnInit {
   public paymentMeans: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
 
+  public orderMatTable: MatTableDataSource<OrderTable> = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  displayedColumns: string[] = ['orderId', 'customerName', 'creationDate', 'paymentStatus', 'actions'];
 
 
   constructor(private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
@@ -32,6 +37,7 @@ export class ListPurchaseOrdersComponent implements OnInit {
         this.loadAllOrders();
       }
       this.mapOrdersTable();
+      this.orderMatTable.paginator = this.paginator;
     });
     this.orderSearchForm = this.fb.group({
       customerNameCSV: '',
@@ -81,7 +87,12 @@ export class ListPurchaseOrdersComponent implements OnInit {
             return orderTable;
           });
         })
-      );
+      ).shareReplay();
+    this.ordersTableData$.subscribe(order => {
+      this.orderMatTable.data = order;
+      this.orderMatTable.paginator = this.paginator;
+      this.orderMatTable.sort = this.sort;
+    });
   }
 
   viewOrder(orderId: number) {
@@ -93,9 +104,9 @@ export class ListPurchaseOrdersComponent implements OnInit {
     this.purchaseOrderList$ = this.orderService.findOrders(searchForm).shareReplay();
     this.mapOrdersTable();
 
-    this.orderService.findOrders(searchForm).subscribe(s => {
+    /*this.orderService.findOrders(searchForm).subscribe(s => {
       console.log(s);
-    })
+    })*/
 
   }
 }

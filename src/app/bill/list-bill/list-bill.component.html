@@ -131,35 +131,54 @@
 
 
   <div class="col-12">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Bill Id</th>
-          <th>Purchase order Id</th>
-          <th>Delivery note Id</th>
-          <th>Deadline</th>
-          <th>Discount</th>
-          <th>Creation date</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let bill of billTable$ | async" [shAttachMenu]="billMenu" [shMenuData]="bill">
-          <td>{{bill.billId}}</td>
-          <td>{{bill.purchaseOrderId}}</td>
-          <td>{{bill.deliveryNoteId}}</td>
-          <td>{{bill.deadLine | date}}</td>
-          <td>{{bill.discount}} %</td>
-          <td>{{bill.creationDate | date}}</td>
-          <td class="text-center">
-            <button mat-stroked-button color="primary" (click)="viewBill(bill.billId)" class="mr-2 mb-2"><fa-icon icon="eye"></fa-icon></button>
-            <button mat-stroked-button color="primary" (click)="generateBill(bill.billId)" class="mr-2 mb-2">Generate bill</button>
-            <button mat-stroked-button color="primary" (click)="createCreditNote(bill.billId)" class="mr-2 mb-2">Create credit note</button>
-            <button *ngIf="bill.initialBill.creditNotes?.length > 0" mat-stroked-button color="primary" (click)="viewCreditNotes(bill)" class="mr-2 mb-2">View credit notes</button>
-          </td>
-        </tr>
-      </tbody>
+    <table *ngIf=" billMatTable?.data?.length >0 " mat-table [dataSource]="billMatTable" class="mat-elevation-z8">
+      <ng-container matColumnDef="bill">
+        <th mat-header-cell *matHeaderCellDef> Bill </th>
+        <td mat-cell *matCellDef="let bill"> {{bill.billId}} </td>
+      </ng-container>
+      <ng-container matColumnDef="po">
+        <th mat-header-cell *matHeaderCellDef> PO </th>
+        <td mat-cell *matCellDef="let bill"> {{bill.purchaseOrderId}} </td>
+      </ng-container>
+      <ng-container matColumnDef="deliveryNote">
+        <th mat-header-cell *matHeaderCellDef> DN </th>
+        <td mat-cell *matCellDef="let bill"> {{bill.deliveryNoteId}} </td>
+      </ng-container>
+      <ng-container matColumnDef="deadline">
+        <th mat-header-cell *matHeaderCellDef> Deadline </th>
+        <td mat-cell *matCellDef="let bill"> {{bill.deadLine | date}} </td>
+      </ng-container>
+      <ng-container matColumnDef="discount">
+        <th mat-header-cell *matHeaderCellDef> Discount </th>
+        <td mat-cell *matCellDef="let bill"> {{bill.discount}} % </td>
+      </ng-container>
+      <ng-container matColumnDef="creationDate">
+        <th mat-header-cell *matHeaderCellDef> Creation Date </th>
+        <td mat-cell *matCellDef="let bill"> {{bill.creationDate | date}} </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let bill">
+        <mat-select>
+          <mat-option (click)="viewBill(bill.billId)">View</mat-option>
+          <mat-option (click)="generateBill(bill.billId)">Generate Bill</mat-option>
+          <mat-option (click)="createCreditNote(bill.billId)">Create Credit Note</mat-option>
+          <mat-option (click)="viewCreditNotes(bill)" *ngIf="bill.initialBill.creditNotes?.length > 0">View Credit Notes</mat-option>
+          <!--<button mat-stroked-button color="primary" (click)="viewBill(bill.billId)" class="mr-2 mb-2"><fa-icon icon="eye"></fa-icon></button>
+          <button mat-stroked-button color="primary" (click)="generateBill(bill.billId)" class="mr-2 mb-2">Generate bill</button>
+          <button mat-stroked-button color="primary" (click)="createCreditNote(bill.billId)" class="mr-2 mb-2">Create credit note</button>
+          <button *ngIf="bill.initialBill.creditNotes?.length > 0" mat-stroked-button color="primary" (click)="viewCreditNotes(bill)" class="mr-2 mb-2">View credit notes</button>
+-->
+        </mat-select>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <mat-paginator
+      [length]="5000"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {BillService} from "../bill.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs/index";
@@ -11,6 +11,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import {AddCreditNoteComponent} from "../../credit-note/add-credit-note/add-credit-note.component";
 import {ListCreditNoteComponent} from "../../credit-note/list-credit-note/list-credit-note.component";
 import {ListCreditNoteDialogComponent} from "../../credit-note/list-credit-note-dialog/list-credit-note-dialog.component";
+import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 
 @Component({
   selector: 'app-list-bill',
@@ -25,8 +26,10 @@ export class ListBillComponent implements OnInit {
   billSearchForm: FormGroup;
   public paymentMethod: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
-
-
+  public billMatTable: MatTableDataSource<BillTable> = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  displayedColumns: string[] = ['bill', 'po', 'deliveryNote', 'deadline', 'discount', 'creationDate', 'actions'];
   constructor(private billService: BillService,
               private route: ActivatedRoute,
               private router: Router,
@@ -42,6 +45,7 @@ export class ListBillComponent implements OnInit {
       }
     });
     this.mapBillTable();
+    this.billMatTable.paginator = this.paginator;
 
     this.billSearchForm = this.fb.group(
       {
@@ -104,7 +108,13 @@ export class ListBillComponent implements OnInit {
           return billTable;
         })
       })
-    )
+    ).shareReplay();
+
+    this.billTable$.subscribe(billTable => {
+      this.billMatTable.data = billTable;
+      this.billMatTable.sort = this.sort;
+      this.billMatTable.paginator = this.paginator;
+    });
   }
 
   viewBill(billId: number) {

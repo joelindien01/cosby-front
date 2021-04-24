@@ -97,30 +97,41 @@
     <p>Delivery notes for customer : <b>{{(customer$ |async)?.name}}</b></p>
   </div>
   <div class="col-12">
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>Purchase order Id</th>
-        <th>Delivery date</th>
-        <th>Creation date</th>
-        <th class="text-center">Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let deliveryNote of deliveryNotesTable$ | async" [shAttachMenu]="deliveryNoteMenu" [shMenuData]="deliveryNote">
-          <td>{{deliveryNote.purchaseOrderId}}</td>
-          <td>{{deliveryNote.deliveryDate | date}}</td>
-          <td>{{deliveryNote.creationDate | date}}</td>
-          <td class="text-center">
-            <button mat-stroked-button class="mr-1" color="primary" (click)="viewDeliveryNote(deliveryNote.deliveryNoteId)"><fa-icon icon="eye"></fa-icon></button>
-            <button mat-stroked-button color="primary" (click)="createBill(deliveryNote.deliveryNoteId)">Create bill</button>
-            <button mat-stroked-button class="mr-1" color="primary" (click)="generateDeliveryNote(deliveryNote.deliveryNoteId)">Generate Delivery Note</button>
-            <!--<button mat-stroked-button class="mr-1" color="primary" (click)="sendBillByEmail(deliveryNote.deliveryNoteId)">Send Delivery Note by Email</button>
-          -->
-          </td>
-        </tr>
-      </tbody>
+    <table mat-table [dataSource]="delNoteMatTable" *ngIf=" delNoteMatTable?.data?.length >0 " class="mat-elevation-z8">
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef> Delivery Note Id </th>
+        <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.deliveryNoteId}} </td>
+      </ng-container>
+      <ng-container matColumnDef="po">
+        <th mat-header-cell *matHeaderCellDef> PO </th>
+        <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.purchaseOrderId}} </td>
+      </ng-container>
+      <ng-container matColumnDef="deliveryDate">
+        <th mat-header-cell *matHeaderCellDef> Delivery Date </th>
+        <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.deliveryDate | date}} </td>
+      </ng-container>
+      <ng-container matColumnDef="creationDate">
+        <th mat-header-cell *matHeaderCellDef> Creation Date </th>
+        <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.creationDate | date}} </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let deliveryNote">
+          <mat-select>
+            <mat-option (click)="viewDeliveryNote(deliveryNote.deliveryNoteId)">View</mat-option>
+            <mat-option (click)="createBill(deliveryNote.deliveryNoteId)">Create Bill</mat-option>
+            <mat-option (click)="generateDeliveryNote(deliveryNote.deliveryNoteId)">Generate Delivery Note</mat-option>
+
+          </mat-select>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <mat-paginator
+      [length]="5000"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
 

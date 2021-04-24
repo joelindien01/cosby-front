@@ -1,11 +1,11 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {CustomerService} from '../customer.service';
 import {Customer} from '../customer';
 import {Router} from "@angular/router";
 import {Observable} from 'rxjs';
 import {map} from "rxjs/internal/operators";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {MAT_DIALOG_DATA} from "@angular/material";
+import {MAT_DIALOG_DATA, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 import {CartService} from "../../cart/cart.service";
 
 @Component({
@@ -19,6 +19,10 @@ export class ListCustomerComponent implements OnInit {
   customerTableData$: Observable<Array<CustomerTable>>;
   customerList: Array<Customer>;
   customerSearchForm: FormGroup;
+  customerMatTable: MatTableDataSource<CustomerTable> = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  displayedColumns: string[] = ['customerName', 'locationCountry', 'actions'];
 
 
   constructor(private customerService: CustomerService, private router: Router, private fb: FormBuilder,
@@ -27,9 +31,15 @@ export class ListCustomerComponent implements OnInit {
     this.customerList$ = this.customerService.getCustomers().shareReplay();
     this.customerTableData$ = this.customerList$.pipe(
       map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.location.country)))
-    );
+    ).shareReplay();
     this.customerList$.subscribe(customerList => this.customerList = customerList);
     this.customerSearchForm = this.fb.group({customerNameCSV: ''});
+
+    this.customerTableData$.subscribe(customer => {
+      this.customerMatTable.data = customer;
+      this.customerMatTable.paginator = this.paginator;
+      this.customerMatTable.sort = this.sort;
+    });
   }
 
   ngOnInit() {
@@ -58,11 +68,17 @@ export class ListCustomerComponent implements OnInit {
   findCustomer() {
     let customerNameCSV: string  = this.customerSearchForm.value.customerNameCSV;
     let customerNameList: Array<string> = customerNameCSV != undefined && customerNameCSV.trim().length > 0 ? customerNameCSV.split(';') : [];
-    this.customerList$ = this.customerService.findCustomer(customerNameList);
+    this.customerList$ = this.customerService.findCustomer(customerNameList).shareReplay();
     this.customerTableData$ = this.customerList$.pipe(
       map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.location.country)))
-    );
+    ).shareReplay();
     this.customerList$.subscribe(customerList => this.customerList = customerList);
+
+    this.customerTableData$.subscribe(customer => {
+      this.customerMatTable.data = customer;
+      this.customerMatTable.paginator = this.paginator;
+      this.customerMatTable.sort = this.sort;
+    });
   }
 
   executeUpdate(customerList$) {

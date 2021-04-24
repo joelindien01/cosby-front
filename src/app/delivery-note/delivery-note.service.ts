@@ -8,6 +8,7 @@ import {mergeMap} from "rxjs/operators";
 import {PurchaseOrderService} from "../purchase-order/purchase-order.service";
 import {PdfService} from "../common/pdf.service";
 import {DatePipe} from "@angular/common";
+import {BillService} from "../bill/bill.service";
 
 export class DelNoteData{
   vessel: string;
@@ -25,7 +26,7 @@ export class DelNoteData{
 })
 export class DeliveryNoteService {
 
-  constructor(public datepipe: DatePipe, private pdfService: PdfService, private httpClient: HttpClient, private docGenerator: DocGeneratorService, private poService: PurchaseOrderService) { }
+  constructor(public billService: BillService, public datepipe: DatePipe, private pdfService: PdfService, private httpClient: HttpClient, private docGenerator: DocGeneratorService, private poService: PurchaseOrderService) { }
 
   apiUrl = environment.apiUrl;
   baseUrl= this.apiUrl+"delivery-note/";
@@ -107,11 +108,26 @@ export class DeliveryNoteService {
   async buildDeliveryNote(delNoteReturned: any, poData: PurchaseOrder) {
 
 
+
     let clientNameArea = {
-      text: poData.customer.name,
+
+      text: '',
       bold: true,
       color: '#333333',
       alignment: 'left',
+      stack: [
+        {text: poData.customer.name, fontSize: 9},
+        {
+          text: 'Billing Address',
+          color: '#aaaaab',
+          bold: true,
+          fontSize: 10,
+          alignment: 'left',
+          margin: [0, 10, 0, 5],
+        },{
+          text: this.billService.buildBillingAddress(poData.customer.billingAddress),
+          fontSize: 9
+        }]
     };
     let bankIbanAccountReferenceArea = [
       {text: ''}];
@@ -145,20 +161,8 @@ export class DeliveryNoteService {
       content: [
         {
           columns: [
-            {
-              image: logoImagePath,
-              width: 150,
-            },
+
             [
-              {
-                text: 'Delivery Note',
-                color: '#333333',
-                width: '*',
-                fontSize: 28,
-                bold: true,
-                alignment: 'right',
-                margin: [0, 0, 0, 15],
-              },
               {
                 stack: invoiceDateArea,
               },
@@ -171,7 +175,7 @@ export class DeliveryNoteService {
               text: 'To',
               color: '#aaaaab',
               bold: true,
-              fontSize: 14,
+              fontSize: 10,
               alignment: 'left',
               margin: [0, 10, 0, 5],
             },
@@ -179,7 +183,7 @@ export class DeliveryNoteService {
               text: 'Delivery Info',
               color: '#aaaaab',
               bold: true,
-              fontSize: 14,
+              fontSize: 10,
               alignment: 'left',
               margin: [0, 10, 0, 5],
             }
@@ -193,6 +197,7 @@ export class DeliveryNoteService {
               bold: true,
               color: '#333333',
               alignment: 'left',
+              fontSize: 9
             }
           ],
         },
@@ -343,7 +348,27 @@ export class DeliveryNoteService {
         },
 
       ],
-      pageMargins: [40, 30, 40, 60],
+      pageMargins: [40, 80, 40, 60],
+      header: {
+        columns: [
+          { image: logoImagePath,
+            alignment: 'left',
+            width: 150,
+            margin: [40,20,0,10],
+          },
+          [
+            {
+              text: 'Delivery Note '+delNoteReturned.id.toString(),
+              color: '#333333',
+              width: '*',
+              fontSize: 20,
+              bold: true,
+              alignment: 'right',
+              margin: [0, 20, 40, 0],
+            }]
+        ]
+
+      },
       footer: {
         columns: [
           { image: footerImagePath,
@@ -387,14 +412,12 @@ export class DeliveryNoteService {
   }
 
   private buildDeliveryInfoArea(delNoteReturned: any, poData: PurchaseOrder) {
-    return "Delivery Note Ref:" + delNoteReturned.id.toString()+ "\n" +
-      "Port: " + poData.deliveryInformation.port + "\n" +
+    return "Port: " + poData.deliveryInformation.port + "\n" +
       "Vessel: " + poData.deliveryInformation.vessel;
   }
 
   private buildInvoiceDateArea(delNoteReturned: any, poData: PurchaseOrder) {
     const invoiceDateAreaElementValues = [
-      {name: "Delivery Note N°", value: delNoteReturned.id.toString()},
       {name: "Your Ref", value: poData.poNumber},
       {name: "Issue Date", value: this.datepipe.transform(delNoteReturned.creationDate, 'MMMM d, y')},
       {name: "Delivery Date", value: this.datepipe.transform(delNoteReturned.deliveryDate, 'MMMM d, y')},
@@ -408,14 +431,14 @@ export class DeliveryNoteService {
             color: '#aaaaab',
             bold: true,
             width: '*',
-            fontSize: 12,
+            fontSize: 9,
             alignment: 'right',
           },
           {
             text: value.value,
             bold: true,
             color: '#333333',
-            fontSize: 12,
+            fontSize: 9,
             alignment: 'right',
             width: 100,
           },
