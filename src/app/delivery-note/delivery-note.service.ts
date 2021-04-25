@@ -447,8 +447,8 @@ export class DeliveryNoteService {
     });
   }
 
-  private buildProduct(item: Item) {
-    const product = [item.id.toString(), item.description, item.quantity.toString(), item.unitOfMeasurement.symbol];
+  private buildProduct(item: Item, index: number) {
+    const product = [index.toString(), item.description, item.quantity.toString(), item.unitOfMeasurement.symbol];
     return product.map(p => {
       return {
         text: p,
@@ -477,8 +477,8 @@ export class DeliveryNoteService {
   private buildTableArea(poData: PurchaseOrder) {
     let tableArea = [];
     tableArea.push(this.buildTableHeader());
-    poData.itemList.forEach(item => {
-      const productRow = this.buildProduct(item);
+    poData.itemList.forEach((item, index) => {
+      const productRow = this.buildProduct(item, index+1);
       tableArea.push(productRow);
     });
     return tableArea;

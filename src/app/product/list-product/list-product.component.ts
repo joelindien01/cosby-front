@@ -12,6 +12,8 @@ import {ViewCartComponent} from "../../cart/view-cart/view-cart.component";
 import {MyErrorStateMatcher} from "../../common/multi-addable-form";
 import {UserService} from "../../common/user.service";
 import {DecoEnumPoRoles, DecoEnumProductRoles, EnumProductRoles} from "../../user/roles.enum";
+import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
+import {isDefined} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-list-product',
@@ -51,6 +53,14 @@ export class ListProductComponent implements OnInit {
     this.spinner.show();
     this.matcher = new MyErrorStateMatcher();
 
+  }
+
+  drop(event: any) {
+    const previous = this.cartService.getItemPosition(event.previousContainer.data.item);
+    const current = this.cartService.getItemPosition(event.container.data.item);
+    if(previous > 0 && current > 0) {
+      moveItemInArray(this.cartService.items, previous - 1, current-1);
+    }
   }
 
   addToCart(product, index:number) {
@@ -96,8 +106,8 @@ export class ListProductComponent implements OnInit {
       product: [product],
       overridePrice: existingProduct != undefined ? existingProduct.overridePrice : false,
       description: [''],
-      quantity: [existingProduct != undefined ? existingProduct.quantity : 0, Validators.required],
-      unit: [existingProduct != undefined ? existingProduct.unit : 0, Validators.required],
+      quantity: [existingProduct != undefined ? existingProduct.quantity : 1, Validators.required],
+      unit: [existingProduct != undefined ? existingProduct.unit : 1, Validators.required],
       unitOfMeasurement: [existingProduct != undefined ? existingProduct.unitOfMeasurement : '', Validators.required]
     }));
     //let pt = new ProductTable(product.id, product.name, this.shouldShowAddToCart(product));
@@ -176,6 +186,15 @@ export class ListProductComponent implements OnInit {
         const itemCt = itemControl.controls['product'].value;
         return itemCt.id == p.product.id;
     });
+  }
+
+  switchPosition(indexToSwitch, item) {
+    const itemPosition = this.cartService.getItemPosition(item);
+    moveItemInArray(this.cartService.items, itemPosition - 1, indexToSwitch);
+  }
+
+  getPositions() {
+    return Array.from(new Array(this.cartService.items.length), (x, i) => i);​​​​​​
   }
 }
 

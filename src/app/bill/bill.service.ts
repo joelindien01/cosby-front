@@ -358,71 +358,77 @@ export class BillService {
         },
         '\n',
         {
-          width: '100%',
-          alignment: 'center',
-          text: 'Payment Information',
-          bold: true,
-          margin: [0, 10, 0, 10],
-          fontSize: 11,
-        },
-        '\n',
-        {unbreakable: true,
-          columns: [
-            {
-              stack: bankIbanAccountReferenceArea,
-              width: '70%',
-              alignment:'left'
-            },
-            {
-              stack: holderSwiftRibArea,
-              width: 180,
-              alignment:'left'
-            },
+          stack: [
 
-          ],
-          columnGap: 10
-        },
-        // Signature
-        {
+          {
+            width: '100%',
+            alignment: 'center',
+            text: 'Payment Information',
+            bold: true,
+            margin: [0, 10, 0, 10],
+            fontSize: 11,
+          },
+            '\n',
+            {unbreakable: true,
+              columns: [
+                {
+                  stack: bankIbanAccountReferenceArea,
+                  width: '70%',
+                  alignment:'left'
+                },
+                {
+                  stack: holderSwiftRibArea,
+                  width: 180,
+                  alignment:'left'
+                },
+
+              ],
+              columnGap: 10
+            },
+            // Signature
+            {
+              unbreakable: true,
+              columns: [
+                {
+                  stack: [
+                    {
+                      text: '_________________________________',
+                      style:'signaturePlaceholder'
+                    },
+                    clientSignatoryNameArea,
+                    clientSignatoryJobTitleArea
+                  ],
+                  width: 180,
+                  alignment:'left'
+                },
+                {
+                  stack: [
+                    {
+                      text: '_________________________________',
+                      style:'signaturePlaceholder'
+                    },
+                    ourSignatoryFunctionArea,
+                    ourSignatoryJobTitleArea
+                  ],
+                  width: 180,
+                  alignment:'right'
+                },
+
+              ],
+              columnGap: 150
+            }
+
+            ],
           unbreakable: true,
-          columns: [
-            {
-              stack: [
-                {
-                  text: '_________________________________',
-                  style:'signaturePlaceholder'
-                },
-                clientSignatoryNameArea,
-                clientSignatoryJobTitleArea
-              ],
-              width: 180,
-              alignment:'left'
-            },
-            {
-              stack: [
-                {
-                  text: '_________________________________',
-                  style:'signaturePlaceholder'
-                },
-                ourSignatoryFunctionArea,
-                ourSignatoryJobTitleArea
-              ],
-              width: 180,
-              alignment:'right'
-            },
-
-          ],
-          columnGap: 150
-        },
-
+        }
       ],
-      pageMargins: [40, 80, 40, 60],
+      pageMargins: [40, 110, 40, 80],
       header: {
         columns: [
           { image: logoImagePath,
             alignment: 'left',
             width: 150,
-            margin: [40,20,0,10],
+            margin: [40,20,0,60],
           },
           [
             {
@@ -515,8 +521,8 @@ export class BillService {
   private buildTableArea(bill: Bill) {
     let tableArea = [];
     tableArea.push(this.buildTableHeader());
-    bill.deliveryNote.purchaseOrder.itemList.forEach(item => {
-      const productRow = this.buildProduct(item);
+    bill.deliveryNote.purchaseOrder.itemList.forEach((item, index) => {
+      const productRow = this.buildProduct(item, index+1);
       tableArea.push(productRow);
     });
     return tableArea;
@@ -535,13 +541,13 @@ export class BillService {
     let returnedAnnexe = tableAnnexe.filter(el => isDefined(el.value) && el.value != 0).map(el => {
       return this.buildAnnexeRow(el.name, el.value.toString(), 9)
     });
-    returnedAnnexe.push(this.buildAnnexeRow("Total Amount", bill.netTotal.toString(), 9));
+    returnedAnnexe.push(this.buildAnnexeRow("Total Amount", bill.netTotal.toString()+ " " + bill.deliveryNote.purchaseOrder.paymentInformation.currency.symbol, 9));
     return returnedAnnexe;
   }
 
-  private buildProduct(item: Item) {
+  private buildProduct(item: Item, index: number) {
     const uom = isDefined(item.unitOfMeasurement) ? item.unitOfMeasurement.symbol : "";
-    const product = [item.id, item.description, item.quantity, uom, item.unit, item.amount];
+    const product = [index.toString(), item.description, item.quantity, uom, item.unit, item.amount];
     return product.map(p => {
       return {
         text: p,

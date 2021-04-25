@@ -8,6 +8,10 @@ export class CartService {
   items = [];
   selectedCustomer: Customer;
 
+  getItemPosition(product) {
+    return this.items.findIndex(item => item.product.id == product.product.id) + 1;
+  }
+
   addToCart(product) {
     this.items.push(product);
   }
