@@ -13,11 +13,12 @@ import { AngularFileUploaderModule } from "angular-file-uploader";
 import {NgxSpinnerModule} from "ngx-spinner";
 import {ViewCartComponent} from "../cart/view-cart/view-cart.component";
 import {CartModule} from "../cart/cart.module";
+import { LoadItemsComponent } from './load-items/load-items.component';
 
 
 @NgModule({
-  declarations: [AddProductComponent, ListProductComponent, ViewProductComponent, LoadProductComponent],
-  exports:[AddProductComponent, LoadProductComponent, ListProductComponent],
+  declarations: [AddProductComponent, ListProductComponent, ViewProductComponent, LoadProductComponent, LoadItemsComponent],
+  exports:[AddProductComponent, LoadProductComponent, ListProductComponent, LoadItemsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

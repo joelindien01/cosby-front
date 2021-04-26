@@ -28,6 +28,7 @@ export class AddCustomerComponent implements OnInit {
               private router: Router) {
     this.customerForm = this.fb.group({
       name: ['',Validators.required],
+      description: [''],
       useLocationAddress: [false],
       contacts: this.fb.array([this.contactService.initForm()]),
       billingAddress: this.addressService.initAddress(),

@@ -22,7 +22,7 @@ export class ListCustomerComponent implements OnInit {
   customerMatTable: MatTableDataSource<CustomerTable> = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns: string[] = ['customerName', 'locationCountry', 'actions'];
+  displayedColumns: string[] = ['customerName', 'customerDescription','locationCountry', 'actions'];
 
 
   constructor(private customerService: CustomerService, private router: Router, private fb: FormBuilder,
@@ -30,7 +30,7 @@ export class ListCustomerComponent implements OnInit {
               public cartService: CartService) {
     this.customerList$ = this.customerService.getCustomers().shareReplay();
     this.customerTableData$ = this.customerList$.pipe(
-      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.location.country)))
+      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.description, customer.location.country)))
     ).shareReplay();
     this.customerList$.subscribe(customerList => this.customerList = customerList);
     this.customerSearchForm = this.fb.group({customerNameCSV: ''});
@@ -70,7 +70,7 @@ export class ListCustomerComponent implements OnInit {
     let customerNameList: Array<string> = customerNameCSV != undefined && customerNameCSV.trim().length > 0 ? customerNameCSV.split(';') : [];
     this.customerList$ = this.customerService.findCustomer(customerNameList).shareReplay();
     this.customerTableData$ = this.customerList$.pipe(
-      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.location.country)))
+      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name,customer.description, customer.location.country)))
     ).shareReplay();
     this.customerList$.subscribe(customerList => this.customerList = customerList);
 
@@ -89,11 +89,13 @@ export class ListCustomerComponent implements OnInit {
 export class CustomerTable {
   id;
   name;
+  description;
   locationCountry;
 
-  constructor(id, name, locationCountry) {
+  constructor(id, name, desc, locationCountry) {
     this.id = id;
     this.name = name;
+    this.description = desc;
     this.locationCountry = locationCountry;
   }
 }

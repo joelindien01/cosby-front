@@ -21,6 +21,46 @@
 
         </div>
         <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field>
+                <mat-select [errorStateMatcher]="matcher" placeholder="Our registered Signatory" formControlName="ourSignatoryObject">
+                  <mat-option *ngFor="let user of (users$| async)" [value]="user">{{user.username}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-6">
+              <mat-form-field>
+                <input [errorStateMatcher]="matcher"  matInput placeholder="Our Signatory Function" formControlName="ourSignatoryFunction"/>
+                <mat-error *ngIf="deliveryNoteForm.controls['ourSignatoryFunction'].touched && deliveryNoteForm.controls['ourSignatoryFunction'].errors?.required">
+                  Our Signatory Function is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field>
+                <input [errorStateMatcher]="matcher" matInput placeholder="Customer Signatory" formControlName="customerSignatory" type="text"/>
+                <mat-error *ngIf="deliveryNoteForm.controls['customerSignatory'].touched && deliveryNoteForm.controls['customerSignatory'].errors?.required">
+                  Customer Signatory is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-6">
+              <mat-form-field>
+                <input [errorStateMatcher]="matcher" matInput placeholder="Customer Signatory Function" formControlName="customerSignatoryFunction" type="text"/>
+                <mat-error *ngIf="deliveryNoteForm.controls['customerSignatoryFunction'].touched && deliveryNoteForm.controls['customerSignatoryFunction'].errors?.required">
+                  Customer Signatory Function is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
           <button mat-flat-button color="primary" type="button" (click)="saveDeliveryNote()">save delivery note</button>
         </div>
       </div>

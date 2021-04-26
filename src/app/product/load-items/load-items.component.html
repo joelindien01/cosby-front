@@ -1,11 +1,11 @@
 <div class="row">
   <div class="col-12">
-    <h2>Load Products</h2>
+    <h2>Load Items For PO</h2>
 
     <div class="row">
 
       <angular-file-uploader
-        [config]="productService.afuConfig">
+        [config]="productService.afuConfig" (ApiResponse)="getReceivedItems($event)">
       </angular-file-uploader>
 
     </div>

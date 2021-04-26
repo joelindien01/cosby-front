@@ -10,6 +10,40 @@ import { environment } from '../../environments/environment';
 })
 export class ProductService {
 
+  afuConfig = {
+    multiple: true,
+    formatsAllowed: ".xlsx",
+    maxSize: "20",
+    uploadAPI:  {
+      method:"POST",
+      url: ''
+      /*headers: {
+        "Content-Type" : "text/plain;charset=UTF-8",
+        "Authorization" : `Bearer ${token}`
+      },
+      params: {
+        'page': '1'
+      },
+      responseType: 'blob',*/
+    },
+
+    /*theme: "dragNDrop",
+    hideProgressBar: true,
+hideResetBtn: true,
+    hideSelectBtn: false,
+    hideSelectBtn: true,
+    fileNameIndex: true,*/
+    replaceTexts: {
+      selectFileBtn: 'Select Files',
+      resetBtn: 'Reset',
+      uploadBtn: 'Upload',
+      dragNDropBox: 'Drag N Drop',
+      attachPinBtn: 'Attach Files...',
+      afterUploadMsg_success: 'Successfully Uploaded !',
+      afterUploadMsg_error: 'Upload Failed !',
+      sizeLimit: 'Size Limit'
+    }
+  };
   apiUrl = environment.apiUrl;
   baseUrl= this.apiUrl+"product/";
 
@@ -53,5 +87,9 @@ export class ProductService {
 
   getProductLoadUrl(): string {
     return this.baseUrl + "load";
+  }
+
+  getLoadItemsForPOUrl() {
+    return this.baseUrl + "load-items";
   }
 }

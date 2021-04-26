@@ -1,6 +1,7 @@
 export class Customer {
   id: number;
   name: string;
+  description: string;
   contacts: Contact[];
   deliveryInformations: DeliveryInformation[];
   billingAddress: Address;

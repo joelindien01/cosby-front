@@ -9,6 +9,7 @@ import {PurchaseOrderService} from "../purchase-order/purchase-order.service";
 import {PdfService} from "../common/pdf.service";
 import {DatePipe} from "@angular/common";
 import {BillService} from "../bill/bill.service";
+import {isDefined} from "@angular/compiler/src/util";
 
 export class DelNoteData{
   vessel: string;
@@ -116,7 +117,7 @@ export class DeliveryNoteService {
       color: '#333333',
       alignment: 'left',
       stack: [
-        {text: poData.customer.name, fontSize: 9},
+        {text: poData.customer.name+(isDefined(poData.customer.description) ? '\n'+poData.customer.description : ''), fontSize: 9},
         {
           text: 'Billing Address',
           color: '#aaaaab',
@@ -134,17 +135,25 @@ export class DeliveryNoteService {
     let holderSwiftRibArea = [
       {text: ''}
     ];
-    let clientSignatoryNameArea = {text: ''
+    let clientSignatoryNameArea = {
+      text: delNoteReturned.customerSignatory,
+      style:'signatureName'
     };
     let clientSignatoryJobTitleArea = {
-      text: ''
+      text: delNoteReturned.customerSignatoryFunction,
+      style:'signatureJobTitle'
+
     };
     let ourSignatoryFunctionArea = {
-      text: ''
+      text: delNoteReturned.ourSignatory,
+      style:'signatureName'
+
     };
     let ourSignatoryJobTitleArea = {
-      text: ''
+      text: delNoteReturned.ourSignatoryFunction,
+      style:'signatureJobTitle'
     };
+
     let footerImagePath = await this.pdfService.getBase64ImageFromURL(
       "/assets/footer.jpg"
       )
@@ -153,6 +162,7 @@ export class DeliveryNoteService {
       "/assets/logo_lobo.jpg"
       )
     ;
+
     let tableArea = this.buildTableArea(poData);
     let buildTableAnnexe = this.buildTableAnnexe(poData);
     let invoiceDateArea = this.buildInvoiceDateArea(delNoteReturned, poData);
@@ -321,7 +331,7 @@ export class DeliveryNoteService {
             {
               stack: [
                 {
-                  text: '',
+                  text: '_________________________________',
                   style:'signaturePlaceholder'
                 },
                 clientSignatoryNameArea,
@@ -333,7 +343,7 @@ export class DeliveryNoteService {
             {
               stack: [
                 {
-                  text: '',
+                  text: '_________________________________',
                   style:'signaturePlaceholder'
                 },
                 ourSignatoryFunctionArea,
@@ -348,7 +358,7 @@ export class DeliveryNoteService {
         },
 
       ],
-      pageMargins: [40, 80, 40, 60],
+      pageMargins: [40, 110, 40, 80],
       header: {
         columns: [
           { image: logoImagePath,

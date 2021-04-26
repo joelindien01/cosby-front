@@ -49,6 +49,9 @@
             <p>Note n° {{ (deliveryNote$ |async)?.id }}</p>
             <p>Created on {{ (deliveryNote$ |async)?.creationDate |date }} (by {{ (deliveryNote$|async)?.emitter }})</p>
             <p>Delivery date: {{ (deliveryNote$ |async)?.deliveryDate |date }}</p>
+            <p>Our Signatory: {{ (deliveryNote$ |async)?.ourSignatory }} <span *ngIf="true">({{ (deliveryNote$ |async)?.ourSignatoryFunction }})</span></p>
+            <p>Customer Signatory: {{ (deliveryNote$ |async)?.customerSignatory }} <span *ngIf="true">({{ (deliveryNote$ |async)?.customerSignatoryFunction }})</span></p>
+
           </div>
         </div>
       </div>

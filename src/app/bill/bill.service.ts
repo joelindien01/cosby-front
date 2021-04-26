@@ -163,7 +163,7 @@ export class BillService {
       color: '#333333',
       alignment: 'left',
       stack: [
-        {text: bill.deliveryNote.purchaseOrder.customer.name, fontSize: 9},
+        {text: bill.deliveryNote.purchaseOrder.customer.name+(isDefined(bill.deliveryNote.purchaseOrder.customer.description) ? '\n'+bill.deliveryNote.purchaseOrder.customer.description : ''), fontSize: 9},
         {
           text: 'Billing Address',
           color: '#aaaaab',

@@ -42,6 +42,7 @@ import {ListUomComponent} from "./uom/list-uom/list-uom.component";
 import {AddAccountComponent} from "./account/add-account/add-account.component";
 import {ListAccountComponent} from "./account/list-account/list-account.component";
 import {ResetPasswordComponent} from "./user/reset-password/reset-password.component";
+import {LoadItemsComponent} from "./product/load-items/load-items.component";
 
 
 const appRoutes: Routes = [
@@ -60,6 +61,7 @@ const appRoutes: Routes = [
   { path: 'product', component: AddProductComponent , canActivate: [AuthGuard]},
   { path: 'products', component: ListProductComponent , canActivate: [AuthGuard]},
   { path: 'load-products', component: LoadProductComponent , canActivate: [AuthGuard]},
+  { path: 'load-items-for-po', component: LoadItemsComponent , canActivate: [AuthGuard]},
   { path: 'bills/add', component: AddBillComponent , canActivate: [AuthGuard]},
   { path: 'bills', component: ListBillComponent , canActivate: [AuthGuard]},
   { path: 'bills/:billId', component: ViewBillComponent , canActivate: [AuthGuard]},
