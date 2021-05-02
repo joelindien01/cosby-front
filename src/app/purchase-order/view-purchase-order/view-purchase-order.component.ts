@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {Item, ItemDto, PurchaseOrder} from "../PurchaseOrder";
+import {DeliveryNote, DeliveryNoteDTO, Item, ItemDto, PurchaseOrder} from "../PurchaseOrder";
 import {Observable} from "rxjs/Rx";
 import {PurchaseOrderService} from "../purchase-order.service";
 import {map, tap} from "rxjs/internal/operators";
@@ -11,6 +11,7 @@ import {concatMap} from "rxjs-compat/operator/concatMap";
 import {forkJoin} from "rxjs/index";
 import {BillService} from "../../bill/bill.service";
 import {DeliveryNoteService} from "../../delivery-note/delivery-note.service";
+import {CartService} from "../../cart/cart.service";
 
 
 @Component({
@@ -27,11 +28,15 @@ export class ViewPurchaseOrderComponent implements OnInit {
   totalAmount: number;
   netTotal: number;
   private show: boolean;
+  private po: PurchaseOrder;
+  private dn: any;
+  private items: Array<any>;
 
   constructor(private activatedRoute: ActivatedRoute,
               private orderService: PurchaseOrderService,
               private router: Router,
-              private spinner: NgxSpinnerService, private billService: BillService, private deliveryNoteService: DeliveryNoteService) {
+              private spinner: NgxSpinnerService, private billService: BillService, private deliveryNoteService: DeliveryNoteService,
+              private cartService: CartService) {
     this.show = false;
     this.spinner.show();
     if(!this.purchaseOrder$) {
@@ -41,6 +46,10 @@ export class ViewPurchaseOrderComponent implements OnInit {
           this.loadPurchaseOrder(purchaseOrderId);
         }
       });
+    } else{
+
+      this.purchaseOrder$.shareReplay().subscribe(po => this.po = po);
+
     }
   }
 
@@ -66,6 +75,7 @@ export class ViewPurchaseOrderComponent implements OnInit {
       }, 1000);
     } else if(isDefined(this.deliveryNote$)) {
       this.deliveryNote$.subscribe(res => {
+        this.dn = res;
         setTimeout(() => {
           this.spinner.hide();
           this.show = true;
@@ -86,7 +96,16 @@ export class ViewPurchaseOrderComponent implements OnInit {
     forkJoin([this.purchaseOrder$, this.items$]).subscribe(allResults => {
       this.spinner.hide();
       this.show = true;
+      this.po = allResults[0];
+      this.items = <Array<any>>allResults[1];
       console.log(allResults);
+      this.items = this.items.map(item => {
+        item.itemDTO.product = item.product;
+        item.itemDTO.overridePrice = true;
+
+        return item.itemDTO;
+      });
+
     });
   }
 
@@ -95,5 +114,22 @@ export class ViewPurchaseOrderComponent implements OnInit {
 
       this.router.navigate(['/delivery-notes/add', {customerId: order.customer.id, orderId: order.id}]).then();
     });
+  }
+
+  editDeliveryNote() {
+    this.deliveryNoteService.deliveryNote = this.dn;
+    this.router.navigate(['/delivery-notes/add', {customerId: this.dn.purchaseOrder.customer.id, orderId: this.dn.id}]).then();
+  }
+
+  editPO() {
+    this.orderService.po = this.po;
+    this.cartService.items = this.items;
+    this.router.navigate(['/purchase-order',{customerId: this.po.customer.id, poId: this.po.id}]).then();
+  }
+
+  editBill() {
+    this.billService.bill = this.bill;
+
+    this.router.navigate(['/bills/add', {deliveryNoteId: this.dn.id}]).then();
   }
 }

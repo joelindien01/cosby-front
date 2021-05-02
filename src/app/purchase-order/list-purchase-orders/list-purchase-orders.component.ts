@@ -8,6 +8,7 @@ import {map} from "rxjs/internal/operators";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ReferenceItem} from "../add-purchase-order/add-purchase-order.component";
 import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
+import {CartService} from "../../cart/cart.service";
 
 @Component({
   selector: 'app-list-purchase-orders',
@@ -25,10 +26,10 @@ export class ListPurchaseOrdersComponent implements OnInit {
   public orderMatTable: MatTableDataSource<OrderTable> = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns: string[] = ['orderId', 'customerName', 'creationDate', 'paymentStatus', 'actions'];
+  displayedColumns: string[] = ['orderId', 'customerName','vessel', 'creationDate', 'paymentStatus', 'actions'];
 
 
-  constructor(private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
+  constructor(private cartService: CartService, private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
     this.route.params.subscribe(params => {
       if (params['customerId']) {
         const customerId = params['customerId'];
@@ -68,6 +69,11 @@ export class ListPurchaseOrdersComponent implements OnInit {
 
   }
 
+  editPO(order) {
+    this.orderService.po = order;
+    this.router.navigate(['/purchase-order',{customerId: order.customerId, poId: order.id}]).then();
+  }
+
   private loadAllOrders() {
     this.purchaseOrderList$ = this.orderService.findAll().shareReplay();
   }
@@ -80,6 +86,8 @@ export class ListPurchaseOrdersComponent implements OnInit {
             let orderTable = new OrderTable();
             orderTable.id = purchaseOrder.id;
             orderTable.customerName = purchaseOrder.customer.name;
+            orderTable.vessel = purchaseOrder.deliveryInformation.vessel;
+
             orderTable.orderCreationDate = purchaseOrder.creationDate;
             orderTable.deliveryInformation = purchaseOrder.deliveryInformation;
             orderTable.customerId = purchaseOrder.customer.id;
@@ -113,6 +121,7 @@ export class ListPurchaseOrdersComponent implements OnInit {
 
 export class OrderTable {
   id: number;
+  vessel: string;
   customerId: number;
   orderCreationDate: Date;
   customerName: string;

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {DeliveryNoteService} from "../delivery-note.service";
@@ -13,7 +13,7 @@ import {Observable} from "rxjs/Rx";
   templateUrl: './add-delivery-note.component.html',
   styleUrls: ['./add-delivery-note.component.scss']
 })
-export class AddDeliveryNoteComponent implements OnInit {
+export class AddDeliveryNoteComponent implements OnInit, OnDestroy {
   public deliveryNoteForm: FormGroup;
   public orderId: number;
   calendarStartDate: Date;
@@ -65,6 +65,9 @@ export class AddDeliveryNoteComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(){
+    this.deliveryNoteService.deliveryNote = undefined;
+  }
 
 }
 

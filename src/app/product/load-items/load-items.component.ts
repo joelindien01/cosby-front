@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {ProductService} from "../product.service";
+import {CartService} from "../../cart/cart.service";
+import {Router} from "@angular/router";
+import {isDefined} from "@angular/compiler/src/util";
+import {isUndefined} from "util";
 
 @Component({
   selector: 'app-load-items',
@@ -8,7 +12,7 @@ import {ProductService} from "../product.service";
 })
 export class LoadItemsComponent implements OnInit {
 
-  constructor(public productService: ProductService) {
+  constructor(public productService: ProductService, public cartService: CartService, private router: Router) {
     this.productService.afuConfig.uploadAPI.url = this.productService.getLoadItemsForPOUrl();
     //this.productService.afuConfig.formatsAllowed = "csv";
   }
@@ -16,7 +20,17 @@ export class LoadItemsComponent implements OnInit {
   ngOnInit() {
   }
 
-  getReceivedItems($event: Event) {
-    console.log($event);
+  getReceivedItems($event: any) {
+    let results: Array<any> = $event.body;
+    if(isUndefined(results)) {
+      return;
+    }
+    results = results.map(result => {
+      result.item.product = result.product;
+      result.item.overridePrice = true;
+    return result.item;
+    });
+    this.cartService.items = results;
+    this.router.navigate(['/purchase-order',{customerId: 1}]).then();
   }
 }

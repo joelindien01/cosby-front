@@ -12,6 +12,7 @@ export class PurchaseOrderService {
 
   apiUrl = environment.apiUrl;
   baseUrl= this.apiUrl+"purchase-order/";
+  po: PurchaseOrder;
 
   constructor(private httpClient: HttpClient) {
   }

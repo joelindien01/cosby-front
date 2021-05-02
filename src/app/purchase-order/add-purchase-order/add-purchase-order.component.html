@@ -27,7 +27,7 @@
                 <div class="col-3">
                   <label>select currency</label>
                   <mat-form-field>
-                    <mat-select [errorStateMatcher]="matcher" formControlName="currency">
+                    <mat-select [compareWith]="compareFunction" [errorStateMatcher]="matcher" formControlName="currency">
                       <mat-option *ngFor="let currency of (currencyList$| async)" [value]="currency">{{currency.label}} ({{currency.symbol}})</mat-option>
                     </mat-select>
                     <mat-error *ngIf="poSetupForm.controls['currency'].touched && poSetupForm.controls['currency'].errors?.required">
@@ -38,7 +38,7 @@
                 <div class="col-3">
                   <label>select contact</label>
                   <mat-form-field>
-                    <mat-select [errorStateMatcher]="matcher" formControlName="contact">
+                    <mat-select [compareWith]="compareFunction" [errorStateMatcher]="matcher" formControlName="contact">
                       <mat-option *ngFor="let contact of (currentCustomer$| async)?.contacts" [value]="contact">{{contact.name}} ({{contact.contactFunction}})</mat-option>
                     </mat-select>
                     <mat-error *ngIf="poSetupForm.controls['contact'].touched && poSetupForm.controls['contact'].errors?.required">
@@ -49,7 +49,7 @@
                 <div class="col-3">
                     <label>select payment method</label>
                     <mat-form-field>
-                      <mat-select [errorStateMatcher]="matcher" formControlName="payMeans">
+                      <mat-select [compareWith]="payInfoCompare" [errorStateMatcher]="matcher" formControlName="payMeans">
                         <mat-option *ngFor="let payMean of paymentMeans" [value]="payMean.value">{{payMean.label}}</mat-option>
                       </mat-select>
                       <mat-error *ngIf="poSetupForm.controls['payMeans'].touched && poSetupForm.controls['payMeans'].errors?.required">
@@ -60,7 +60,7 @@
                 <div class="col-3">
                     <label>select payment status</label>
                     <mat-form-field>
-                      <mat-select [errorStateMatcher]="matcher" formControlName="payStatus">
+                      <mat-select [compareWith]="payInfoCompare" [errorStateMatcher]="matcher" formControlName="payStatus">
                         <mat-option *ngFor="let payStatus of paymentStatus" [value]="payStatus.value">{{payStatus.label}}</mat-option>
                       </mat-select>
                       <mat-error *ngIf="poSetupForm.controls['payStatus'].touched && poSetupForm.controls['payStatus'].errors?.required">

@@ -42,6 +42,7 @@ export class BillService {
 
   apiUrl = environment.apiUrl;
   baseUrl= this.apiUrl+"bill/";
+  bill: any;
 
   constructor(public dialog: MatDialog, private httpClient: HttpClient,
               private docGenerator: DocGeneratorService, private pdfService: PdfService, public datepipe: DatePipe) {}

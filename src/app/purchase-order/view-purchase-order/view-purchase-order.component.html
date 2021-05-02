@@ -10,6 +10,7 @@
       <div class="col-9 text-right" *ngIf="bill != undefined">
         <button mat-flat-button color="primary" class="mr-3 mb-1" (click)="generateBill(bill.id)">Generate Bill</button>
         <button mat-flat-button color="primary"  (click)="createCreditNote(bill.id)">Create Credit Note</button>
+        <button mat-flat-button color="primary"  (click)="editBill(bill)">Edit Bill</button>
       </div>
 
     </div>
@@ -60,6 +61,9 @@
         <button mat-flat-button color="primary" class="mr-3 mb-1" (click)="generateDeliveryNote(noteId.value)">Generate Delivery
           Note
         </button>
+        <input  #dn [value]="(deliveryNote$ | async)" type="hidden" />
+        <button mat-flat-button color="primary" class="mr-3 mb-1" (click)="editDeliveryNote(dn.value)">Edit Delivery Note
+        </button>
         <button mat-flat-button color="primary" (click)="createBill(noteId.value)">Create
           bill
         </button>
@@ -79,6 +83,9 @@
       </div>
       <div class="col-9 text-right" *ngIf="!title">
         <button mat-flat-button color="primary" (click)="createDeliveryNote()" class="mr-3 mb-1">Create delivery note</button>
+        <input  #po [value]="(purchaseOrder$ | async)" type="hidden" />
+        <input  #items [value]="(items$ | async)" type="hidden" />
+        <button mat-flat-button color="primary" (click)="editPO(purchaseOrder$, items.value)" class="mr-3 mb-1">Edit Purchase Order</button>
 
       </div>
 
@@ -130,10 +137,10 @@
       </thead>
       <tbody>
       <tr *ngFor="let item of (items$ |async)">
-        <td>{{ item.productName }}</td>
-        <td class="text-right">{{ item.quantity }}</td>
-        <td class="text-right">{{ item.unit }} {{item.unitOfMeasurement?.symbol}}</td>
-        <td class="text-right">{{ item.amount }}</td>
+        <td>{{ item.itemDTO.productName }}</td>
+        <td class="text-right">{{ item.itemDTO.quantity }} {{item.itemDTO.unitOfMeasurement?.symbol}}</td>
+        <td class="text-right">{{ item.itemDTO.unit }}</td>
+        <td class="text-right">{{ item.itemDTO.amount }}</td>
       </tr>
       <tr>
 

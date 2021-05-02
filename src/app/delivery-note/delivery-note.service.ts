@@ -26,6 +26,7 @@ export class DelNoteData{
   providedIn: 'root'
 })
 export class DeliveryNoteService {
+  deliveryNote: DeliveryNote;
 
   constructor(public billService: BillService, public datepipe: DatePipe, private pdfService: PdfService, private httpClient: HttpClient, private docGenerator: DocGeneratorService, private poService: PurchaseOrderService) { }
 

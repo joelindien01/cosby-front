@@ -27,7 +27,7 @@ export class ListDeliveryNoteComponent implements OnInit {
   delNotesSearchForm: FormGroup;
   public paymentMethod: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
-  displayedColumns: string[] = ['note', 'po', 'deliveryDate', 'creationDate', 'actions'];
+  displayedColumns: string[] = ['note', 'po', 'deliveryDate','customerName','vessel', 'creationDate', 'actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   public delNoteMatTable: MatTableDataSource<DeliveryNoteTable> = new MatTableDataSource();
@@ -101,6 +101,8 @@ export class ListDeliveryNoteComponent implements OnInit {
             let deliveryNoteTable = new DeliveryNoteTable();
             deliveryNoteTable.purchaseOrderId = deliveryNote.purchaseOrder.id;
             deliveryNoteTable.deliveryDate = deliveryNote.deliveryDate;
+            deliveryNoteTable.vessel = deliveryNote.purchaseOrder.deliveryInformation.vessel;
+            deliveryNoteTable.customerName = deliveryNote.purchaseOrder.customer.name;
             deliveryNoteTable.creationDate = deliveryNote.creationDate;
             deliveryNoteTable.deliveryNoteId = deliveryNote.id;
             return deliveryNoteTable;
@@ -133,4 +135,6 @@ export class DeliveryNoteTable {
   purchaseOrderId;
   deliveryDate;
   creationDate;
+  customerName;
+  vessel;
 }

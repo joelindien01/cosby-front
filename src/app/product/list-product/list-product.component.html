@@ -19,7 +19,7 @@
         <form id="search-form" [formGroup]="productSearchForm">
           <div class="row">
             <div class="form-group col-9">
-              <input class="form-control" formControlName="productNameCSV" type="text" placeholder="Search" />
+              <input (keydown.enter)="findProduct()" class="form-control" formControlName="productNameCSV" type="text" placeholder="Search" />
             </div>
             <div class="form-group col-3">
               <button type="button" class="btn btn-block btn-primary" (click)="findProduct()"><fa-icon icon="search"></fa-icon></button>
@@ -56,7 +56,9 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                  <input [errorStateMatcher]="matcher" matInput min="1" formControlName="quantity" placeholder="Quantity" type="number"
+                  <input (keyup)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value,  p.index, $event)"
+                         (click)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value)"
+                         [errorStateMatcher]="matcher" matInput min="1" formControlName="quantity" placeholder="Quantity" type="number"
                          class="form-control input-md" required="">
                   <mat-error *ngIf="itemsSetupForm?.controls['items']?.controls[p.index].get('quantity')?.touched && itemsSetupForm?.controls['items'].controls[p.index].get('quantity')?.errors?.required">
                     Quantity is <strong>required</strong>
@@ -64,8 +66,8 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                  <mat-select [errorStateMatcher]="matcher" [compareWith]="comparePriceFunction" placeholder="Select the price you want to apply" formControlName="unit">
-                    <mat-option *ngFor="let price of itemsSetupForm?.controls['items'].controls[p.index].get('product')?.value.prices" [value]="price.value">{{price.label}} ->
+                  <mat-select  [errorStateMatcher]="matcher" [compareWith]="comparePriceFunction" placeholder="Select the price you want to apply" formControlName="unit">
+                    <mat-option (click)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value)" *ngFor="let price of itemsSetupForm?.controls['items'].controls[p.index].get('product')?.value.prices" [value]="price.value">{{price.label}} ->
                       {{price.value}}
                     </mat-option>
                   </mat-select>
@@ -75,8 +77,8 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                  <mat-select [errorStateMatcher]="matcher" [compareWith]="compareFunction" placeholder="Unit of Measurement" formControlName="unitOfMeasurement">
-                    <mat-option *ngFor="let uom of itemsSetupForm?.controls['items'].controls[p.index].get('product')?.value.uomSet" [value]="uom">{{uom.label}} (
+                  <mat-select  [errorStateMatcher]="matcher" [compareWith]="compareFunction" placeholder="Unit of Measurement" formControlName="unitOfMeasurement">
+                    <mat-option (click)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value)" *ngFor="let uom of itemsSetupForm?.controls['items'].controls[p.index].get('product')?.value.uomSet" [value]="uom">{{uom.label}} (
                       {{uom.symbol}})
                     </mat-option>
                   </mat-select>
@@ -87,13 +89,16 @@
 
                 <div>
                   <label>Override the price?</label>
-                  <input  type="checkbox" name="overridePrice" formControlName="overridePrice">
+                  <input (click)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value)" type="checkbox" name="overridePrice" formControlName="overridePrice">
                 </div>
                 <div *ngIf="itemsSetupForm?.controls['items'].controls[p.index].get('overridePrice')?.value">
                   <mat-form-field>
-                    <input min="1" [errorStateMatcher]="matcher" placeholder="Unit price" matInput formControlName="unit" type="number" class="form-control input-md" required="">
+                    <input (keyup)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value, p.index)"
+                           (click)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value)"
+                           min="1" [errorStateMatcher]="matcher" placeholder="Unit price" matInput formControlName="unit" type="number" class="form-control input-md" required="">
                     <mat-error *ngIf="itemsSetupForm?.controls['items']?.controls[p.index].get('unit')?.touched && itemsSetupForm?.controls['items'].controls[p.index].get('unit')?.errors?.required">
                       Unit price is <strong>required</strong>
+
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -120,7 +125,7 @@
     </form>
 
     <mat-paginator
-      (page)="pageEvent = onPageChange($event)"
+      (page)="500"
       [length]="(productTable)?.data?.length"
       [pageSize]="10"
       [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BillService} from "../bill.service";
 import {Account, BillDTO} from "../bill";
@@ -13,7 +13,7 @@ import {UserService} from "../../common/user.service";
   templateUrl: './add-bill.component.html',
   styleUrls: ['./add-bill.component.scss']
 })
-export class AddBillComponent implements OnInit {
+export class AddBillComponent implements OnInit, OnDestroy {
   public billForm: FormGroup;
   public applyDiscount: boolean;
   public orderId: number;
@@ -110,5 +110,9 @@ export class AddBillComponent implements OnInit {
     const deadlineDate = new Date().setDate(new Date().getDate() +nbDays);
     this.billForm.controls['deadLine'].setValue(new Date(deadlineDate));
     console.log(this.billForm.controls['deadLine'].value);
+  }
+
+  ngOnDestroy() {
+    this.billService.bill = undefined;
   }
 }

@@ -13,7 +13,7 @@
     <form id="search-form" [formGroup]="customerSearchForm">
       <div class="row">
         <div class="form-group col-9">
-          <input class="form-control" formControlName="customerNameCSV" type="text" placeholder="Search" />
+          <input (keydown.enter)="findCustomer()" class="form-control" formControlName="customerNameCSV" type="text" placeholder="Search" />
         </div>
         <div class="form-group col-3">
           <button type="button" class="btn btn-block btn-primary" (click)="findCustomer()"><fa-icon icon="search"></fa-icon></button>

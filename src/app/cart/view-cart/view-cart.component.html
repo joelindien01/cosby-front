@@ -10,6 +10,7 @@
   </div>
   <div class="col-12 modal-footer">
     <button mat-flat-button color="warn" (click)="dialogRef.close()">Go Back To product</button>
+    <button mat-flat-button color="warn" (click)="emptyCart()">Empty cart</button>
     <button mat-flat-button *ngIf="cartService.selectedCustomer != undefined" color="warn" (click)="cartService.selectedCustomer = undefined">Select another customer</button>
     <button mat-flat-button *ngIf="cartService.selectedCustomer != undefined && cartService.items.length >0" color="primary" (click)="goToPurchaseOrderPage()">Place Order</button>
 

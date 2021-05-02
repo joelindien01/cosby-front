@@ -15,14 +15,14 @@
 
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker7" placeholder="Bill created after" formControlName="billCreatedAfter" name="billCreatedAfter"/>
+              <input matInput (keydown.enter)="findBills()" [matDatepicker]="picker7" placeholder="Bill created after" formControlName="billCreatedAfter" name="billCreatedAfter"/>
               <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
               <mat-datepicker #picker7></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker8" placeholder="Bill created before" formControlName="billCreatedBefore" name="billCreatedBefore"/>
+              <input matInput (keydown.enter)="findBills()" [matDatepicker]="picker8" placeholder="Bill created before" formControlName="billCreatedBefore" name="billCreatedBefore"/>
               <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
               <mat-datepicker #picker8></mat-datepicker>
             </mat-form-field>
@@ -30,14 +30,14 @@
 
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker9" placeholder="Deadline after" formControlName="deadlineAfter" name="deadlineAfter"/>
+              <input matInput (keydown.enter)="findBills()" [matDatepicker]="picker9" placeholder="Deadline after" formControlName="deadlineAfter" name="deadlineAfter"/>
               <mat-datepicker-toggle matSuffix [for]="picker9"></mat-datepicker-toggle>
               <mat-datepicker #picker9></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker10" placeholder="Deadline before" formControlName="deadlineBefore" name="deadlineBefore"/>
+              <input matInput (keydown.enter)="findBills()" [matDatepicker]="picker10" placeholder="Deadline before" formControlName="deadlineBefore" name="deadlineBefore"/>
               <mat-datepicker-toggle matSuffix [for]="picker10"></mat-datepicker-toggle>
               <mat-datepicker #picker10></mat-datepicker>
             </mat-form-field>
@@ -45,14 +45,14 @@
 
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker1" placeholder="Note created after" formControlName="noteCreatedAfter" name="noteCreatedAfter"/>
+              <input matInput (keydown.enter)="findBills()" [matDatepicker]="picker1" placeholder="Note created after" formControlName="noteCreatedAfter" name="noteCreatedAfter"/>
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
               <mat-datepicker #picker1></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker2" placeholder="Note created before" formControlName="noteCreatedBefore" name="noteCreatedBefore"/>
+              <input matInput (keydown.enter)="findBills()" [matDatepicker]="picker2" placeholder="Note created before" formControlName="noteCreatedBefore" name="noteCreatedBefore"/>
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
@@ -60,14 +60,14 @@
 
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker3" placeholder="PO created after" formControlName="poCreatedAfter" name="orderCreationDateFrom"/>
+              <input matInput (keydown.enter)="findBills()" [matDatepicker]="picker3" placeholder="PO created after" formControlName="poCreatedAfter" name="orderCreationDateFrom"/>
               <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
               <mat-datepicker #picker3></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker4" placeholder="PO created before" formControlName="poCreatedBefore" name="orderCreationDateTo"/>
+              <input matInput (keydown.enter)="findBills()" [matDatepicker]="picker4" placeholder="PO created before" formControlName="poCreatedBefore" name="orderCreationDateTo"/>
               <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
               <mat-datepicker #picker4></mat-datepicker>
             </mat-form-field>
@@ -75,14 +75,14 @@
 
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker5" placeholder="To be deliver after" formControlName="toBeDeliveredAfter" name="orderCreationDateFrom"/>
+              <input matInput (keydown.enter)="findBills()" [matDatepicker]="picker5" placeholder="To be deliver after" formControlName="toBeDeliveredAfter" name="orderCreationDateFrom"/>
               <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
               <mat-datepicker #picker5></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="form-group col-3">
             <mat-form-field>
-              <input matInput [matDatepicker]="picker6" placeholder="To be deliver before" formControlName="toBeDeliveredBefore" name="orderCreationDateTo"/>
+              <input (keydown.enter)="findBills()" matInput [matDatepicker]="picker6" placeholder="To be deliver before" formControlName="toBeDeliveredBefore" name="orderCreationDateTo"/>
               <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
               <mat-datepicker #picker6></mat-datepicker>
             </mat-form-field>
@@ -105,20 +105,20 @@
         </div>
         <div class="row">
           <div class="form-group col-3">
-            <input class="form-control" formControlName="discount" type="text" placeholder="Discount value" />
+            <input (keydown.enter)="findBills()" class="form-control" formControlName="discount" type="text" placeholder="Discount value" />
           </div>
 
           <div class="form-group col-3">
-            <input class="form-control" formControlName="noteIdCSV" type="text" placeholder="Note Id" />
+            <input (keydown.enter)="findBills()" class="form-control" formControlName="noteIdCSV" type="text" placeholder="Note Id" />
           </div>
           <div class="form-group col-3">
-            <input class="form-control" formControlName="purchaseOrderIdCSV" type="text" placeholder="PO Id" />
+            <input (keydown.enter)="findBills()" class="form-control" formControlName="purchaseOrderIdCSV" type="text" placeholder="PO Id" />
           </div>
           <div class="form-group col-3">
-            <input class="form-control" formControlName="billId" type="text" placeholder="Bill Id" />
+            <input (keydown.enter)="findBills()" class="form-control" formControlName="billId" type="text" placeholder="Bill Id" />
           </div>
           <div class="form-group col-9">
-            <input class="form-control" formControlName="customerNameCSV" type="text" placeholder="Customer name" />
+            <input (keydown.enter)="findBills()" class="form-control" formControlName="customerNameCSV" type="text" placeholder="Customer name" />
           </div>
           <div class="form-group col-3 ">
             <button type="button" class="btn btn-block btn-primary" (click)="findBills()"><fa-icon icon="search"></fa-icon></button>

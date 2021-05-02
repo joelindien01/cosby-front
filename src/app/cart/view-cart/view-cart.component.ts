@@ -23,4 +23,8 @@ export class ViewCartComponent implements OnInit {
     this.dialogRef.close();
     this.router.navigate(['/purchase-order', {customerId: this.cartService.selectedCustomer.id}]).then();
   }
+
+  emptyCart() {
+    this.cartService.items = [];
+  }
 }

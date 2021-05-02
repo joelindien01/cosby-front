@@ -14,6 +14,7 @@ import {UserService} from "../../common/user.service";
 import {DecoEnumPoRoles, DecoEnumProductRoles, EnumProductRoles} from "../../user/roles.enum";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {isDefined} from "@angular/compiler/src/util";
+import {isUndefined} from "util";
 
 @Component({
   selector: 'app-list-product',
@@ -89,7 +90,7 @@ export class ListProductComponent implements OnInit {
     this.cartService.removeFromCart(product);
   }
   compareFunction(o1: any, o2: any) {
-    return (o1.id == o2.id);
+    return (isDefined(o1) && isDefined(o2) && o1.id == o2.id);
   }
 
   comparePriceFunction(o1: any, o2: any) {
@@ -103,6 +104,7 @@ export class ListProductComponent implements OnInit {
       existingProduct = this.cartService.findCardItemById(product.id);
     }
     (<FormArray>this.itemsSetupForm.get('items')).push(this.fb.group({
+      id:[existingProduct != undefined ? existingProduct.id : null],
       product: [product],
       overridePrice: existingProduct != undefined ? existingProduct.overridePrice : false,
       description: [''],
@@ -141,6 +143,7 @@ export class ListProductComponent implements OnInit {
       this.show = true;
       this.spinner.hide();
 
+
     });
 
     this.products$.subscribe(products => this.products = products);
@@ -177,10 +180,6 @@ export class ListProductComponent implements OnInit {
       item.product.id == p.id ) == -1;
   }
 
-  onPageChange($event: Event) {
-    this.pageEvent;
-  }
-
   getControlFromProduct(p) {
     return (<Array<FormGroup>>(<FormArray>this.itemsSetupForm.controls['items']).controls).findIndex( itemControl => {
         const itemCt = itemControl.controls['product'].value;
@@ -195,6 +194,23 @@ export class ListProductComponent implements OnInit {
 
   getPositions() {
     return Array.from(new Array(this.cartService.items.length), (x, i) => i);​​​​​​
+  }
+
+  changeValue(value, index?, event?) {
+    Observable.from([value]).debounceTime(1000).subscribe(event => {
+      if(isDefined(index)) {
+        value = (<Array<FormGroup>>(<FormArray>this.itemsSetupForm.controls['items']).controls)[index].value;
+      }
+      if(isUndefined(this.cartService.items)){
+        return;
+      }
+      const i = this.cartService.getItemPosition(value);
+      if(i > 0) {
+        this.cartService.items[i-1] = value;
+      }
+    });
+
+
   }
 }
 

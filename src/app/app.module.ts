@@ -43,6 +43,7 @@ import {AddAccountComponent} from "./account/add-account/add-account.component";
 import {ListAccountComponent} from "./account/list-account/list-account.component";
 import {ResetPasswordComponent} from "./user/reset-password/reset-password.component";
 import {LoadItemsComponent} from "./product/load-items/load-items.component";
+import {ShortcutService} from "./shortcut.service";
 
 
 const appRoutes: Routes = [
@@ -100,7 +101,7 @@ const appRoutes: Routes = [
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [],
+  providers: [ShortcutService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
 })

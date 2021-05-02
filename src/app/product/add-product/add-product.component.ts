@@ -73,12 +73,12 @@ export class AddProductComponent implements OnInit {
     if (prices) {
       formModel = prices.map(price => this.fb.group({
         id: price.id,
-        label: [price.label, Validators.required],
+        label: [price.label],
         value: [price.value, Validators.required]
       }));
     } else {
       formModel = this.fb.group({
-        label: ['', Validators.required],
+        label: [''],
         value: ['', Validators.required]
       });
     }

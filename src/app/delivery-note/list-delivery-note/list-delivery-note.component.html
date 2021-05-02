@@ -13,14 +13,14 @@
 
                 <div class="form-group col-3">
                   <mat-form-field>
-                    <input matInput [matDatepicker]="picker1" placeholder="Note created after" formControlName="noteCreatedAfter" name="orderCreationDateFrom"/>
+                    <input (keydown.enter)="findNotes()" matInput [matDatepicker]="picker1" placeholder="Note created after" formControlName="noteCreatedAfter" name="orderCreationDateFrom"/>
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                   </mat-form-field>
                 </div>
                 <div class="form-group col-3">
                   <mat-form-field>
-                    <input matInput [matDatepicker]="picker2" placeholder="Note created before" formControlName="noteCreatedBefore" name="orderCreationDateTo"/>
+                    <input (keydown.enter)="findNotes()" matInput [matDatepicker]="picker2" placeholder="Note created before" formControlName="noteCreatedBefore" name="orderCreationDateTo"/>
                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                   </mat-form-field>
@@ -28,14 +28,14 @@
 
                 <div class="form-group col-3">
                   <mat-form-field>
-                    <input matInput [matDatepicker]="picker3" placeholder="PO created after" formControlName="poCreatedAfter" name="orderCreationDateFrom"/>
+                    <input (keydown.enter)="findNotes()" matInput [matDatepicker]="picker3" placeholder="PO created after" formControlName="poCreatedAfter" name="orderCreationDateFrom"/>
                     <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                     <mat-datepicker #picker3></mat-datepicker>
                   </mat-form-field>
                 </div>
                 <div class="form-group col-3">
                   <mat-form-field>
-                    <input matInput [matDatepicker]="picker4" placeholder="PO created before" formControlName="poCreatedBefore" name="orderCreationDateTo"/>
+                    <input (keydown.enter)="findNotes()" matInput [matDatepicker]="picker4" placeholder="PO created before" formControlName="poCreatedBefore" name="orderCreationDateTo"/>
                     <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                     <mat-datepicker #picker4></mat-datepicker>
                   </mat-form-field>
@@ -43,14 +43,14 @@
 
                 <div class="form-group col-3">
                   <mat-form-field>
-                    <input matInput [matDatepicker]="picker5" placeholder="To be deliver after" formControlName="toBeDeliveredAfter" name="orderCreationDateFrom"/>
+                    <input (keydown.enter)="findNotes()" matInput [matDatepicker]="picker5" placeholder="To be deliver after" formControlName="toBeDeliveredAfter" name="orderCreationDateFrom"/>
                     <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
                     <mat-datepicker #picker5></mat-datepicker>
                   </mat-form-field>
                 </div>
                 <div class="form-group col-3">
                   <mat-form-field>
-                    <input matInput [matDatepicker]="picker6" placeholder="To be deliver before" formControlName="toBeDeliveredBefore" name="orderCreationDateTo"/>
+                    <input (keydown.enter)="findNotes()" matInput [matDatepicker]="picker6" placeholder="To be deliver before" formControlName="toBeDeliveredBefore" name="orderCreationDateTo"/>
                     <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
                     <mat-datepicker #picker6></mat-datepicker>
                   </mat-form-field>
@@ -73,13 +73,13 @@
               </div>
               <div class="row">
                 <div class="form-group col-3">
-                  <input class="form-control" formControlName="customerNameCSV" type="text" placeholder="Customer name" />
+                  <input (keydown.enter)="findNotes()" class="form-control" formControlName="customerNameCSV" type="text" placeholder="Customer name" />
                 </div>
                 <div class="form-group col-3">
-                  <input class="form-control" formControlName="noteIdCSV" type="text" placeholder="Note Id" />
+                  <input (keydown.enter)="findNotes()" class="form-control" formControlName="noteIdCSV" type="text" placeholder="Note Id" />
                 </div>
                 <div class="form-group col-3">
-                  <input class="form-control" formControlName="purchaseOrderIdCSV" type="text" placeholder="PO Id" />
+                  <input (keydown.enter)="findNotes()" class="form-control" formControlName="purchaseOrderIdCSV" type="text" placeholder="PO Id" />
                 </div>
                 <div class="form-group col-3 ">
                   <button type="button" class="btn btn-block btn-primary" (click)="findNotes()"><fa-icon icon="search"></fa-icon></button>
@@ -102,6 +102,15 @@
         <th mat-header-cell *matHeaderCellDef> Delivery Note Id </th>
         <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.deliveryNoteId}} </td>
       </ng-container>
+      <ng-container matColumnDef="customerName">
+        <th mat-header-cell *matHeaderCellDef> Customer Name </th>
+        <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.customerName}} </td>
+      </ng-container>
+      <ng-container matColumnDef="vessel">
+        <th mat-header-cell *matHeaderCellDef> Vessel </th>
+        <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.vessel}} </td>
+      </ng-container>
+
       <ng-container matColumnDef="po">
         <th mat-header-cell *matHeaderCellDef> PO </th>
         <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.purchaseOrderId}} </td>
