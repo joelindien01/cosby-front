@@ -74,39 +74,10 @@
                 </div>
               </div>
             </form>
-
-            <!--<form [formGroup]="poSetupForm">
-              <div class="row">
-                <div class="col-6">
-                  <mat-form-field>
-                    <input matInput formControlName="poNumber" placeholder="PO Number" type="text"
-                           class="form-control input-md" required="">
-                  </mat-form-field>
-                </div>
-                <div class="col-6">
-                  <mat-form-field>
-                    <mat-select placeholder="Select the currency for this PO" formControlName="currency">
-                      <mat-option *ngFor="let currency of (currencyList$| async)" [value]="currency">{{currency.label}} ({{currency.symbol}})</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-              <button *ngIf="poSetupForm.get('poNumber').value && poSetupForm.get('currency').value" (click)="addSetupToProduct()" mat-flat-button color="primary" type="button" matStepperNext>
-                Next
-              </button>
-            </form>
-            <form [formGroup]="deliveryAddressForm">
-              <label> select delivery address</label>
-              <div *ngFor="let information of customer.deliveryInformations">
-                <input name="address" type="radio" [value]="information" formControlName="address">
-                <p> {{information |json}}</p>
-              </div>
-            </form>
-            <form [formGroup]="paymentInfoForm">-->
           </div>
         </div>
       </mat-expansion-panel>
-      <mat-expansion-panel>
+      <mat-expansion-panel *ngIf="!poId">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <h6>Products</h6>

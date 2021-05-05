@@ -1,6 +1,7 @@
 import {Address, Contact, Customer, DeliveryInformation} from "../customer/customer";
 import {Product} from "../product/product";
 import {Currency, UnitOfMeasurement} from "../uom/UnitOfMeasurement";
+import {ObjectStatus} from "./list-purchase-orders/list-purchase-orders.component";
 
 export class PurchaseOrder {
   id: number;
@@ -12,6 +13,7 @@ export class PurchaseOrder {
   paymentInformation: any;
   poNumber: string;
   contactInfo: Contact;
+  status: ObjectStatus;
 }
 
 export class Item {
@@ -49,6 +51,12 @@ export class DeliveryNote {
   purchaseOrder: PurchaseOrder;
   deliveryDate: Date;
   creationDate: Date;
+  ourSignatory: string;
+  ourSignatoryFunction: string;
+  customerSignatory: string;
+  customerSignatoryFunction: string;
+  status: ObjectStatus;
+  emitter: any;
 }
 
 export class DeliveryNoteDTO {

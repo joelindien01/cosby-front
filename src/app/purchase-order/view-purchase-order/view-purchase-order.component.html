@@ -9,7 +9,7 @@
       </div>
       <div class="col-9 text-right" *ngIf="bill != undefined">
         <button mat-flat-button color="primary" class="mr-3 mb-1" (click)="generateBill(bill.id)">Generate Bill</button>
-        <button mat-flat-button color="primary"  (click)="createCreditNote(bill.id)">Create Credit Note</button>
+        <button mat-flat-button color="primary" class="mr-3 mb-1"  (click)="createCreditNote(bill.id)">Create Credit Note</button>
         <button mat-flat-button color="primary"  (click)="editBill(bill)">Edit Bill</button>
       </div>
 
@@ -30,11 +30,12 @@
                 <p>Bill n° {{ (bill)?.id }}</p>
                 <p>Deadline: {{ (bill)?.deadLine | date }}</p>
                 <p>Creation Date: {{ (bill)?.creationDate | date }} (by {{ bill?.emitter }})</p>
+                <p>Status: {{ (bill)?.status?.status }}</p>
               </div>
               <div class="col-8">
                 <p>Our Signatory: {{ (bill)?.ourSignatory }} <span *ngIf="true">({{ (bill)?.ourSignatoryFunction }})</span></p>
                 <p>Customer Signatory: {{ (bill)?.customerSignatory }} <span *ngIf="true">({{ (bill)?.customerSignatoryFunction }})</span></p>
-                <p>Impacted Account: {{ (bill)?.impactedAccount.bankName }} -<br> {{ (bill)?.impactedAccount.reference }} </p>
+                <p>Impacted Account: {{ (bill)?.impactedAccount?.bankName }} -<br> {{ (bill)?.impactedAccount?.reference }} </p>
               </div>
             </div>
           </div>
@@ -52,6 +53,7 @@
             <p>Delivery date: {{ (deliveryNote$ |async)?.deliveryDate |date }}</p>
             <p>Our Signatory: {{ (deliveryNote$ |async)?.ourSignatory }} <span *ngIf="true">({{ (deliveryNote$ |async)?.ourSignatoryFunction }})</span></p>
             <p>Customer Signatory: {{ (deliveryNote$ |async)?.customerSignatory }} <span *ngIf="true">({{ (deliveryNote$ |async)?.customerSignatoryFunction }})</span></p>
+            <p>Status: {{ (deliveryNote$ |async)?.status?.status }}</p>
 
           </div>
         </div>
@@ -110,6 +112,7 @@
           <div class="col-4">
             <h6>References</h6>
             <p>Our Ref° {{(purchaseOrder$|async)?.id}}</p>
+            <p>Status: {{(purchaseOrder$|async)?.status?.status}}</p>
             <p>Customer Ref° {{(purchaseOrder$|async)?.poNumber}}</p>
             <p>Created on {{(purchaseOrder$|async)?.creationDate |date }} (by {{ (purchaseOrder$|async)?.emitter?.username }})</p>
             <p>Currency: {{(purchaseOrder$|async)?.paymentInformation.currency.label }} ({{(purchaseOrder$|async)?.paymentInformation.currency.symbol }})</p>
@@ -129,6 +132,7 @@
     <table class="table table-bordered">
       <thead>
 
+      <th>N°</th>
       <th>Product Name</th>
       <th class="text-right">Quantity</th>
       <th class="text-right">Price</th>
@@ -136,7 +140,9 @@
 
       </thead>
       <tbody>
-      <tr *ngFor="let item of (items$ |async)">
+      <tr *ngFor="let item of sort((items$ |async))">
+
+        <td>{{ item.itemDTO.position }}</td>
         <td>{{ item.itemDTO.productName }}</td>
         <td class="text-right">{{ item.itemDTO.quantity }} {{item.itemDTO.unitOfMeasurement?.symbol}}</td>
         <td class="text-right">{{ item.itemDTO.unit }}</td>
@@ -182,7 +188,7 @@
         <td></td>
         <td></td>
         <td>NET TOTAL</td>
-        <td colspan="4" class="text-right">{{(purchaseOrder$|async)?.totalAmount * (100 - this.bill.discount)/100 + bill.transportationFee + bill.deliveryFee}} {{(purchaseOrder$|async)?.paymentInformation.currency.symbol}}</td>
+        <td colspan="4" class="text-right">{{((purchaseOrder$|async)?.totalAmount * (100 - this.bill.discount)/100 + bill.transportationFee + bill.deliveryFee) | number:'1.0-2'}} {{(purchaseOrder$|async)?.paymentInformation.currency.symbol }}</td>
       </tr>
       </tbody>
     </table>

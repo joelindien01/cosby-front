@@ -1,12 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {BillService} from "../bill.service";
-import {Account, BillDTO} from "../bill";
-import {ActivatedRoute} from "@angular/router";
+import {Account, Bill, BillDTO} from "../bill";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs/Rx";
 import {AccountService} from "../../account/account.service";
 import {MyErrorStateMatcher} from "../../common/multi-addable-form";
 import {UserService} from "../../common/user.service";
+import {isDefined} from "@angular/compiler/src/util";
+import {isUndefined} from "util";
 
 @Component({
   selector: 'app-add-bill',
@@ -22,23 +24,27 @@ export class AddBillComponent implements OnInit, OnDestroy {
   matcher;
   users$: Observable<Array<any>>;
 
-  constructor(private userService: UserService, private fb: FormBuilder, private billService: BillService, private accountService :AccountService , private route: ActivatedRoute) {
+
+  constructor(private router: Router, private userService: UserService, private fb: FormBuilder, private billService: BillService, private accountService :AccountService , private route: ActivatedRoute) {
 
     this.users$ = this.userService.findAllUsers();
     this.accounts$ = this.accountService.findAllAccounts();
+    const bill: Bill = isDefined(this.billService.bill) ? this.billService.bill : undefined;
+    const deadLine = isDefined(bill) ? new Date(bill.deadLine) : new Date();
     this.billForm = this.fb.group({
-      deadLine: new FormControl(new Date(), Validators.required),
-      discount: [0, Validators.required],
-      applyDiscount: [false],
+      id: isDefined(bill) ? bill.id : null,
+      deadLine: new FormControl(deadLine, Validators.required),
+      discount: [isDefined(bill) ? bill.discount :0, Validators.required],
+      applyDiscount: [isDefined(bill) && bill.discount > 0],
       deadlines: [],
-      deliveryFee: [0, Validators.required],
-      transportationFee: [0, Validators.required],
-      ourSignatoryObject: [null, Validators.required],
-      ourSignatory: [null, Validators.required],
-      ourSignatoryFunction: [{value:'', disabled: false },Validators.required],
-      customerSignatory: [null],
-      customerSignatoryFunction: [{value:'', disabled: false }],
-      impactedAccount: [null,Validators.required]
+      deliveryFee: [isDefined(bill) ? bill.deliveryFee : 0, Validators.required],
+      transportationFee: [isDefined(bill) ? bill.transportationFee : 0, Validators.required],
+      ourSignatoryObject: [null],
+      ourSignatory: [isDefined(bill) ? bill.ourSignatory : '', Validators.required],
+      ourSignatoryFunction: [{value:isDefined(bill) ? bill.ourSignatoryFunction : '', disabled: false },Validators.required],
+      customerSignatory: [isDefined(bill) ? bill.customerSignatory : ''],
+      customerSignatoryFunction: [{value:isDefined(bill) ? bill.customerSignatoryFunction : '', disabled: false }],
+      impactedAccount: [isDefined(bill) ? bill.impactedAccount : null]
     });
 
     this.route.params.subscribe(params => {
@@ -65,6 +71,10 @@ export class AddBillComponent implements OnInit, OnDestroy {
     this.billForm.controls['deadlines'].valueChanges.subscribe(value => {
       this.computeDeadline();
     });
+  }
+
+  compareFunction(o1, o2) {
+    return (isDefined(o1) && isDefined(o2) && o1.id == o2.id);
   }
 
   ngOnInit() {
@@ -102,6 +112,7 @@ export class AddBillComponent implements OnInit, OnDestroy {
     bill.deliveryNoteId = this.orderId;
     this.billService.saveBill(bill).subscribe(result => {
       alert("bill saved");
+      this.router.navigateByUrl("/bills/"+result).then();
     });
   }
 

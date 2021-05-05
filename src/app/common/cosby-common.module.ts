@@ -34,9 +34,10 @@ import {NgxSpinnerModule} from "ngx-spinner";
 import {faCartPlus} from "@fortawesome/free-solid-svg-icons/faCartPlus";
 import {faShoppingCart} from "@fortawesome/free-solid-svg-icons/faShoppingCart";
 import {PdfService} from "./pdf.service";
+import { StatusComponent } from './status/status.component';
 
 @NgModule({
-  declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
+  declarations: [AddressComponent, ShipComponent, ContactComponent, EmailAddressComponent, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent, StatusComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -49,8 +50,9 @@ import {PdfService} from "./pdf.service";
     NgxSpinnerModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule, ShContextMenuModule, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent],
-  providers: [DatePipe, ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService,PdfService, {provide:HTTP_INTERCEPTORS, useClass: BasicAuthHttpInterceptorService, multi:true}]
+  exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule, ShContextMenuModule, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent, StatusComponent],
+  providers: [DatePipe, ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService,PdfService, {provide:HTTP_INTERCEPTORS, useClass: BasicAuthHttpInterceptorService, multi:true}],
+  entryComponents: [StatusComponent]
 })
 export class CosbyCommonModule {
 

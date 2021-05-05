@@ -1,12 +1,27 @@
-<div class="row">
+<div class="row" >
   <div class="col-12">
     <h2>Load Items For PO</h2>
+    <div class="row" *ngIf="cartService.selectedCustomer == undefined">
+      <div class="col-12">
+        <app-list-customer></app-list-customer>
+      </div>
+    </div>
 
-    <div class="row">
+    <div class="row" *ngIf="cartService.selectedCustomer != undefined">
+      <div class="col-12">
+        <p>You will place order for customer: <strong>{{cartService.selectedCustomer.name}}</strong></p>
+      </div>
+      <div class="col-4 mb-1">
 
-      <angular-file-uploader
-        [config]="productService.afuConfig" (ApiResponse)="getReceivedItems($event)">
-      </angular-file-uploader>
+        <button mat-flat-button *ngIf="cartService.selectedCustomer != undefined" color="warn" (click)="cartService.selectedCustomer = undefined">Select another customer</button>
+      </div>
+      <div class="col-12">
+        <angular-file-uploader
+          [config]="productService.afuConfig" (ApiResponse)="getReceivedItems($event)">
+        </angular-file-uploader>
+      </div>
+
+
 
     </div>
   </div>

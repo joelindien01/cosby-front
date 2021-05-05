@@ -81,6 +81,19 @@
                 <div class="form-group col-3">
                   <input (keydown.enter)="findNotes()" class="form-control" formControlName="purchaseOrderIdCSV" type="text" placeholder="PO Id" />
                 </div>
+                <div class="form-group col-3">
+                  <select formControlName="poStatus" data-filter="model" class="filter-model filter form-control">
+                    <option value="" [selected]="true">PO Status</option>
+                    <option *ngFor="let status of status" [value]="status.value">{{status.label}}</option>
+                  </select>
+                </div>
+                <div class="form-group col-3">
+                  <select formControlName="dnStatus" data-filter="model" class="filter-model filter form-control">
+                    <option value="" [selected]="true">DN Status</option>
+                    <option *ngFor="let status of status" [value]="status.value">{{status.label}}</option>
+                    <option value="DELIVERED">Delivered</option>
+                  </select>
+                </div>
                 <div class="form-group col-3 ">
                   <button type="button" class="btn btn-block btn-primary" (click)="findNotes()"><fa-icon icon="search"></fa-icon></button>
                 </div>
@@ -110,7 +123,10 @@
         <th mat-header-cell *matHeaderCellDef> Vessel </th>
         <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.vessel}} </td>
       </ng-container>
-
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote?.status?.status}} </td>
+      </ng-container>
       <ng-container matColumnDef="po">
         <th mat-header-cell *matHeaderCellDef> PO </th>
         <td mat-cell *matCellDef="let deliveryNote"> {{deliveryNote.purchaseOrderId}} </td>
@@ -128,6 +144,11 @@
         <td mat-cell *matCellDef="let deliveryNote">
           <mat-select>
             <mat-option (click)="viewDeliveryNote(deliveryNote.deliveryNoteId)">View</mat-option>
+            <mat-option (click)="editDeliveryNote(deliveryNote.dn)" *ngIf="deliveryNote?.status?.status == 'LIVE'">Edit</mat-option>
+            <mat-option (click)="cancelDelNote(deliveryNote)" *ngIf="deliveryNote.status?.status == 'LIVE'">Cancel Delivery Note</mat-option>
+            <mat-option (click)="restore(deliveryNote)" *ngIf="deliveryNote?.status?.status == 'CANCEL'">Restore Delivery Note</mat-option>
+            <mat-option (click)="markAsDelivered(deliveryNote)" *ngIf="deliveryNote?.status?.status == 'LIVE'">Set Delivery Done</mat-option>
+            <mat-option (click)="markAsNotDelivered(deliveryNote)" *ngIf="deliveryNote?.status?.status == 'DELIVERED'">Set Delivery Not Done</mat-option>
             <mat-option (click)="createBill(deliveryNote.deliveryNoteId)">Create Bill</mat-option>
             <mat-option (click)="generateDeliveryNote(deliveryNote.deliveryNoteId)">Generate Delivery Note</mat-option>
 

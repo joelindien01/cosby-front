@@ -69,7 +69,7 @@
             </div>
             <div class="col-sm-6">
               <mat-form-field>
-                <input matInput formControlName="value" type="number" placeholder="value" class="form-control input-md">
+                <input matInput formControlName="value" step="0.01" type="number" placeholder="value" class="form-control input-md">
                 <mat-error *ngIf="price.controls['value'].hasError('required')">
                   Price {{i + 1}} Value <strong> is required</strong>
                 </mat-error>

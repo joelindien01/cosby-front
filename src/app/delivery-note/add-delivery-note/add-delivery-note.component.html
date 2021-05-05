@@ -24,10 +24,19 @@
           <div class="row">
             <div class="col-6">
               <mat-form-field>
-                <mat-select [errorStateMatcher]="matcher" placeholder="Our registered Signatory" formControlName="ourSignatoryObject">
+                <mat-select [errorStateMatcher]="matcher" [compareWith]="compareFunction" placeholder="Our registered Signatory" formControlName="ourSignatoryObject">
                   <mat-option *ngFor="let user of (users$| async)" [value]="user">{{user.username}}
                   </mat-option>
                 </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-6"></div>
+            <div class="col-6">
+              <mat-form-field>
+                <input [errorStateMatcher]="matcher" matInput placeholder="Our Signatory" formControlName="ourSignatory"/>
+                <mat-error *ngIf="deliveryNoteForm.controls['ourSignatory'].touched && deliveryNoteForm.controls['ourSignatory'].errors?.required">
+                  Our Signatory is <strong>required</strong>
+                </mat-error>
               </mat-form-field>
             </div>
             <div class="col-6">

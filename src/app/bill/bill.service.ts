@@ -11,6 +11,7 @@ import {Address} from "../customer/customer";
 import {isDefined} from "@angular/compiler/src/util";
 import {MatDialog} from "@angular/material";
 import {AddCreditNoteComponent} from "../credit-note/add-credit-note/add-credit-note.component";
+import {isUndefined} from "util";
 
 
 export class BillData {
@@ -178,13 +179,13 @@ export class BillService {
         }]
     };
     let bankIbanAccountReferenceArea = [
-      {text: 'Bank: '+ bill.impactedAccount.bankName, fontSize: 9},
-      {text: 'Account N°: '+ bill.impactedAccount.reference, fontSize: 9},
-      {text: 'IBAN: ' + bill.impactedAccount.iban, fontSize: 9}];
+      {text: 'Bank: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.bankName, fontSize: 9},
+      {text: 'Account N°: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.reference, fontSize: 9},
+      {text: 'IBAN: ' + isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.iban, fontSize: 9}];
     let holderSwiftRibArea = [
-      {text: 'Holder: '+ bill.impactedAccount.holder, fontSize: 9},
-      {text: 'SWIFT Code: '+ bill.impactedAccount.swiftCode, fontSize: 9},
-      {text: 'RIB: '+ bill.impactedAccount.rib, fontSize: 9}
+      {text: 'Holder: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.holder, fontSize: 9},
+      {text: 'SWIFT Code: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.swiftCode, fontSize: 9},
+      {text: 'RIB: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.rib, fontSize: 9}
     ];
     let clientSignatoryNameArea = {
       text: bill.customerSignatory,
@@ -220,10 +221,6 @@ export class BillService {
       content: [
         {
           columns: [
-            /*{
-              image: logoImagePath,
-              width: 150,
-            },*/
             [
               {
                 stack: invoiceDateArea,
@@ -364,7 +361,7 @@ export class BillService {
           {
             width: '100%',
             alignment: 'center',
-            text: 'Payment Information',
+            text: isDefined(bill.impactedAccount)? 'Payment Information' : "",
             bold: true,
             margin: [0, 10, 0, 10],
             fontSize: 11,
@@ -373,12 +370,12 @@ export class BillService {
             {unbreakable: true,
               columns: [
                 {
-                  stack: bankIbanAccountReferenceArea,
+                  stack: isDefined(bill.impactedAccount)? bankIbanAccountReferenceArea : [],
                   width: '70%',
                   alignment:'left'
                 },
                 {
-                  stack: holderSwiftRibArea,
+                  stack: isDefined(bill.impactedAccount)? holderSwiftRibArea : [],
                   width: 180,
                   alignment:'left'
                 },
@@ -433,7 +430,7 @@ export class BillService {
           },
           [
             {
-              text: 'Invoice '+bill.id.toString(),
+              text: this.pdfService.buildId(bill, "Invoice ", "FE"),
               color: '#333333',
               width: '*',
               fontSize: 20,
@@ -489,12 +486,13 @@ export class BillService {
   }
 
   private buildInvoiceDateArea(bill: Bill) {
-    const invoiceDateAreaElementValues = [
-      {name: "Your Ref", value: bill.deliveryNote.purchaseOrder.poNumber},
-      {name: "Issue Date", value: this.datepipe.transform(bill.creationDate, 'MMMM d, y')},
+
+    let invoiceDateAreaElementValues = [
       {name: "Due Date", value: this.datepipe.transform(bill.deadLine, 'MMMM d, y')},
-      {name: "Contact Person", value: bill.deliveryNote.purchaseOrder.contactInfo.name}
-    ];
+      {name: "Contact Person", value: bill.deliveryNote.purchaseOrder.contactInfo.name}];
+    if(isDefined(bill.deliveryNote.purchaseOrder.poNumber)) {
+      invoiceDateAreaElementValues.push({name: "Your Ref", value: bill.deliveryNote.purchaseOrder.poNumber})
+    }
     return invoiceDateAreaElementValues.map(value => {
       return {
         columns: [
@@ -522,23 +520,36 @@ export class BillService {
   private buildTableArea(bill: Bill) {
     let tableArea = [];
     tableArea.push(this.buildTableHeader());
-    bill.deliveryNote.purchaseOrder.itemList.forEach((item, index) => {
+    let itemList = bill.deliveryNote.purchaseOrder.itemList;
+    itemList = itemList.sort(this.comparePosition);
+      itemList.forEach((item, index) => {
       const productRow = this.buildProduct(item, index+1);
       tableArea.push(productRow);
     });
     return tableArea;
+  }
+  comparePosition(a, b) {
+
+    if (a.position < b.position)
+      return -1;
+    if (a.position > b.position)
+      return 1;
+    return 0;
   }
 
   private buildTableAnnexe(bill: Bill, withAnnexe?:boolean) {
     if(!withAnnexe) {
       return [[]];
     }
-    let tableAnnexe = [
-      {name: "subtotal", value:bill.deliveryNote.purchaseOrder.totalAmount},
-      {name: "Transportation Fee", value: bill.transportationFee},
-      {name: "Delivery Fee", value:bill.deliveryFee},
-      {name: "Discount", value:bill.discount}
-    ];
+    let tableAnnexe = [];
+
+    if(bill.deliveryNote.purchaseOrder.totalAmount != bill.netTotal) {
+      tableAnnexe.push({name: "subtotal", value:bill.deliveryNote.purchaseOrder.totalAmount});
+    }
+
+    tableAnnexe.push({name: "Transportation Fee", value: bill.transportationFee});
+    tableAnnexe.push({name: "Delivery Fee", value:bill.deliveryFee});
+    tableAnnexe.push({name: "Discount", value:bill.discount});
     let returnedAnnexe = tableAnnexe.filter(el => isDefined(el.value) && el.value != 0).map(el => {
       return this.buildAnnexeRow(el.name, el.value.toString(), 9)
     });

@@ -6,12 +6,15 @@ import {Customer} from "../../customer/customer";
 import {map} from "rxjs/internal/operators";
 import {DeliveryNote} from "../../purchase-order/PurchaseOrder";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
+import {isDefined} from "@angular/compiler/src/util";
+import {StatusComponent} from "../../common/status/status.component";
+import {StatusService} from "../../common/status.service";
+import {ObjectStatus} from "../../purchase-order/list-purchase-orders/list-purchase-orders.component";
 
 class ReferenceItem {
   label: string;
   value: string;
-
 }
 
 @Component({
@@ -22,12 +25,13 @@ class ReferenceItem {
 export class ListDeliveryNoteComponent implements OnInit {
   deliveryNotes$: Observable<Array<DeliveryNote>>;
   public customer$: Observable<Customer>;
+  public status: Array<ReferenceItem> = [{label:"Live", value: "LIVE"},{label:"Cancel", value:"CANCEL"}];
   deliveryNotesTable$: Observable<Array<DeliveryNoteTable>>;
   public deliveryNotes: Array<DeliveryNote>;
   delNotesSearchForm: FormGroup;
   public paymentMethod: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
-  displayedColumns: string[] = ['note', 'po', 'deliveryDate','customerName','vessel', 'creationDate', 'actions'];
+  displayedColumns: string[] = ['note', 'po', 'deliveryDate','customerName','vessel', 'status','creationDate','actions'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   public delNoteMatTable: MatTableDataSource<DeliveryNoteTable> = new MatTableDataSource();
@@ -35,7 +39,8 @@ export class ListDeliveryNoteComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private deliveryNoteService: DeliveryNoteService,
               private router: Router,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              public dialog: MatDialog, private statusService: StatusService) {
 
 
     this.delNoteMatTable.paginator = this.paginator;
@@ -54,6 +59,8 @@ export class ListDeliveryNoteComponent implements OnInit {
         customerNameCSV: '',
         paymentStatus: [],
         paymentMeans: [],
+        poStatus: '',
+        dnStatus: '',
         purchaseOrderIdCSV: '',
         noteIdCSV: '',
         toBeDeliveredBefore: [],
@@ -64,6 +71,46 @@ export class ListDeliveryNoteComponent implements OnInit {
         noteCreatedBefore: []
       });
 
+  }
+
+  editDeliveryNote(dn) {
+    this.deliveryNoteService.deliveryNote = dn;
+    this.router.navigate(['/delivery-notes/add', {customerId: dn.purchaseOrder.customer.id, orderId: dn.id}]).then();
+  }
+
+  cancelDelNote(deliveryNote) {
+    const dialogRef = this.dialog.open(StatusComponent, {
+      width: '500px',
+      data: {id: deliveryNote.status.id}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(isDefined(result)) {
+        deliveryNote.status.status = 'CANCEL';
+      }
+    });
+  }
+
+  restore(dn) {
+    this.statusService.restore(dn.status).subscribe(result => {
+      alert("DN restored");
+    });
+  }
+
+  markAsDelivered(dn) {
+    this.updateDelivery(dn, "DELIVERED", "Order Delivered");
+  }
+
+  markAsNotDelivered(dn) {
+    this.updateDelivery(dn, "LIVE", "Restored to Live");
+  }
+
+  private updateDelivery(dn, status, alertMsg) {
+    dn.status.status = status;
+    dn.status.description = "";
+    this.statusService.updateStatus(dn.status).subscribe(result => {
+      alert(alertMsg);
+    });
   }
 
   private loadNotesByCustomerId(customerId: number) {
@@ -101,10 +148,13 @@ export class ListDeliveryNoteComponent implements OnInit {
             let deliveryNoteTable = new DeliveryNoteTable();
             deliveryNoteTable.purchaseOrderId = deliveryNote.purchaseOrder.id;
             deliveryNoteTable.deliveryDate = deliveryNote.deliveryDate;
+            deliveryNoteTable.status = deliveryNote.status;
             deliveryNoteTable.vessel = deliveryNote.purchaseOrder.deliveryInformation.vessel;
             deliveryNoteTable.customerName = deliveryNote.purchaseOrder.customer.name;
             deliveryNoteTable.creationDate = deliveryNote.creationDate;
             deliveryNoteTable.deliveryNoteId = deliveryNote.id;
+            deliveryNoteTable.dn = deliveryNote;
+
             return deliveryNoteTable;
           })
         })
@@ -137,4 +187,6 @@ export class DeliveryNoteTable {
   creationDate;
   customerName;
   vessel;
+  status: ObjectStatus;
+  dn: DeliveryNote;
 }

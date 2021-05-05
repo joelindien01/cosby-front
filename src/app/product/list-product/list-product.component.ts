@@ -105,6 +105,7 @@ export class ListProductComponent implements OnInit {
     }
     (<FormArray>this.itemsSetupForm.get('items')).push(this.fb.group({
       id:[existingProduct != undefined ? existingProduct.id : null],
+      position: [existingProduct != undefined ? existingProduct.position : null],
       product: [product],
       overridePrice: existingProduct != undefined ? existingProduct.overridePrice : false,
       description: [''],
@@ -137,6 +138,7 @@ export class ListProductComponent implements OnInit {
     this.productSearchForm = this.fb.group({productNameCSV: ''});
 
     this.productTable$.subscribe(p => {
+      p.sort(this.comparePosition);
       this.productTable.data = p;
       this.productTable.paginator = this.paginator;
       this.productTable.sort = this.sort;
@@ -147,6 +149,15 @@ export class ListProductComponent implements OnInit {
     });
 
     this.products$.subscribe(products => this.products = products);
+  }
+
+  comparePosition(a, b) {
+
+    if (a.position < b.position)
+      return -1;
+    if (a.position > b.position)
+      return 1;
+    return 0;
   }
 
   viewSelectedProduct(productId: number) {
@@ -168,6 +179,7 @@ export class ListProductComponent implements OnInit {
       }))
     );
     this.productTable$.subscribe(p => {
+      p.sort(this.comparePosition);
       this.productTable.data = p;
       this.productTable.paginator = this.paginator;
       this.productTable.sort = this.sort;

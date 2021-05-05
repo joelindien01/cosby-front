@@ -7,6 +7,7 @@ import {startWith} from "rxjs/internal/operators";
 import {MyErrorStateMatcher} from "../../common/multi-addable-form";
 import {UserService} from "../../common/user.service";
 import {Observable} from "rxjs/Rx";
+import {isDefined} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-add-delivery-note',
@@ -26,30 +27,38 @@ export class AddDeliveryNoteComponent implements OnInit, OnDestroy {
               private router: Router,
               private userService: UserService) {
     this.matcher = new MyErrorStateMatcher();
-    this.users$ = this.userService.findAllUsers();
-    this.deliveryNoteForm = this.fb.group({
-      deliveryDate: new FormControl(new Date(), Validators.required),
-      ourSignatoryObject: [null, Validators.required],
-      ourSignatory: [null, Validators.required],
-      ourSignatoryFunction: [{value:'', disabled: false },Validators.required],
-      customerSignatory: [null],
-      customerSignatoryFunction: [{value:'', disabled: false }],
 
-    });
-    this.deliveryNoteForm.controls['ourSignatoryObject'].valueChanges.subscribe(user => {
-
-      this.deliveryNoteForm.controls['ourSignatoryFunction'].setValue(user.profile.name);
-      this.deliveryNoteForm.controls['ourSignatory'].setValue(user.username);
-    });
     this.route.params.subscribe(params => {
       if (params['orderId']) {
         this.orderId = params['orderId']
       }
+
+      this.users$ = this.userService.findAllUsers();
+      const date = isDefined(this.deliveryNoteService.deliveryNote) ? new Date(this.deliveryNoteService.deliveryNote.deliveryDate) : new Date;
+      this.deliveryNoteForm = this.fb.group({
+        id: [isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.id : null],
+        deliveryDate: new FormControl(date, Validators.required),
+        ourSignatoryObject: [''],
+        ourSignatory: [isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.ourSignatory :'', Validators.required],
+        ourSignatoryFunction: [{value:isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.ourSignatoryFunction :'', disabled: false },Validators.required],
+        customerSignatory: [isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.customerSignatory : ''],
+        customerSignatoryFunction: [{value:isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.customerSignatoryFunction : '', disabled: false }],
+
+      });
+      this.deliveryNoteForm.controls['ourSignatoryObject'].valueChanges.subscribe(user => {
+
+        this.deliveryNoteForm.controls['ourSignatoryFunction'].setValue(user.profile.name);
+        this.deliveryNoteForm.controls['ourSignatory'].setValue(user.username);
+      });
     });
 
   }
 
   ngOnInit() {
+  }
+
+  compareFunction(o1, o2) {
+    return (isDefined(o1) && isDefined(o2) && o1.id == o2.id);
   }
 
   saveDeliveryNote() {

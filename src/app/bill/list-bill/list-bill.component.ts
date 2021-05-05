@@ -12,6 +12,10 @@ import {AddCreditNoteComponent} from "../../credit-note/add-credit-note/add-cred
 import {ListCreditNoteComponent} from "../../credit-note/list-credit-note/list-credit-note.component";
 import {ListCreditNoteDialogComponent} from "../../credit-note/list-credit-note-dialog/list-credit-note-dialog.component";
 import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
+import {StatusComponent} from "../../common/status/status.component";
+import {isDefined} from "@angular/compiler/src/util";
+import {StatusService} from "../../common/status.service";
+import {ObjectStatus} from "../../purchase-order/list-purchase-orders/list-purchase-orders.component";
 
 @Component({
   selector: 'app-list-bill',
@@ -26,15 +30,17 @@ export class ListBillComponent implements OnInit {
   billSearchForm: FormGroup;
   public paymentMethod: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
+  public status: Array<ReferenceItem> = [{label:"Live", value: "LIVE"},{label:"Cancel", value:"CANCEL"}];
   public billMatTable: MatTableDataSource<BillTable> = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns: string[] = ['bill', 'po', 'deliveryNote', 'deadline', 'discount', 'creationDate', 'actions'];
+  displayedColumns: string[] = ['bill', 'po', 'deliveryNote', 'deadline', 'discount', 'status', 'creationDate', 'actions'];
   constructor(private billService: BillService,
               private route: ActivatedRoute,
               private router: Router,
               private fb: FormBuilder,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private statusService: StatusService) {
     this.route.params.subscribe(params => {
       if (params['customerId']) {
         const customerId = params['customerId'];
@@ -65,6 +71,9 @@ export class ListBillComponent implements OnInit {
         deadlineAfter: [],
         deadlineBefore: [],
         discount: '',
+        billStatus: '',
+        dnStatus: '',
+        poStatus: '',
         billId: ''
       });
   }
@@ -102,6 +111,7 @@ export class ListBillComponent implements OnInit {
           billTable.creationDate = bill.creationDate;
           billTable.deadLine = bill.deadLine;
           billTable.discount = bill.discount;
+          billTable.status = bill.status;
           billTable.purchaseOrderId = bill.deliveryNote.purchaseOrder.id;
           billTable.initialBill = bill;
 
@@ -119,6 +129,11 @@ export class ListBillComponent implements OnInit {
 
   viewBill(billId: number) {
     this.router.navigateByUrl("/bills/"+billId).then();
+  }
+
+  edit(bill) {
+    this.billService.bill = bill.initialBill;
+    this.router.navigate(['/bills/add', {deliveryNoteId: bill.initialBill.deliveryNote.id}]).then();
   }
 
   findBills() {
@@ -147,6 +162,24 @@ export class ListBillComponent implements OnInit {
       data: bill.initialBill
     });
   }
+
+  cancelBill(bill) {
+    const dialogRef = this.dialog.open(StatusComponent, {
+      width: '500px',
+      data: {id: bill.status.id}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(isDefined(result)) {
+        bill.status.status = 'CANCEL';
+      }
+    });
+  }
+  restore(bill) {
+    this.statusService.restore(bill.status).subscribe(result => {
+      alert("Bill restored");
+    });
+  }
 }
 
 export class BillTable {
@@ -157,4 +190,5 @@ export class BillTable {
   discount;
   creationDate;
   initialBill: any;
+  status: ObjectStatus;
 }

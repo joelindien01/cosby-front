@@ -58,7 +58,7 @@
                 <mat-form-field>
                   <input (keyup)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value,  p.index, $event)"
                          (click)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value)"
-                         [errorStateMatcher]="matcher" matInput min="1" formControlName="quantity" placeholder="Quantity" type="number"
+                         [errorStateMatcher]="matcher" matInput min="1" formControlName="quantity" placeholder="Quantity" step="0.01" type="number"
                          class="form-control input-md" required="">
                   <mat-error *ngIf="itemsSetupForm?.controls['items']?.controls[p.index].get('quantity')?.touched && itemsSetupForm?.controls['items'].controls[p.index].get('quantity')?.errors?.required">
                     Quantity is <strong>required</strong>
@@ -95,7 +95,7 @@
                   <mat-form-field>
                     <input (keyup)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value, p.index)"
                            (click)="changeValue(itemsSetupForm.controls['items'].controls[p.index].value)"
-                           min="1" [errorStateMatcher]="matcher" placeholder="Unit price" matInput formControlName="unit" type="number" class="form-control input-md" required="">
+                           min="1" [errorStateMatcher]="matcher" placeholder="Unit price" matInput formControlName="unit" step="0.01" type="number" class="form-control input-md" required="">
                     <mat-error *ngIf="itemsSetupForm?.controls['items']?.controls[p.index].get('unit')?.touched && itemsSetupForm?.controls['items'].controls[p.index].get('unit')?.errors?.required">
                       Unit price is <strong>required</strong>
 

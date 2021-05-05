@@ -7,13 +7,14 @@
         <h3>Customer</h3>
       </div>
       <div class="col-9 text-right">
+        <button mat-flat-button color="primary" class="mr-1" (click)="edit()">Edit</button>
         <button mat-flat-button color="primary" class="mr-1" (click)="createPurchaseOrder()">create purchase order</button>
         <button mat-flat-button color="primary" class="mr-1" (click)="goToPurchaseOrdersPage()">purchase orders</button>
         <button mat-flat-button color="primary" class="mr-1" (click)="goToBillsPage()">bills</button>
         <button mat-flat-button color="primary" (click)="goToDeliveryNotePage()">delivery notes</button>
       </div>
     </div>
-    <p>Name: {{currentCustomer.name}} <span class="edit-name" (click)="editName()">(edit customer)</span></p>
+    <p>Name: {{currentCustomer.name}} </p>
     <p>Description: {{currentCustomer.description}} </p>
 
   </div>
@@ -23,14 +24,14 @@
       <div class="col-4 mr-3" *ngFor="let contact of currentCustomer?.contacts">
         <app-view-contact [(contact)]="contact" [customerId]="currentCustomer.id"></app-view-contact>
       </div>
-      <div class="col-3">
+      <!--<div class="col-3">
         <div data-toggle="modal" [attr.data-target]="'#editContactModal_'+currentCustomer?.id+currentCustomer?.contacts?.length" (click)="addContact()" class="card add-card-button add-contact" style="width: 18rem;">
           <div class="card-body text-center vertical-align">
             <fa-icon icon="plus"></fa-icon>
             <p>Add contact</p>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
   <div class="col-12 mb-3">

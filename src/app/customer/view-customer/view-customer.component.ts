@@ -41,6 +41,15 @@ export class ViewCustomerComponent implements OnInit {
     })
   }
 
+  edit(customer: Customer) {
+    this.customerService.customer = this.currentCustomer;
+    this.router.navigate(['/customers/add']).then();
+/*    this.customerService.findCustomerById(this.currentCustomer.id).subscribe(result => {
+
+
+    });*/
+  }
+
   updateContact() {
     if(this.contactEditForm.form.invalid) {
       return;

@@ -10,7 +10,7 @@
 
         <div class="col-9 account">
           <mat-form-field>
-            <mat-select [errorStateMatcher]="matcher" placeholder="Account to use for payment" formControlName="impactedAccount">
+            <mat-select [errorStateMatcher]="matcher" [compareWith]="compareFunction" placeholder="Account to use for payment" formControlName="impactedAccount">
               <mat-option *ngFor="let account of (accounts$| async)" [value]="account">{{account.bankName}} ({{account.reference}})
               </mat-option>
             </mat-select>
@@ -38,7 +38,7 @@
         </div>
         <div class="col-6">
           <mat-form-field>
-            <input [errorStateMatcher]="matcher" matInput placeholder="Delivery Fee" formControlName="deliveryFee" type="number"/>
+            <input [errorStateMatcher]="matcher" matInput placeholder="Delivery Fee" formControlName="deliveryFee" step="0.01" type="number"/>
             <mat-error *ngIf="billForm.controls['deliveryFee'].touched && billForm.controls['deliveryFee'].errors?.required">
               Delivery Fee is <strong>required</strong>
             </mat-error>
@@ -46,7 +46,7 @@
         </div>
         <div class="col-6">
           <mat-form-field>
-            <input [errorStateMatcher]="matcher" matInput placeholder="Transportation Fee" formControlName="transportationFee" type="number"/>
+            <input [errorStateMatcher]="matcher" matInput placeholder="Transportation Fee" formControlName="transportationFee" step="0.01" type="number"/>
             <mat-error *ngIf="billForm.controls['transportationFee'].touched && billForm.controls['transportationFee'].errors?.required">
               Transportation Fee is <strong>required</strong>
             </mat-error>
@@ -63,6 +63,15 @@
                 </mat-select>
               </mat-form-field>
             </div>
+            <div class="col-6"></div>
+            <div class="col-6">
+              <mat-form-field>
+                <input [errorStateMatcher]="matcher"  matInput placeholder="Our Signatory" formControlName="ourSignatory"/>
+                <mat-error *ngIf="billForm.controls['ourSignatory'].touched && billForm.controls['ourSignatory'].errors?.required">
+                  Our Signatory is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
             <div class="col-6">
               <mat-form-field>
                 <input [errorStateMatcher]="matcher"  matInput placeholder="Our Signatory Function" formControlName="ourSignatoryFunction"/>
@@ -77,7 +86,7 @@
           <div class="row">
             <div class="col-6">
               <mat-form-field>
-                <input [errorStateMatcher]="matcher" matInput placeholder="Customer Signatory" formControlName="customerSignatory" type="text"/>
+                <input [errorStateMatcher]="matcher" matInput placeholder="Customer Signatory" formControlName="customerSignatory"/>
                 <mat-error *ngIf="billForm.controls['customerSignatory'].touched && billForm.controls['customerSignatory'].errors?.required">
                   Customer Signatory is <strong>required</strong>
                 </mat-error>
@@ -100,7 +109,7 @@
             </div>
             <div class="col-6">
               <mat-form-field *ngIf="billForm.get('applyDiscount').value">
-                <input matInput [errorStateMatcher]="matcher" placeholder="discount (%)" formControlName="discount" type="number" name="discount"/>
+                <input matInput [errorStateMatcher]="matcher" placeholder="discount (%)" formControlName="discount" step="0.01" type="number" name="discount"/>
                 <mat-error *ngIf="billForm.controls['discount'].touched && billForm.controls['discount'].errors?.required">
                   Discount is <strong>required</strong>
                 </mat-error>

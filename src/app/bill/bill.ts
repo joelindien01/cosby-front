@@ -1,5 +1,6 @@
 import {DeliveryNote, PurchaseOrder} from "../purchase-order/PurchaseOrder";
 import {Contact} from "../customer/customer";
+import {ObjectStatus} from "../purchase-order/list-purchase-orders/list-purchase-orders.component";
 
 export class BillDTO {
   billId: number;
@@ -50,6 +51,7 @@ export class Bill {
   customerSignatory: string;
   emitter: any;
   contactInfo: Contact;
+  status: ObjectStatus;
 }
 
 export class Account {

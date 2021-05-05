@@ -63,17 +63,7 @@ export class DeliveryNoteService {
 
           console.log(value);
           this.pdfService.generatePdf(value);
-        });/*
-        let docGeneratorHelper = new FileGeneratorHelper();
-        docGeneratorHelper.outputName = "delivery_note"+
-          "_"+delNoteReturned.id+ "_" +
-          poData.customer.name+
-          "_"+
-          new Date().toISOString();
-        docGeneratorHelper.templateName = "delivery_note";
-        docGeneratorHelper.data = this.mapDelNote(delNoteReturned, poData);
-
-        this.docGenerator.generateFile(docGeneratorHelper);*/
+        });
 
 
     });
@@ -168,6 +158,7 @@ export class DeliveryNoteService {
     let buildTableAnnexe = this.buildTableAnnexe(poData);
     let invoiceDateArea = this.buildInvoiceDateArea(delNoteReturned, poData);
     let deliveryInfoArea = this.buildDeliveryInfoArea(delNoteReturned, poData);
+    let deliveryNoteHead = this.pdfService.buildId(delNoteReturned , "Delivery Note ", "DN");
     return {
       content: [
         {
@@ -369,7 +360,7 @@ export class DeliveryNoteService {
           },
           [
             {
-              text: 'Delivery Note '+delNoteReturned.id.toString(),
+              text: deliveryNoteHead,
               color: '#333333',
               width: '*',
               fontSize: 20,
@@ -429,11 +420,12 @@ export class DeliveryNoteService {
 
   private buildInvoiceDateArea(delNoteReturned: any, poData: PurchaseOrder) {
     const invoiceDateAreaElementValues = [
-      {name: "Your Ref", value: poData.poNumber},
-      {name: "Issue Date", value: this.datepipe.transform(delNoteReturned.creationDate, 'MMMM d, y')},
       {name: "Delivery Date", value: this.datepipe.transform(delNoteReturned.deliveryDate, 'MMMM d, y')},
       {name: "Contact Person", value: poData.contactInfo.name}
     ];
+    if(isDefined(poData.poNumber)) {
+      invoiceDateAreaElementValues.push({name: "Your Ref", value: poData.poNumber})
+    }
     return invoiceDateAreaElementValues.map(value => {
       return {
         columns: [
@@ -488,11 +480,23 @@ export class DeliveryNoteService {
   private buildTableArea(poData: PurchaseOrder) {
     let tableArea = [];
     tableArea.push(this.buildTableHeader());
-    poData.itemList.forEach((item, index) => {
+    let itemList = poData.itemList;
+    itemList = itemList.sort(this.comparePosition);
+    itemList.forEach((item, index) => {
       const productRow = this.buildProduct(item, index+1);
       tableArea.push(productRow);
     });
     return tableArea;
+  }
+
+
+  comparePosition(a, b) {
+
+    if (a.position < b.position)
+      return -1;
+    if (a.position > b.position)
+      return 1;
+    return 0;
   }
 }
 

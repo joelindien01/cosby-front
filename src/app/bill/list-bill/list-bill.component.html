@@ -117,7 +117,26 @@
           <div class="form-group col-3">
             <input (keydown.enter)="findBills()" class="form-control" formControlName="billId" type="text" placeholder="Bill Id" />
           </div>
-          <div class="form-group col-9">
+          <div class="form-group col-3">
+            <select formControlName="billStatus" data-filter="model" class="filter-model filter form-control">
+              <option value="" [selected]="true">Bill Status</option>
+              <option *ngFor="let status of status" [value]="status.value">{{status.label}}</option>
+            </select>
+          </div>
+          <div class="form-group col-3">
+            <select formControlName="poStatus" data-filter="model" class="filter-model filter form-control">
+              <option value="" [selected]="true">PO Status</option>
+              <option *ngFor="let status of status" [value]="status.value">{{status.label}}</option>
+            </select>
+          </div>
+          <div class="form-group col-3">
+            <select formControlName="dnStatus" data-filter="model" class="filter-model filter form-control">
+              <option value="" [selected]="true">DN Status</option>
+              <option *ngFor="let status of status" [value]="status.value">{{status.label}}</option>
+              <option value="DELIVERED">Delivered</option>
+            </select>
+          </div>
+          <div class="form-group col-3">
             <input (keydown.enter)="findBills()" class="form-control" formControlName="customerNameCSV" type="text" placeholder="Customer name" />
           </div>
           <div class="form-group col-3 ">
@@ -152,6 +171,10 @@
         <th mat-header-cell *matHeaderCellDef> Discount </th>
         <td mat-cell *matCellDef="let bill"> {{bill.discount}} % </td>
       </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let bill"> {{bill.status?.status}}</td>
+      </ng-container>
       <ng-container matColumnDef="creationDate">
         <th mat-header-cell *matHeaderCellDef> Creation Date </th>
         <td mat-cell *matCellDef="let bill"> {{bill.creationDate | date}} </td>
@@ -161,14 +184,12 @@
         <td mat-cell *matCellDef="let bill">
         <mat-select>
           <mat-option (click)="viewBill(bill.billId)">View</mat-option>
+          <mat-option (click)="edit(bill)" *ngIf="bill.status?.status == 'LIVE'">Edit</mat-option>
+          <mat-option (click)="cancelBill(bill)" *ngIf="bill.status?.status == 'LIVE'">Cancel Bill</mat-option>
+          <mat-option (click)="restore(bill)" *ngIf="bill?.status?.status == 'CANCEL'">Restore Bill</mat-option>
           <mat-option (click)="generateBill(bill.billId)">Generate Bill</mat-option>
           <mat-option (click)="createCreditNote(bill.billId)">Create Credit Note</mat-option>
           <mat-option (click)="viewCreditNotes(bill)" *ngIf="bill.initialBill.creditNotes?.length > 0">View Credit Notes</mat-option>
-          <!--<button mat-stroked-button color="primary" (click)="viewBill(bill.billId)" class="mr-2 mb-2"><fa-icon icon="eye"></fa-icon></button>
-          <button mat-stroked-button color="primary" (click)="generateBill(bill.billId)" class="mr-2 mb-2">Generate bill</button>
-          <button mat-stroked-button color="primary" (click)="createCreditNote(bill.billId)" class="mr-2 mb-2">Create credit note</button>
-          <button *ngIf="bill.initialBill.creditNotes?.length > 0" mat-stroked-button color="primary" (click)="viewCreditNotes(bill)" class="mr-2 mb-2">View credit notes</button>
--->
         </mat-select>
         </td>
       </ng-container>

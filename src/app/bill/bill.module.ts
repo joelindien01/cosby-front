@@ -10,6 +10,7 @@ import {PurchaseOrderModule} from "../purchase-order/purchase-order.module";
 import {DeliveryNoteModule} from "../delivery-note/delivery-note.module";
 import {CreditNoteModule} from "../credit-note/credit-note.module";
 import {NgxSpinnerModule} from "ngx-spinner";
+import {StatusComponent} from "../common/status/status.component";
 
 @NgModule({
   declarations: [AddBillComponent, ListBillComponent, ViewBillComponent],
@@ -22,8 +23,10 @@ import {NgxSpinnerModule} from "ngx-spinner";
     CosbyCommonModule,
     PurchaseOrderModule,
     DeliveryNoteModule,
-    CreditNoteModule,    NgxSpinnerModule
+    CreditNoteModule,
+    NgxSpinnerModule
   ],
+  entryComponents: [StatusComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class BillModule { }

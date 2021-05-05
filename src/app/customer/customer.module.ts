@@ -11,9 +11,10 @@ import {RouterModule} from '@angular/router';
 import { ViewCustomerComponent } from './view-customer/view-customer.component';
 import {NgxSpinnerModule} from "ngx-spinner";
 import {MAT_DIALOG_DATA} from "@angular/material";
+import { EditCustomerComponent } from './edit-customer/edit-customer.component';
 
 @NgModule({
-  declarations: [AddCustomerComponent, ListCustomerComponent, ViewCustomerComponent],
+  declarations: [AddCustomerComponent, ListCustomerComponent, ViewCustomerComponent, EditCustomerComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

@@ -50,4 +50,11 @@ export class PdfService {
       img.src = url;
     });
   }
+
+  public buildId(element: {id: number, creationDate: Date}, prefix: string, idSuffix: String) {
+    const creationDate: Date = new Date(element.creationDate);
+    const suffix =   element.id.toString()  + '/'+idSuffix+'/' + ("0" + (new Date(creationDate).getMonth() + 1)).slice(-2)+ creationDate.getFullYear().toString().substr(-2);
+
+    return prefix + suffix;
+  }
 }

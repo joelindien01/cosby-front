@@ -12,6 +12,7 @@ import {forkJoin} from "rxjs/index";
 import {BillService} from "../../bill/bill.service";
 import {DeliveryNoteService} from "../../delivery-note/delivery-note.service";
 import {CartService} from "../../cart/cart.service";
+import {isUndefined} from "util";
 
 
 @Component({
@@ -31,6 +32,7 @@ export class ViewPurchaseOrderComponent implements OnInit {
   private po: PurchaseOrder;
   private dn: any;
   private items: Array<any>;
+  private sortedItems$: Observable<any>;
 
   constructor(private activatedRoute: ActivatedRoute,
               private orderService: PurchaseOrderService,
@@ -80,9 +82,19 @@ export class ViewPurchaseOrderComponent implements OnInit {
           this.spinner.hide();
           this.show = true;
         }, 1000);
+        this.purchaseOrder$ = this.orderService.findById(res.id).shareReplay();
+        this.purchaseOrder$.subscribe(po => this.po = po);
 
-      })
+      });
+
     }
+  }
+
+  sort(array:Array<any>){
+    if(isUndefined(array) || array == null) {
+      return;
+    }
+    return array.sort(this.compareItemPosition);
   }
 
   createBill(deliveryNoteId: number) {
@@ -105,8 +117,26 @@ export class ViewPurchaseOrderComponent implements OnInit {
 
         return item.itemDTO;
       });
-
+      this.items.sort(this.comparePosition);
     });
+  }
+
+  comparePosition(a, b) {
+
+    if (a.position < b.position)
+      return -1;
+    if (a.position > b.position)
+      return 1;
+    return 0;
+  }
+
+  compareItemPosition(a, b) {
+
+    if (a.itemDTO.position < b.itemDTO.position)
+      return -1;
+    if (a.itemDTO.position > b.itemDTO.position)
+      return 1;
+    return 0;
   }
 
   createDeliveryNote() {
@@ -118,6 +148,7 @@ export class ViewPurchaseOrderComponent implements OnInit {
 
   editDeliveryNote() {
     this.deliveryNoteService.deliveryNote = this.dn;
+    this.dn.purchaseOrder = this.po;
     this.router.navigate(['/delivery-notes/add', {customerId: this.dn.purchaseOrder.customer.id, orderId: this.dn.id}]).then();
   }
 
@@ -130,6 +161,6 @@ export class ViewPurchaseOrderComponent implements OnInit {
   editBill() {
     this.billService.bill = this.bill;
 
-    this.router.navigate(['/bills/add', {deliveryNoteId: this.dn.id}]).then();
+    this.router.navigate(['/bills/add', {deliveryNoteId: this.bill.deliveryNoteId}]).then();
   }
 }

@@ -52,6 +52,16 @@ export class AddPurchaseOrderComponent implements OnInit, OnDestroy {
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
   productAlreadySelected: boolean;
   public matcher;
+  private poId: number;
+
+  comparePosition(a, b) {
+
+    if (a.position < b.position)
+      return -1;
+    if (a.position > b.position)
+      return 1;
+    return 0;
+  }
 
   constructor(private customerService: CustomerService,
               private fb: FormBuilder,
@@ -65,23 +75,35 @@ export class AddPurchaseOrderComponent implements OnInit, OnDestroy {
     this.panelOpenState = true;
     this.currencyList$ = this.uomService.findAllCurrencyList();
     const routeParams$ = this.route.params;
-
+    const po = this.purchaseOrderService.po ;
     this.currentCustomer$ = routeParams$.pipe(
       switchMap(params => {
         const customerId = params['customerId'];
-        const poId = params['poId'];
-        if(isDefined(poId) && isDefined(this.cartService.items) && this.cartService.items.length <=0 ) {
-          this.router.navigate(['/purchase-order/'+poId]).then();
+         this.poId = params['poId'];
+        if(isDefined(this.poId) && isDefined(this.cartService.items) && this.cartService.items.length <=0 ) {
+          this.purchaseOrderService.findItemsByOrderId(this.poId).subscribe(results => {
+
+            let items = <Array<any>>results;
+            items = items.map(item => {
+              item.itemDTO.product = item.product;
+              item.itemDTO.overridePrice = true;
+
+              return item.itemDTO;
+            });
+            items.sort(this.comparePosition);
+            this.cartService.items = items;
+          });
+
         }
         if (customerId) {
           return this.customerService.findCustomerById(customerId);
         }
       }));
     this.currentCustomer$.subscribe(currentCustomer => this.customer = <Customer> currentCustomer);
-    const po = this.purchaseOrderService.po ;
+
     this.poSetupForm = this.fb.group({
       id: [isUndefined(po) ? null: po.id],
-      poNumber: [isUndefined(po) ? '': po.poNumber, Validators.required],
+      poNumber: [isUndefined(po) ? '': po.poNumber],
       currency: [isUndefined(po) ? '': po.paymentInformation.currency, Validators.required],
       contact: [isUndefined(po) ? '': po.contactInfo, Validators.required],
       payMeans: [isUndefined(po) ? '': po.paymentInformation.paymentMethod, Validators.required],
@@ -91,7 +113,7 @@ export class AddPurchaseOrderComponent implements OnInit, OnDestroy {
         vessel: [isUndefined(po) ? '': po.deliveryInformation.vessel, Validators.required],
         imo: [isUndefined(po) ? '': po.deliveryInformation.vessel, Validators.required],
         flag: [isUndefined(po) ? '': po.deliveryInformation.flag, Validators.required],
-        master: [isUndefined(po) ? '': po.deliveryInformation.master, Validators.required],
+        master: [isUndefined(po) ? '': po.deliveryInformation.master],
         port: [isUndefined(po) ? '': po.deliveryInformation.port, Validators.required]
       })
     });
@@ -136,10 +158,19 @@ export class AddPurchaseOrderComponent implements OnInit, OnDestroy {
     let po = this.poSetupForm.value;
     po.customer = this.customer;
     po.items = this.cartService.getItems();
+    po.items.map((item, index) => {
+      item.position = index + 1;
+      return item;
+    });
+    if(isUndefined(po.items) || po.items.length <= 0) {
+      alert("Select products");
+      return;
+    }
     console.log(this.purchaseOrder);
     this.purchaseOrderService.createOrder(po).subscribe(result =>{
       alert("order created");
       this.cartService.items = [];
+      this.cartService.selectedCustomer = undefined;
       this.router.navigate(['/purchase-order/'+result]).then();
     });
 

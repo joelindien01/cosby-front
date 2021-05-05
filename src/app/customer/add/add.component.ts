@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AddressComponent} from "../../common/address/address.component";
 import {AddressService} from "../../common/address.service";
 import {CustomerService} from "../customer.service";
 import {ShipService} from "../../common/ship.service";
 import {ContactService} from "../../common/contact.service";
 import {deepEqual} from "assert";
-import {Address} from "../customer";
+import {Address, Customer} from "../customer";
 import {Router} from "@angular/router";
+import {isDefined} from "@angular/compiler/src/util";
 
 
 @Component({
@@ -15,7 +16,10 @@ import {Router} from "@angular/router";
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss']
 })
-export class AddCustomerComponent implements OnInit {
+export class AddCustomerComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {
+    this.customerService.customer = undefined;
+  }
 
 
   public customerForm: FormGroup;
@@ -26,6 +30,7 @@ export class AddCustomerComponent implements OnInit {
               private shipService: ShipService,
               private contactService: ContactService,
               private router: Router) {
+    const customer: Customer = this.customerService.customer;
     this.customerForm = this.fb.group({
       name: ['',Validators.required],
       description: [''],
@@ -35,7 +40,21 @@ export class AddCustomerComponent implements OnInit {
       location: this.addressService.initAddress(),
       addAnotherCustomer: [true]
     });
-
+    if(isDefined(customer)) {
+      this.customerForm = this.fb.group({
+        id: isDefined(customer) ? customer.id : null,
+        name: [isDefined(customer)?customer.name: '',Validators.required],
+        description: [isDefined(customer) ? customer.description : ''],
+        useLocationAddress: [false],
+        contacts: this.fb.array([]),
+        billingAddress: this.addressService.initAddress(customer.billingAddress),
+        location: this.addressService.initAddress(customer.location),
+        addAnotherCustomer: [true]
+      });
+      customer.contacts.forEach(contact => {
+        (this.customerForm.get('contacts') as FormArray).push(this.contactService.initForm(contact));
+      })
+    }
   }
 
 
@@ -61,7 +80,12 @@ export class AddCustomerComponent implements OnInit {
       } else {
         this.router.navigate(['/customer', {customerId: addedCustomer.id}]).then();
       }
-    });
+    },
+      error2 => {
+      if(error2.error.exception == "org.springframework.dao.DataIntegrityViolationException") {
+        alert("Can't delete a Customer who is already linked to a PO/Bill, Please refresh !!");
+      }
+      });
   }
 
   private onUseLocationAddressChanges() {

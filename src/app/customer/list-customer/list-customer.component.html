@@ -1,8 +1,8 @@
 <div class="row page-header">
   <div class="col-2">
-    <h2 *ngIf="!dialogData.dialogMode">Customers </h2>
+    <h2 *ngIf="!dialogData?.dialogMode && !dialogMode">Customers</h2>
   </div>
-  <div class="col-10 text-right" *ngIf="!dialogData.dialogMode">
+  <div class="col-10 text-right" *ngIf="!dialogData?.dialogMode && !dialogMode">
     <button type="button" routerLink="/customers/add" mat-flat-button color="primary"><fa-icon icon="plus"></fa-icon> Add customer</button>
   </div>
 </div>
@@ -44,41 +44,18 @@
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let customer">
           <mat-select>
-            <mat-option *ngIf="!dialogData.dialogMode" (click)="goToCustomerViewInfo(customer.id)">View</mat-option>
-            <mat-option *ngIf="!dialogData.dialogMode" (click)="createPurchaseOrder(customer.id)">Create purchase order</mat-option>
-            <mat-option *ngIf="!dialogData.dialogMode" (click)="goToPurchaseOrdersPage(customer.id)">Linked purchase orders</mat-option>
-            <mat-option *ngIf="!dialogData.dialogMode" (click)="goToBillsPage(customer.id)">Linked Bills</mat-option>
-            <mat-option *ngIf="!dialogData.dialogMode" (click)="goToDeliveryNotePage(customer.id)">Linked Delivery Notes</mat-option>
-            <mat-option *ngIf="dialogData.dialogMode && cartService.selectedCustomer == undefined" (click)="cartService.selectedCustomer = customer">Select customer</mat-option>
-            <mat-option *ngIf="dialogData.dialogMode && cartService.selectedCustomer != undefined && cartService.selectedCustomer.id == customer.id" (click)="cartService.selectedCustomer = undefined">Remove customer</mat-option>
+            <mat-option *ngIf="!dialogData.dialogMode && !dialogMode" (click)="goToCustomerViewInfo(customer.id)">View</mat-option>
+            <mat-option *ngIf="!dialogData.dialogMode && !dialogMode" (click)="edit(customer.initialCustomer)">edit</mat-option>
+            <mat-option *ngIf="!dialogData.dialogMode && !dialogMode" (click)="createPurchaseOrder(customer.initialCustomer)">Create purchase order</mat-option>
+            <mat-option *ngIf="!dialogData.dialogMode && !dialogMode" (click)="goToPurchaseOrdersPage(customer.id)">Linked purchase orders</mat-option>
+            <mat-option *ngIf="!dialogData?.dialogMode && !dialogMode" (click)="goToBillsPage(customer.id)">Linked Bills</mat-option>
+            <mat-option *ngIf="!dialogData?.dialogMode && !dialogMode" (click)="goToDeliveryNotePage(customer.id)">Linked Delivery Notes</mat-option>
+            <mat-option *ngIf="(dialogData?.dialogMode || dialogMode) && cartService.selectedCustomer == undefined" (click)="cartService.selectedCustomer = customer">Select customer</mat-option>
+            <mat-option *ngIf="(dialogData?.dialogMode || dialogMode) && cartService.selectedCustomer != undefined && cartService.selectedCustomer.id == customer.id" (click)="cartService.selectedCustomer = undefined">Remove customer</mat-option>
 
           </mat-select>
         </td>
       </ng-container>
-<!--      <thead>
-      <tr>
-        <th>Customer name</th>
-        <th>Location country</th>
-        <th class="text-center">Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor='let customer of customerTableData$ | async' [shAttachMenu]="customerListMenu" [shMenuData]="customer">
-        <td>{{customer.name}}</td>
-        <td>{{customer.locationCountry}}</td>
-        <td class="text-center" *ngIf="!dialogData.dialogMode">
-          <button mat-stroked-button color="primary" class="mr-1" (click)="goToCustomerViewInfo(customer.id)"><fa-icon icon="eye"></fa-icon></button>
-          <button mat-stroked-button color="primary" class="mr-1" (click)="createPurchaseOrder(customer.id)"></button>
-          <button mat-stroked-button color="primary" class="mr-1" (click)="goToPurchaseOrdersPage(customer.id)"></button>
-          <button mat-stroked-button color="primary" class="mr-1" (click)="goToBillsPage(customer.id)">bills</button>
-          <button mat-stroked-button color="primary" (click)="goToDeliveryNotePage(customer.id)">delivery notes</button>
-        </td>
-        <td *ngIf="dialogData.dialogMode">
-          <button mat-stroked-button *ngIf="dialogData.dialogMode && cartService.selectedCustomer == undefined" color="primary" (click)="cartService.selectedCustomer = customer">select customer</button>
-          <button mat-stroked-button *ngIf="dialogData.dialogMode && cartService.selectedCustomer != undefined && cartService.selectedCustomer.id == customer.id" color="warn" (click)="cartService.selectedCustomer = undefined">remove customer</button>
-        </td>
-      </tr>
-      </tbody>-->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>

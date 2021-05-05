@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
 import {CustomerService} from '../customer.service';
 import {Customer} from '../customer';
 import {Router} from "@angular/router";
@@ -20,6 +20,7 @@ export class ListCustomerComponent implements OnInit {
   customerList: Array<Customer>;
   customerSearchForm: FormGroup;
   customerMatTable: MatTableDataSource<CustomerTable> = new MatTableDataSource();
+  dialogMode: boolean;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['customerName', 'customerDescription','locationCountry', 'actions'];
@@ -28,9 +29,10 @@ export class ListCustomerComponent implements OnInit {
   constructor(private customerService: CustomerService, private router: Router, private fb: FormBuilder,
               @Inject(MAT_DIALOG_DATA) public dialogData: any,
               public cartService: CartService) {
+    this.dialogMode = this.cartService.dialogMode ;
     this.customerList$ = this.customerService.getCustomers().shareReplay();
     this.customerTableData$ = this.customerList$.pipe(
-      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.description, customer.location.country)))
+      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name, customer.description, customer.location.country, customer)))
     ).shareReplay();
     this.customerList$.subscribe(customerList => this.customerList = customerList);
     this.customerSearchForm = this.fb.group({customerNameCSV: ''});
@@ -45,8 +47,12 @@ export class ListCustomerComponent implements OnInit {
   ngOnInit() {
   }
 
-  createPurchaseOrder(customerId: number) {
-    this.router.navigate(['/purchase-order', {customerId: customerId}]).then();
+  createPurchaseOrder(customer: Customer) {
+    this.customerService.findCustomerById(customer.id).subscribe(result => {
+
+      this.cartService.selectedCustomer = result;
+      this.router.navigate(['/purchase-order', {customerId: customer.id}]).then();
+    });
   }
 
   goToPurchaseOrdersPage(customerId: number) {
@@ -65,12 +71,20 @@ export class ListCustomerComponent implements OnInit {
     this.router.navigate(['/customer', {customerId: customerId}]).then();
   }
 
+  edit(customer: Customer) {
+    this.customerService.findCustomerById(customer.id).subscribe(result => {
+
+      this.customerService.customer = result;
+      this.router.navigate(['/customers/add']).then();
+    });
+  }
+
   findCustomer() {
     let customerNameCSV: string  = this.customerSearchForm.value.customerNameCSV;
     let customerNameList: Array<string> = customerNameCSV != undefined && customerNameCSV.trim().length > 0 ? customerNameCSV.split(';') : [];
     this.customerList$ = this.customerService.findCustomer(customerNameList).shareReplay();
     this.customerTableData$ = this.customerList$.pipe(
-      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name,customer.description, customer.location.country)))
+      map(customerList => customerList.map(customer => new CustomerTable(customer.id, customer.name,customer.description, customer.location.country, customer)))
     ).shareReplay();
     this.customerList$.subscribe(customerList => this.customerList = customerList);
 
@@ -91,11 +105,13 @@ export class CustomerTable {
   name;
   description;
   locationCountry;
+  initialCustomer;
 
-  constructor(id, name, desc, locationCountry) {
+  constructor(id, name, desc, locationCountry, initialCustomer) {
     this.id = id;
     this.name = name;
     this.description = desc;
     this.locationCountry = locationCountry;
+    this.initialCustomer = initialCustomer;
   }
 }

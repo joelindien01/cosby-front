@@ -14,6 +14,7 @@ import {NgxSpinnerModule} from "ngx-spinner";
 import {ViewCartComponent} from "../cart/view-cart/view-cart.component";
 import {CartModule} from "../cart/cart.module";
 import { LoadItemsComponent } from './load-items/load-items.component';
+import {CustomerModule} from "../customer/customer.module";
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { LoadItemsComponent } from './load-items/load-items.component';
     RouterModule,
     AngularFileUploaderModule,
     NgxSpinnerModule,
-    CartModule
+    CartModule,
+    CustomerModule
   ],
   providers: [ProductService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

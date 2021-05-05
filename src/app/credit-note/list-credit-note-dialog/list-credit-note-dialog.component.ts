@@ -19,7 +19,7 @@ export class ListCreditNoteDialogComponent implements OnInit {
 
   ngOnInit() {
   }
-  generateCreditNote(note: CreditNote) {
+  generateCreditNote(note: CreditNote, bill: Bill) {
     let cn = new CreditNoteDocData();
     cn.id = note.id;
     cn.billId = this.bill.id;
@@ -27,6 +27,7 @@ export class ListCreditNoteDialogComponent implements OnInit {
     cn.creditedAmount = note.creditedAmount;
     cn.creationDate = note.creationDate;
     cn.netToBeDeducted = note.netToBeDeducted;
+    cn.bill = bill;
     this.creditNoteService.generateCreditNote(cn);
 
   }

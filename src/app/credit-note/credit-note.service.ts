@@ -6,6 +6,7 @@ import {DocGeneratorService, FileGeneratorHelper} from "../common/doc-generator.
 import {DatePipe} from "@angular/common";
 import {isDefined} from "@angular/compiler/src/util";
 import {PdfService} from "../common/pdf.service";
+import {Address} from "../customer/customer";
 export class CreditNote {
   id: number;
   creationDate: Date;
@@ -27,14 +28,7 @@ export class CreditNoteService {
   }
 
   generateCreditNote(cn: CreditNoteDocData) {
-    /*let docGeneratorHelper = new FileGeneratorHelper();
-    docGeneratorHelper.outputName = "credit_note"+
-      "_"+cn.id+ "_" +
-      new Date().toISOString();
-    docGeneratorHelper.templateName = "credit_note";
-    docGeneratorHelper.data = cn;
 
-    this.docGenerator.generateFile(docGeneratorHelper);*/
     const pdfDefinition = this.buildCreditNote(cn).then(value => {
 
       console.log(value);
@@ -43,14 +37,35 @@ export class CreditNoteService {
 
   }
 
+  public buildBillingAddress(address: Address) {
+    return address.street + "\n"
+      + address.zipCode +" "+ address.city + "\n"
+      + address.state + "\n"
+      + address.country;
+  }
+
   async buildCreditNote(creditNoteData: CreditNoteDocData) {
 
 
     let clientNameArea = {
-      text: "",
+
+      text: '',
       bold: true,
       color: '#333333',
       alignment: 'left',
+      stack: [
+        {text: creditNoteData.bill.deliveryNote.purchaseOrder.customer.name+(isDefined(creditNoteData.bill.deliveryNote.purchaseOrder.customer.description) ? '\n'+creditNoteData.bill.deliveryNote.purchaseOrder.customer.description : ''), fontSize: 9},
+        {
+          text: 'Billing Address',
+          color: '#aaaaab',
+          bold: true,
+          fontSize: 10,
+          alignment: 'left',
+          margin: [0, 10, 0, 5],
+        },{
+          text: this.buildBillingAddress(creditNoteData.bill.deliveryNote.purchaseOrder.customer.billingAddress),
+          fontSize: 9
+        }]
     };
     let bankIbanAccountReferenceArea = [
       {text: ''}];
@@ -107,10 +122,10 @@ export class CreditNoteService {
         {
           columns: [
             {
-              text: '',
+              text: 'TO',
               color: '#aaaaab',
               bold: true,
-              fontSize: 14,
+              fontSize: 11,
               alignment: 'left',
               margin: [0, 10, 0, 5],
             },
@@ -326,7 +341,7 @@ export class CreditNoteService {
       text: areaName,
       border: [false, true, false, true],
       alignment: 'right',
-      margin: [0, 5, 0, 5],
+      margin: [0, 2, 0, 2],
     };
     if(isDefined(fontSize)) {
       areaNameEL.fontSize = fontSize;
@@ -338,13 +353,14 @@ export class CreditNoteService {
         text: text,
         alignment: 'right',
         fillColor: '#f5f5f5',
-        margin: [0, 5, 0, 5],
+        margin: [0, 2, 0, 2],
+        fontSize: fontSize
       },
     ]
   }
 
   private buildTableAnnexe(creditNoteData: CreditNoteDocData) {
-    return [this.buildAnnexeRow("NET TO BE DEDUCTED", creditNoteData.netToBeDeducted.toString(), 20)];
+    return [this.buildAnnexeRow("NET TO BE DEDUCTED", creditNoteData.netToBeDeducted.toString(), 9)];
   }
 
   private buildDeliveryInfoArea(creditNoteData: CreditNoteDocData) {
@@ -353,9 +369,7 @@ export class CreditNoteService {
 
   private buildInvoiceDateArea(creditNoteData: CreditNoteDocData) {
     const invoiceDateAreaElementValues = [
-      {name: "Credit Note N°", value: creditNoteData.id.toString()},
-      {name: "Issue Date", value: this.datepipe.transform(creditNoteData.creationDate, 'MMMM d, y')},
-      {name: "Vessel", value: creditNoteData.vessel}
+      {name: "Credit Note N°", value: this.pdfService.buildId(creditNoteData, "", "CN")}
     ];
     return invoiceDateAreaElementValues.map(value => {
       return {
@@ -382,7 +396,7 @@ export class CreditNoteService {
   }
 
   private buildProduct(creditNoteData: CreditNoteDocData) {
-    const product = ["Credit on invoice n° : " +creditNoteData.billId.toString(), creditNoteData.creditedAmount];
+    const product = [ this.pdfService.buildId(creditNoteData.bill, "Credit on invoice n° : ", "FE"), creditNoteData.creditedAmount];
     return product.map(p => {
       return {
         text: p,
@@ -423,4 +437,5 @@ export class CreditNoteDocData {
   billId: number;
   creditedAmount: number;
   netToBeDeducted: number;
+  bill: Bill;
 }

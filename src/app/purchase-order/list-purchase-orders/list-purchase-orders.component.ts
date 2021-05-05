@@ -7,8 +7,11 @@ import {Observable} from "rxjs/Rx";
 import {map} from "rxjs/internal/operators";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ReferenceItem} from "../add-purchase-order/add-purchase-order.component";
-import {MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from "@angular/material";
 import {CartService} from "../../cart/cart.service";
+import {StatusComponent} from "../../common/status/status.component";
+import {StatusService} from "../../common/status.service";
+import {isDefined} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-list-purchase-orders',
@@ -22,14 +25,18 @@ export class ListPurchaseOrdersComponent implements OnInit {
   orderSearchForm: FormGroup;
   public paymentMeans: Array<ReferenceItem> = [{label:"Cash", value: "CASH"},{label:"Bank transfer", value:"BANK_TRANSFER"}];
   public paymentStatus: Array<ReferenceItem> = [{label:"Paid", value: "Paid"},{label:"Pending", value:"Pending"}, {label:"Partially paid", value:"PARTIALLY_PAID"}];
+  public status: Array<ReferenceItem> = [{label:"Live", value: "LIVE"},{label:"Cancel", value:"CANCEL"}];
 
   public orderMatTable: MatTableDataSource<OrderTable> = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns: string[] = ['orderId', 'customerName','vessel', 'creationDate', 'paymentStatus', 'actions'];
+  displayedColumns: string[] = ['orderId', 'customerName','vessel', 'creationDate', 'paymentStatus', 'status', 'actions'];
 
 
-  constructor(private cartService: CartService, private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute, private fb: FormBuilder) {
+
+
+  constructor(private cartService: CartService, private orderService: PurchaseOrderService, private router: Router, private route: ActivatedRoute, private fb: FormBuilder,
+              public dialog: MatDialog, private statusService: StatusService) {
     this.route.params.subscribe(params => {
       if (params['customerId']) {
         const customerId = params['customerId'];
@@ -46,6 +53,7 @@ export class ListPurchaseOrdersComponent implements OnInit {
       poCreatedBefore: [],
       paymentStatus: [],
       paymentMeans: [],
+      poStatus: '',
       purchaseOrderIdCSV: ''
     });
   }
@@ -70,7 +78,7 @@ export class ListPurchaseOrdersComponent implements OnInit {
   }
 
   editPO(order) {
-    this.orderService.po = order;
+    this.orderService.po = order.po;
     this.router.navigate(['/purchase-order',{customerId: order.customerId, poId: order.id}]).then();
   }
 
@@ -87,11 +95,12 @@ export class ListPurchaseOrdersComponent implements OnInit {
             orderTable.id = purchaseOrder.id;
             orderTable.customerName = purchaseOrder.customer.name;
             orderTable.vessel = purchaseOrder.deliveryInformation.vessel;
-
+            orderTable.status = purchaseOrder.status;
             orderTable.orderCreationDate = purchaseOrder.creationDate;
             orderTable.deliveryInformation = purchaseOrder.deliveryInformation;
             orderTable.customerId = purchaseOrder.customer.id;
             orderTable.paymentStatus = purchaseOrder.paymentInformation.paymentStatus;
+            orderTable.po = purchaseOrder;
             return orderTable;
           });
         })
@@ -117,6 +126,29 @@ export class ListPurchaseOrdersComponent implements OnInit {
     })*/
 
   }
+
+  cancelPO(order) {
+    const dialogRef = this.dialog.open(StatusComponent, {
+      width: '250px',
+      data: {id: order.status.id}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(isDefined(result)) {
+        order.status.status = 'CANCEL';
+      }
+    });
+  }
+
+  restorePO(order) {
+    this.statusService.restore(order.status).subscribe(result => {
+      alert("PO restored");
+    });
+  }
+
+  loadPoByFile() {
+    this.router.navigateByUrl('/load-items-for-po').then();
+  }
 }
 
 export class OrderTable {
@@ -127,4 +159,12 @@ export class OrderTable {
   customerName: string;
   deliveryInformation: DeliveryInformation;
   paymentStatus: string;
+  status: ObjectStatus;
+  po: PurchaseOrder;
+}
+
+export class ObjectStatus {
+  id: number;
+  status: string;
+  description: string;
 }

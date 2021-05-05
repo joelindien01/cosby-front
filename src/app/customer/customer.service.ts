@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 export class CustomerService {
   apiUrl = environment.apiUrl;
   baseUrl = this.apiUrl+"customers/";
+  customer: Customer;
 
   public customerList: Array<Customer>;
   constructor(private http: HttpClient) { }

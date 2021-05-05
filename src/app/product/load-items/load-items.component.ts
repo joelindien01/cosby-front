@@ -1,20 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ProductService} from "../product.service";
 import {CartService} from "../../cart/cart.service";
 import {Router} from "@angular/router";
 import {isDefined} from "@angular/compiler/src/util";
 import {isUndefined} from "util";
+import {CustomerService} from "../../customer/customer.service";
 
 @Component({
   selector: 'app-load-items',
   templateUrl: './load-items.component.html',
   styleUrls: ['./load-items.component.scss']
 })
-export class LoadItemsComponent implements OnInit {
+export class LoadItemsComponent implements OnInit, OnDestroy {
 
-  constructor(public productService: ProductService, public cartService: CartService, private router: Router) {
+  ngOnDestroy(): void {
+    this.cartService.dialogMode = false;
+  }
+
+  dialogMode: boolean;
+
+  constructor(public productService: ProductService, public cartService: CartService, private router: Router, private customerService: CustomerService) {
     this.productService.afuConfig.uploadAPI.url = this.productService.getLoadItemsForPOUrl();
-    //this.productService.afuConfig.formatsAllowed = "csv";
+    this.cartService.dialogMode = true;
   }
 
   ngOnInit() {
@@ -31,6 +38,6 @@ export class LoadItemsComponent implements OnInit {
     return result.item;
     });
     this.cartService.items = results;
-    this.router.navigate(['/purchase-order',{customerId: 1}]).then();
+    this.router.navigate(['/purchase-order',{customerId: this.cartService.selectedCustomer.id}]).then();
   }
 }

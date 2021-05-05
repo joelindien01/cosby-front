@@ -7,6 +7,7 @@ import {Customer} from "../customer/customer";
 export class CartService {
   items = [];
   selectedCustomer: Customer;
+  dialogMode: boolean;
 
   getItemPosition(product) {
     return this.items.findIndex(item => item.product.id == product.product.id) + 1;
