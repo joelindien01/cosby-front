@@ -30,7 +30,7 @@
     "@ng-bootstrap/ng-bootstrap": "^4.0.1",
     "angular-expressions": "^1.0.0",
     "angular-file-uploader": "^7.0.3",
-    "bootstrap": "^4.2.1",
+    "bootstrap": "^4.3.1",
     "core-js": "^2.6.1",
     "docxtemplater": "^3.10.1",
     "file-saver": "^2.0.1",
