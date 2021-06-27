@@ -162,6 +162,8 @@ export class BillService {
 
       text: '',
       bold: true,
+
+      width: 300,
       color: '#333333',
       alignment: 'left',
       stack: [
@@ -206,16 +208,19 @@ export class BillService {
       text: bill.ourSignatoryFunction,
       style:'signatureJobTitle'
     };
-    let footerImagePath = await this.pdfService.getBase64ImageFromURL(
-      "/assets/footer.jpg"
-      )
-    ;
     let logoImagePath = await this.pdfService.getBase64ImageFromURL(
-      "/assets/logo_lobo.jpg"
+      "/assets/logo_lobo.png"
     )
     ;
 
-    let billHead = this.pdfService.buildId(bill, "Invoice ", "FE");
+    let myAddress = {
+      text: this.buildBillingAddress(bill.deliveryNote.purchaseOrder.customer.billingAddress),
+      fontSize: 9,
+      alignment: 'right',
+      margin: [0, 20, 40, 0],
+    };
+
+    let billHead = this.pdfService.buildId(bill, "Facture ", "");
     let tableArea = this.buildTableArea(bill);
     let buildTableAnnexe = this.buildTableAnnexe(bill, true);
     let invoiceDateArea = this.buildInvoiceDateArea(bill);
@@ -224,25 +229,29 @@ export class BillService {
       content: [
         {
           columns: [
-            [
-              {
-                stack: invoiceDateArea,
-              },
-            ],
+            {
+              text: 'Facture \n\n',
+              color: '#333333',
+              bold: true,
+              fontSize: 15,
+              alignment: 'center',
+              //margin: [0, 10, 0, 5],
+            },
           ],
         },
         {
           columns: [
             {
-              text: 'To',
+              text: 'Adressée à',
               color: '#aaaaab',
               bold: true,
               fontSize: 11,
               alignment: 'left',
               margin: [0, 10, 0, 5],
+              width: 300,
             },
             {
-              text: 'Delivery Info',
+              text: 'Détails de facturation',
               color: '#aaaaab',
               bold: true,
               fontSize: 11,
@@ -306,8 +315,8 @@ export class BillService {
           },
           table: {
             headerRows: 1,
-            heights: 8,
-            widths: ['auto', '*','auto','auto','auto','auto'],
+            heights: 10,
+            widths: ['*','auto','auto'],
             body: tableArea,
           },
         },
@@ -366,7 +375,7 @@ export class BillService {
           {
             width: '100%',
             alignment: 'center',
-            text: isDefined(bill.impactedAccount)? 'Payment Information' : "",
+            text: isDefined(bill.impactedAccount)? 'Information de Paiement' : "",
             bold: true,
             margin: [0, 10, 0, 10],
             fontSize: 11,
@@ -457,24 +466,17 @@ export class BillService {
                 width: 150,
                 margin: [40,20,0,10],
               },
-              [{
-                text: 'Page: ' + currentPage + '/' + pageCount,
-                color: '#333333',
-                width: '*',
-                fontSize: 9,
-                bold: false,
-                alignment: 'right',
-                margin: [0, 20, 40, 0],
-              },
-                {
+              [
+                /*{
                   text: billHead,
                   color: '#333333',
                   width: '*',
                   fontSize: 20,
                   bold: true,
                   alignment: 'right',
-                  margin: [0, 20, 40, 0],
-                }]
+                  margin: [0, 40, 40, 0],
+                },*/
+                myAddress]
             ]
 
           },
@@ -484,10 +486,7 @@ export class BillService {
       },
       footer: {
         columns: [
-          { image: footerImagePath,
-            alignment: 'left',
-            width: 520,
-            margin: [40,0,0,0],
+          {
           }
         ]
       },
@@ -521,9 +520,9 @@ export class BillService {
   }
 
   private buildDeliveryInfoArea(bill: Bill) {
-    return this.pdfService.buildId(bill.deliveryNote, "Delivery Note Ref: ", "DN")+ "\n" +
-      "Port: " + bill.deliveryNote.purchaseOrder.deliveryInformation.port + "\n" +
-      "Vessel: " + bill.deliveryNote.purchaseOrder.deliveryInformation.vessel;
+    return this.pdfService.buildId(bill.deliveryNote, "Contrat: ", "")+ "\n" +
+      "Date d'émission: " + bill.deliveryNote.purchaseOrder.deliveryInformation.port + "\n" +
+      "Correspondant: " + bill.deliveryNote.purchaseOrder.deliveryInformation.vessel;
   }
 
   private buildInvoiceDateArea(bill: Bill) {
@@ -565,7 +564,7 @@ export class BillService {
     let itemList = bill.deliveryNote.purchaseOrder.itemList;
     itemList = itemList.sort(this.comparePosition);
       itemList.forEach((item, index) => {
-      const productRow = this.buildProduct(item, index+1);
+      const productRow = this.buildProduct(item, index+1, bill);
       tableArea.push(productRow);
     });
     return tableArea;
@@ -585,44 +584,38 @@ export class BillService {
     }
     let tableAnnexe = [];
 
-    if(bill.deliveryNote.purchaseOrder.totalAmount != bill.netTotal) {
-      tableAnnexe.push({name: "subtotal", value: this.numberPipe.transform(bill.deliveryNote.purchaseOrder.totalAmount, '1.0-2', 'fr-FR')});
-    }
     if(isDefined(bill.discount)) {
       const discount = bill.deliveryNote.purchaseOrder.totalAmount* (bill.discount)/100;
-      tableAnnexe.push({name: "Discount " + bill.discount + "%", value: this.numberPipe.transform(discount, '1.0-2', 'fr-FR')});
+      tableAnnexe.push({name: "TVA " + bill.discount + "%", value: this.numberPipe.transform(discount, '1.0-2', 'fr-FR')+ " " + bill.deliveryNote.purchaseOrder.paymentInformation.currency.symbol});
     }
-    tableAnnexe.push({name: "Transportation Fee", value: this.numberPipe.transform(bill.transportationFee , '1.0-2', 'fr-FR')});
-    tableAnnexe.push({name: "Delivery Fee", value: this.numberPipe.transform(bill.deliveryFee, '1.0-2', 'fr-FR')});
-
     let returnedAnnexe = tableAnnexe.filter(el => isDefined(el.value) && el.value != 0).map(el => {
-      return this.buildAnnexeRow(el.name, el.value.toString(), 9)
+      return this.buildAnnexeRow(el.name, el.value.toString(), 9, false)
     });
-    returnedAnnexe.push(this.buildAnnexeRow("Total Amount", this.numberPipe.transform(bill.netTotal, '1.0-2', 'fr-FR')+ " " + bill.deliveryNote.purchaseOrder.paymentInformation.currency.symbol, 9));
+    returnedAnnexe.push(this.buildAnnexeRow("Total T.T.C.", this.numberPipe.transform(bill.netTotal, '1.0-2', 'fr-FR')+ " " + bill.deliveryNote.purchaseOrder.paymentInformation.currency.symbol, 12, true));
     return returnedAnnexe;
   }
 
-  private buildProduct(item: Item, index: number) {
+  private buildProduct(item: Item, index: number, bill?:any) {
     const uom = isDefined(item.unitOfMeasurement) ? item.unitOfMeasurement.symbol : "";
-    const product = [{label:index.toString(), alignment: "right" }, {label:item.description, alignment: "left" }, {label:this.numberPipe.transform(item.quantity, '1.0-2', 'fr-FR'), alignment: "right" }, {label:uom, alignment: "left" }, {label:this.numberPipe.transform(item.unit, '1.0-2', 'fr-FR'), alignment: "right" }, {label:this.numberPipe.transform(item.amount, '1.0-2', 'fr-FR'), alignment: "right" }];
+    const product = [{label:item.description, alignment: "left" }, {label:this.numberPipe.transform(item.quantity, '1.0-2', 'fr-FR'), alignment: "right" }, {label:this.numberPipe.transform(item.unit, '1.0-2', 'fr-FR')+ " " + bill.deliveryNote.purchaseOrder.paymentInformation.currency.symbol, alignment: "right" }];
     return product.map(p => {
       return {
         text: p.label,
         border: [false, false, false, true],
-        fontSize: 8,
-        margin: [0, 1, 0, 1],
+        fontSize: 10,
+        margin: [0, 5, 0, 5],
         alignment: p.alignment,
       }
     });
   }
 
   private buildTableHeader() {
-    const columns = [{label:"N°", alignment: "right" }, {label:"Description", alignment: "left" }, {label:"Quantity", alignment: "right" }, {label:"Unit", alignment: "left" }, {label:"Price", alignment: "right" }, {label:"Amount", alignment: "right" }];
+    const columns = [{label:"Description", alignment: "left" }, {label:"Quantité", alignment: "right" }, {label:"Facturation", alignment: "right" }];
     return columns.map( column => {
       return {
         text: column.label,
         fillColor: '#eaf2f5',
-        fontSize: 9,
+        fontSize: 10,
         border: [false, true, false, true],
         alignment: column.alignment,
         margin: [0, 5, 0, 5],
@@ -631,12 +624,13 @@ export class BillService {
     });
   }
 
-  private buildAnnexeRow(areaName: string,text: string, fontSize?:number) {
+  private buildAnnexeRow(areaName: string,text: string, fontSize?:number, bold?: boolean) {
     let areaNameEL: any = {
       text: areaName,
       border: [false, true, false, true],
       alignment: 'right',
-      margin: [0, 2, 0, 2],
+      bold: bold,
+      margin: [0, bold? 10 : 5, 0, bold?10: 5],
     };
     if(isDefined(fontSize)) {
       areaNameEL.fontSize = fontSize;
@@ -648,8 +642,9 @@ export class BillService {
         border: [false, true, false, true],
         text: text,
         alignment: 'right',
+        bold: bold,
         fillColor: '#f5f5f5',
-        margin: [0, 2, 0, 2],
+        margin: [0, bold? 10 : 5, 0, bold? 10 : 5],
         fontSize: fontSize
       },
     ]
