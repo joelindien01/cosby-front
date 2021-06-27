@@ -31,17 +31,19 @@ export class AddBillComponent implements OnInit, OnDestroy {
     this.accounts$ = this.accountService.findAllAccounts();
     const bill: Bill = isDefined(this.billService.bill) ? this.billService.bill : undefined;
     const deadLine = isDefined(bill) ? new Date(bill.deadLine) : new Date();
+    const issueDate = isDefined(bill) ? new Date(bill.issueDate) : new Date();
     this.billForm = this.fb.group({
       id: isDefined(bill) ? bill.id : null,
       deadLine: new FormControl(deadLine, Validators.required),
+      issueDate: new FormControl(issueDate, Validators.required),
       discount: [isDefined(bill) ? bill.discount :0, Validators.required],
       applyDiscount: [isDefined(bill) && bill.discount > 0],
       deadlines: [],
       deliveryFee: [isDefined(bill) ? bill.deliveryFee : 0, Validators.required],
       transportationFee: [isDefined(bill) ? bill.transportationFee : 0, Validators.required],
       ourSignatoryObject: [null],
-      ourSignatory: [isDefined(bill) ? bill.ourSignatory : '', Validators.required],
-      ourSignatoryFunction: [{value:isDefined(bill) ? bill.ourSignatoryFunction : '', disabled: false },Validators.required],
+      ourSignatory: [isDefined(bill) ? bill.ourSignatory : ''],
+      ourSignatoryFunction: [{value:isDefined(bill) ? bill.ourSignatoryFunction : '', disabled: false }],
       customerSignatory: [isDefined(bill) ? bill.customerSignatory : ''],
       customerSignatoryFunction: [{value:isDefined(bill) ? bill.customerSignatoryFunction : '', disabled: false }],
       impactedAccount: [isDefined(bill) ? bill.impactedAccount : null]

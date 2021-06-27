@@ -11,8 +11,9 @@
         <div class="col-9 account">
           <mat-form-field>
             <mat-select [errorStateMatcher]="matcher" [compareWith]="compareFunction" placeholder="Account to use for payment" formControlName="impactedAccount">
-              <mat-option *ngFor="let account of (accounts$| async)" [value]="account">{{account.bankName}} ({{account.reference}})
-              </mat-option>
+              <mat-option [value]="null">--- None</mat-option>
+              <mat-option *ngFor="let account of (accounts$| async)" [value]="account">{{account.bankName}} ({{account.reference}})</mat-option>
+
             </mat-select>
             <mat-error *ngIf="billForm.controls['impactedAccount'].touched && billForm.controls['impactedAccount'].errors?.required">
               The impacted account is <strong>required</strong>
@@ -63,7 +64,17 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-6"></div>
+            <div class="col-6">
+              <mat-form-field>
+                <input [errorStateMatcher]="matcher" matInput placeholder="Issue Date" [matDatepicker]="picker2" formControlName="issueDate">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error *ngIf="billForm.controls['issueDate'].touched && billForm.controls['issueDate'].errors?.required">
+                  Issue Date is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+
             <div class="col-6">
               <mat-form-field>
                 <input [errorStateMatcher]="matcher"  matInput placeholder="Our Signatory" formControlName="ourSignatory"/>

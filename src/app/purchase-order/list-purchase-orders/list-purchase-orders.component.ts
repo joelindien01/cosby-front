@@ -106,6 +106,9 @@ export class ListPurchaseOrdersComponent implements OnInit {
         })
       ).shareReplay();
     this.ordersTableData$.subscribe(order => {
+      order.sort((a, b) =>{
+        return (a.orderCreationDate < b.orderCreationDate ? -1 : 1) * -1;
+      });
       this.orderMatTable.data = order;
       this.orderMatTable.paginator = this.paginator;
       this.orderMatTable.sort = this.sort;

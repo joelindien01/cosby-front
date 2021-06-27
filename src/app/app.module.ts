@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -44,6 +44,9 @@ import {ListAccountComponent} from "./account/list-account/list-account.componen
 import {ResetPasswordComponent} from "./user/reset-password/reset-password.component";
 import {LoadItemsComponent} from "./product/load-items/load-items.component";
 import {ShortcutService} from "./shortcut.service";
+import localeFr from '@angular/common/locales/fr';
+import {registerLocaleData} from "@angular/common";
+registerLocaleData(localeFr);
 
 
 const appRoutes: Routes = [
@@ -101,7 +104,8 @@ const appRoutes: Routes = [
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [ShortcutService],
+
+  providers: [ShortcutService, { provide: LOCALE_ID, useValue: 'en-EN'}],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
 })

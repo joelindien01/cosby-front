@@ -160,6 +160,9 @@ export class ListDeliveryNoteComponent implements OnInit {
         })
       );
     this.deliveryNotesTable$.subscribe(delNote => {
+    delNote.sort((a, b) =>{
+        return (a.creationDate < b.creationDate ? -1 : 1) * -1;
+      });
       this.delNoteMatTable.data = delNote;
       this.delNoteMatTable.paginator = this.paginator;
       this.delNoteMatTable.sort = this.sort;

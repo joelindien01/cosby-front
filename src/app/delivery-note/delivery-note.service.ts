@@ -127,7 +127,7 @@ export class DeliveryNoteService {
       {text: ''}
     ];
     let clientSignatoryNameArea = {
-      text: delNoteReturned.customerSignatory,
+      text: isDefined(delNoteReturned.customerSignatory) && delNoteReturned.customerSignatory.length > 0 ? delNoteReturned.customerSignatory : '\n',
       style:'signatureName'
     };
     let clientSignatoryJobTitleArea = {
@@ -136,7 +136,7 @@ export class DeliveryNoteService {
 
     };
     let ourSignatoryFunctionArea = {
-      text: delNoteReturned.ourSignatory,
+      text: isDefined(delNoteReturned.ourSignatory) && delNoteReturned.ourSignatory.length > 0 ? delNoteReturned.ourSignatory : '\n',
       style:'signatureName'
 
     };
@@ -297,9 +297,7 @@ export class DeliveryNoteService {
             body: buildTableAnnexe,
           },
         },
-        '\n',
         {text:''},
-        '\n',
         {unbreakable: true,
           columns: [
             {
@@ -323,7 +321,7 @@ export class DeliveryNoteService {
             {
               stack: [
                 {
-                  text: '_________________________________',
+                  text: '',
                   style:'signaturePlaceholder'
                 },
                 clientSignatoryNameArea,
@@ -335,7 +333,7 @@ export class DeliveryNoteService {
             {
               stack: [
                 {
-                  text: '_________________________________',
+                  text: '',
                   style:'signaturePlaceholder'
                 },
                 ourSignatoryFunctionArea,
@@ -351,7 +349,7 @@ export class DeliveryNoteService {
 
       ],
       pageMargins: [40, 110, 40, 80],
-      header: {
+      /*header: {
         columns: [
           { image: logoImagePath,
             alignment: 'left',
@@ -370,6 +368,42 @@ export class DeliveryNoteService {
             }]
         ]
 
+      },*/
+      header: function(currentPage, pageCount, pageSize) {
+        // you can apply any logic and return any valid pdfmake element
+
+        return [
+          {
+            columns: [
+              { image: logoImagePath,
+                alignment: 'left',
+                width: 150,
+                margin: [40,20,0,10],
+              },
+              [{
+                text: 'Page: ' + currentPage + '/' + pageCount,
+                color: '#333333',
+                width: '*',
+                fontSize: 9,
+                bold: false,
+                alignment: 'right',
+                margin: [0, 20, 40, 0],
+              },
+                {
+                  text: deliveryNoteHead,
+                  color: '#333333',
+                  width: '*',
+                  fontSize: 20,
+                  bold: true,
+                  alignment: 'right',
+                  margin: [0, 20, 40, 0],
+                }]
+            ]
+
+          },
+          //{ text: 'simple text', alignment: (currentPage % 2) ? 'left' : 'right' },
+          { canvas: [ { type: 'rect', x: 170, y: 32, w: pageSize.width - 170, h: 40 } ] }
+        ]
       },
       footer: {
         columns: [

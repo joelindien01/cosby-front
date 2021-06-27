@@ -2,7 +2,7 @@ import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {ConfigService} from "./config.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AddressComponent} from './address/address.component';
-import {CommonModule, DatePipe} from "@angular/common";
+import {CommonModule, DatePipe, DecimalPipe} from "@angular/common";
 import {FormControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {AddressService} from "./address.service";
 import { ShipComponent } from './ship/ship.component';
@@ -51,7 +51,7 @@ import { StatusComponent } from './status/status.component';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [AddressComponent, ShipComponent, ContactComponent, FontAwesomeModule, Ng2SmartTableModule, MaterialModule, ShContextMenuModule, ViewAddressComponent, ViewContactComponent, ViewShipComponent, ModalComponent, StatusComponent],
-  providers: [DatePipe, ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService,PdfService, {provide:HTTP_INTERCEPTORS, useClass: BasicAuthHttpInterceptorService, multi:true}],
+  providers: [DecimalPipe, DatePipe, ConfigService, AddressService, ShipService, EmailAddressService, DocGeneratorService,PdfService, {provide:HTTP_INTERCEPTORS, useClass: BasicAuthHttpInterceptorService, multi:true}],
   entryComponents: [StatusComponent]
 })
 export class CosbyCommonModule {

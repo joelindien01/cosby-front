@@ -121,6 +121,9 @@ export class ListBillComponent implements OnInit {
     ).shareReplay();
 
     this.billTable$.subscribe(billTable => {
+      billTable.sort((a, b) =>{
+        return (a.creationDate < b.creationDate ? -1 : 1) * -1;
+      });
       this.billMatTable.data = billTable;
       this.billMatTable.sort = this.sort;
       this.billMatTable.paginator = this.paginator;

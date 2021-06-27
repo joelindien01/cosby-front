@@ -6,7 +6,7 @@ import {DocGeneratorService, FileGeneratorHelper} from "../common/doc-generator.
 import { environment } from '../../environments/environment';
 import {Item, ItemDto} from "../purchase-order/PurchaseOrder";
 import {PdfService} from "../common/pdf.service";
-import { DatePipe } from '@angular/common'
+import {DatePipe, DecimalPipe} from '@angular/common'
 import {Address} from "../customer/customer";
 import {isDefined} from "@angular/compiler/src/util";
 import {MatDialog} from "@angular/material";
@@ -46,7 +46,7 @@ export class BillService {
   bill: any;
 
   constructor(public dialog: MatDialog, private httpClient: HttpClient,
-              private docGenerator: DocGeneratorService, private pdfService: PdfService, public datepipe: DatePipe) {}
+              private docGenerator: DocGeneratorService, private pdfService: PdfService, public datepipe: DatePipe, public numberPipe: DecimalPipe) {}
 
   saveBill(bill: BillDTO) {
     return this.httpClient.post(this.baseUrl, bill);
@@ -179,16 +179,17 @@ export class BillService {
         }]
     };
     let bankIbanAccountReferenceArea = [
-      {text: 'Bank: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.bankName, fontSize: 9},
-      {text: 'Account N°: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.reference, fontSize: 9},
-      {text: 'IBAN: ' + isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.iban, fontSize: 9}];
+      {text: 'Bank: '+ (isUndefined(bill.impactedAccount) || bill.impactedAccount == null ? "":bill.impactedAccount.bankName), fontSize: 9},
+      {text: 'Account N°: '+ (isUndefined(bill.impactedAccount) || bill.impactedAccount == null? "":bill.impactedAccount.reference), fontSize: 9},
+      {text: 'IBAN: ' + (isUndefined(bill.impactedAccount) || bill.impactedAccount == null? "":bill.impactedAccount.iban), fontSize: 9}];
     let holderSwiftRibArea = [
-      {text: 'Holder: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.holder, fontSize: 9},
-      {text: 'SWIFT Code: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.swiftCode, fontSize: 9},
-      {text: 'RIB: '+ isUndefined(bill.impactedAccount) ? "":bill.impactedAccount.rib, fontSize: 9}
+      {text: 'Holder: '+ (isUndefined(bill.impactedAccount) || bill.impactedAccount == null? "":bill.impactedAccount.holder), fontSize: 9},
+      {text: 'SWIFT Code: '+ (isUndefined(bill.impactedAccount) || bill.impactedAccount == null? "":bill.impactedAccount.swiftCode), fontSize: 9},
+      {text: 'RIB: '+ (isUndefined(bill.impactedAccount) || bill.impactedAccount == null? "":bill.impactedAccount.rib), fontSize: 9}
     ];
     let clientSignatoryNameArea = {
-      text: bill.customerSignatory,
+      text: isDefined(bill.customerSignatory) && bill.customerSignatory.length > 0 ? bill.customerSignatory : '\n',
+
       style:'signatureName'
     };
     let clientSignatoryJobTitleArea = {
@@ -197,7 +198,7 @@ export class BillService {
 
     };
     let ourSignatoryFunctionArea = {
-      text: bill.ourSignatory,
+      text: isDefined(bill.ourSignatory) && bill.ourSignatory.length > 0 ? bill.ourSignatory : '\n',
       style:'signatureName'
 
     };
@@ -213,6 +214,8 @@ export class BillService {
       "/assets/logo_lobo.jpg"
     )
     ;
+
+    let billHead = this.pdfService.buildId(bill, "Invoice ", "FE");
     let tableArea = this.buildTableArea(bill);
     let buildTableAnnexe = this.buildTableAnnexe(bill, true);
     let invoiceDateArea = this.buildInvoiceDateArea(bill);
@@ -353,6 +356,8 @@ export class BillService {
             heights: 8,
             body: buildTableAnnexe,
           },
+
+          unbreakable: true,
         },
         '\n',
         {
@@ -366,7 +371,6 @@ export class BillService {
             margin: [0, 10, 0, 10],
             fontSize: 11,
           },
-            '\n',
             {unbreakable: true,
               columns: [
                 {
@@ -390,7 +394,7 @@ export class BillService {
                 {
                   stack: [
                     {
-                      text: '_________________________________',
+                      text: '',
                       style:'signaturePlaceholder'
                     },
                     clientSignatoryNameArea,
@@ -402,7 +406,7 @@ export class BillService {
                 {
                   stack: [
                     {
-                      text: '_________________________________',
+                      text: '',
                       style:'signaturePlaceholder'
                     },
                     ourSignatoryFunctionArea,
@@ -421,7 +425,7 @@ export class BillService {
         }
       ],
       pageMargins: [40, 110, 40, 80],
-      header: {
+      /*header: {
         columns: [
           { image: logoImagePath,
             alignment: 'left',
@@ -440,6 +444,43 @@ export class BillService {
             }]
         ]
 
+      },*/
+      header: function(currentPage, pageCount, pageSize) {
+        // you can apply any logic and return any valid pdfmake element
+
+
+        return [
+          {
+            columns: [
+              { image: logoImagePath,
+                alignment: 'left',
+                width: 150,
+                margin: [40,20,0,10],
+              },
+              [{
+                text: 'Page: ' + currentPage + '/' + pageCount,
+                color: '#333333',
+                width: '*',
+                fontSize: 9,
+                bold: false,
+                alignment: 'right',
+                margin: [0, 20, 40, 0],
+              },
+                {
+                  text: billHead,
+                  color: '#333333',
+                  width: '*',
+                  fontSize: 20,
+                  bold: true,
+                  alignment: 'right',
+                  margin: [0, 20, 40, 0],
+                }]
+            ]
+
+          },
+          //{ text: 'simple text', alignment: (currentPage % 2) ? 'left' : 'right' },
+          { canvas: [ { type: 'rect', x: 170, y: 32, w: pageSize.width - 170, h: 40 } ] }
+        ]
       },
       footer: {
         columns: [
@@ -480,7 +521,7 @@ export class BillService {
   }
 
   private buildDeliveryInfoArea(bill: Bill) {
-    return "Delivery Note Ref:" + bill.deliveryNote.id.toString()+ "\n" +
+    return this.pdfService.buildId(bill.deliveryNote, "Delivery Note Ref: ", "DN")+ "\n" +
       "Port: " + bill.deliveryNote.purchaseOrder.deliveryInformation.port + "\n" +
       "Vessel: " + bill.deliveryNote.purchaseOrder.deliveryInformation.vessel;
   }
@@ -488,6 +529,7 @@ export class BillService {
   private buildInvoiceDateArea(bill: Bill) {
 
     let invoiceDateAreaElementValues = [
+      {name: "Issue Date", value: this.datepipe.transform(bill.issueDate, 'MMMM d, y')},
       {name: "Due Date", value: this.datepipe.transform(bill.deadLine, 'MMMM d, y')},
       {name: "Contact Person", value: bill.deliveryNote.purchaseOrder.contactInfo.name}];
     if(isDefined(bill.deliveryNote.purchaseOrder.poNumber)) {
@@ -544,41 +586,45 @@ export class BillService {
     let tableAnnexe = [];
 
     if(bill.deliveryNote.purchaseOrder.totalAmount != bill.netTotal) {
-      tableAnnexe.push({name: "subtotal", value:bill.deliveryNote.purchaseOrder.totalAmount});
+      tableAnnexe.push({name: "subtotal", value: this.numberPipe.transform(bill.deliveryNote.purchaseOrder.totalAmount, '1.0-2', 'fr-FR')});
     }
+    if(isDefined(bill.discount)) {
+      const discount = bill.deliveryNote.purchaseOrder.totalAmount* (bill.discount)/100;
+      tableAnnexe.push({name: "Discount " + bill.discount + "%", value: this.numberPipe.transform(discount, '1.0-2', 'fr-FR')});
+    }
+    tableAnnexe.push({name: "Transportation Fee", value: this.numberPipe.transform(bill.transportationFee , '1.0-2', 'fr-FR')});
+    tableAnnexe.push({name: "Delivery Fee", value: this.numberPipe.transform(bill.deliveryFee, '1.0-2', 'fr-FR')});
 
-    tableAnnexe.push({name: "Transportation Fee", value: bill.transportationFee});
-    tableAnnexe.push({name: "Delivery Fee", value:bill.deliveryFee});
-    tableAnnexe.push({name: "Discount", value:bill.discount});
     let returnedAnnexe = tableAnnexe.filter(el => isDefined(el.value) && el.value != 0).map(el => {
       return this.buildAnnexeRow(el.name, el.value.toString(), 9)
     });
-    returnedAnnexe.push(this.buildAnnexeRow("Total Amount", bill.netTotal.toString()+ " " + bill.deliveryNote.purchaseOrder.paymentInformation.currency.symbol, 9));
+    returnedAnnexe.push(this.buildAnnexeRow("Total Amount", this.numberPipe.transform(bill.netTotal, '1.0-2', 'fr-FR')+ " " + bill.deliveryNote.purchaseOrder.paymentInformation.currency.symbol, 9));
     return returnedAnnexe;
   }
 
   private buildProduct(item: Item, index: number) {
     const uom = isDefined(item.unitOfMeasurement) ? item.unitOfMeasurement.symbol : "";
-    const product = [index.toString(), item.description, item.quantity, uom, item.unit, item.amount];
+    const product = [{label:index.toString(), alignment: "right" }, {label:item.description, alignment: "left" }, {label:this.numberPipe.transform(item.quantity, '1.0-2', 'fr-FR'), alignment: "right" }, {label:uom, alignment: "left" }, {label:this.numberPipe.transform(item.unit, '1.0-2', 'fr-FR'), alignment: "right" }, {label:this.numberPipe.transform(item.amount, '1.0-2', 'fr-FR'), alignment: "right" }];
     return product.map(p => {
       return {
-        text: p,
+        text: p.label,
         border: [false, false, false, true],
         fontSize: 8,
         margin: [0, 1, 0, 1],
-        alignment: 'left',
+        alignment: p.alignment,
       }
     });
   }
 
   private buildTableHeader() {
-    const columns = ["N°", "Description", "Quantity", "Unit", "Price", "Amount"];
+    const columns = [{label:"N°", alignment: "right" }, {label:"Description", alignment: "left" }, {label:"Quantity", alignment: "right" }, {label:"Unit", alignment: "left" }, {label:"Price", alignment: "right" }, {label:"Amount", alignment: "right" }];
     return columns.map( column => {
       return {
-        text: column,
+        text: column.label,
         fillColor: '#eaf2f5',
         fontSize: 9,
         border: [false, true, false, true],
+        alignment: column.alignment,
         margin: [0, 5, 0, 5],
         textTransform: 'uppercase',
       }

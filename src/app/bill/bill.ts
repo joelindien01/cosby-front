@@ -38,6 +38,7 @@ export class Bill {
   purchaseOrder: PurchaseOrder;
   deliveryNote: DeliveryNote;
   deadLine: Date;
+  issueDate: Date;
   discount: number;
   creationDate: Date;
   deliveryFee: number;

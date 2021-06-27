@@ -39,8 +39,8 @@ export class AddDeliveryNoteComponent implements OnInit, OnDestroy {
         id: [isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.id : null],
         deliveryDate: new FormControl(date, Validators.required),
         ourSignatoryObject: [''],
-        ourSignatory: [isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.ourSignatory :'', Validators.required],
-        ourSignatoryFunction: [{value:isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.ourSignatoryFunction :'', disabled: false },Validators.required],
+        ourSignatory: [isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.ourSignatory :''],
+        ourSignatoryFunction: [{value:isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.ourSignatoryFunction :'', disabled: false }],
         customerSignatory: [isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.customerSignatory : ''],
         customerSignatoryFunction: [{value:isDefined(this.deliveryNoteService.deliveryNote) ? this.deliveryNoteService.deliveryNote.customerSignatoryFunction : '', disabled: false }],
 

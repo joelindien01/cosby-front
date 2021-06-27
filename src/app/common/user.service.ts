@@ -32,8 +32,8 @@ export class UserService {
       map(
         userData => {
           this.connectedUser = userData;
-          localStorage.setItem('username', JSON.stringify(this.connectedUser));
-          localStorage.setItem('basicauth', basicauth);
+          sessionStorage.setItem('username', JSON.stringify(this.connectedUser));
+          sessionStorage.setItem('basicauth', basicauth);
           return userData;
         }
       )
@@ -41,12 +41,12 @@ export class UserService {
   }
 
   isUserLoggedIn() {
-    let user = localStorage.getItem('username');
+    let user = sessionStorage.getItem('username');
     return !(user === null);
   }
   logOut() {
-    localStorage.removeItem('username');
-    localStorage.removeItem('basicauth');
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('basicauth');
     this.connectedUser = undefined;
     this.router.navigate(['login']);
   }
@@ -74,7 +74,7 @@ export class UserService {
   }
 
   getConnectedUser() {
-    return JSON.parse(localStorage.getItem("username"));
+    return JSON.parse(sessionStorage.getItem("username"));
   }
 
   resetPassword(value: any) {
@@ -114,18 +114,18 @@ export class UserService {
   reloadCurrentUser(editedAccount: UserAddForm) {
     let response = this.httpClient.get<User>(this.baseUrl+'validate-login').pipe(
       map(user => {
-        this.saveToLocalStorage(editedAccount, user);
+        this.saveTosessionStorage(editedAccount, user);
       })
     );
     return response;
   }
 
-  private saveToLocalStorage(editedAccount: UserAddForm, resultUser?: any) {
+  private saveTosessionStorage(editedAccount: UserAddForm, resultUser?: any) {
     this.connectedUser = resultUser;
-    localStorage.setItem('username', JSON.stringify(this.connectedUser));
+    sessionStorage.setItem('username', JSON.stringify(this.connectedUser));
     if (isDefined(editedAccount.password)) {
       const basicauth = "Basic " + btoa(editedAccount.username + ':' + editedAccount.password);
-      localStorage.setItem('basicauth', basicauth);
+      sessionStorage.setItem('basicauth', basicauth);
     }
   }
 
