@@ -35,7 +35,7 @@
     "docxtemplater": "^3.10.1",
     "file-saver": "^2.0.1",
     "jquery": "^3.3.1",
-    "jszip": "^2.6.1",
+    "jszip": "^2.7.0",
     "jszip-utils": "0.0.2",
     "lodash": "^4.17.21",
     "ng2-completer": "^2.0.8",
